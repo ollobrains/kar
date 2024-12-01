@@ -343,7 +343,7 @@ func VelocityFunc(body *cm.Body, grav vec.Vec2, damping, dt float64) {
 			gravity = longJumpGravities[speedThreshold]
 		}
 		velocity.Y = velocity.Y + gravity*delta
-		if velocity.Y > MaxFallSpeed {
+		if velocity.Y > MaxFallSpeedCap {
 			velocity.Y = MaxFallSpeedCap
 		}
 	}

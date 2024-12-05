@@ -9,11 +9,11 @@ import (
 )
 
 func main() {
-
+	// ebiten.SetTPS(15)
 	game := NewGame()
 	game.Init()
 	ebiten.SetScreenClearedEveryFrame(false)
-	ebiten.SetWindowSize(int(kar.ScreenSize.X), int(kar.ScreenSize.Y))
+	ebiten.SetWindowSize(int(kar.ScreenW), int(kar.ScreenH))
 
 	// run
 	if err := ebiten.RunGameWithOptions(
@@ -39,12 +39,8 @@ func (g *Game) Init() {
 	g.systems = []kar.ISystem{
 		&system.Input{},
 		&system.Spawn{},
-		&system.Player{},
-		&system.DropItem{},
 		&system.Controller{},
-		&system.CollisionHandler{},
 		&system.Render{},
-		&system.RenderGUI{},
 	}
 
 	// Initalize systems
@@ -71,10 +67,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 }
 
-// func (g *Game) LayoutF(w, h float64) (float64, float64) {
-// 	return resources.ScreenSize.X, resources.ScreenSize.Y
-// }
+func (g *Game) LayoutF(w, h float64) (float64, float64) {
+	return kar.ScreenW, kar.ScreenH
+}
 
 func (g *Game) Layout(w, h int) (int, int) {
-	return int(kar.ScreenSize.X), int(kar.ScreenSize.Y)
+	return 0, 0
 }

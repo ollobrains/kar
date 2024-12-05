@@ -1,81 +1,50 @@
 package system
 
 import (
+	"image/color"
 	"kar"
 	"kar/arc"
-	"kar/engine/vectorg"
-	"kar/items"
-	"kar/world"
+	"kar/engine/v"
+	"kar/tilemap"
 
 	"github.com/mlange-42/arche/ecs"
-	"github.com/setanarut/anim"
-	"github.com/setanarut/cm"
-	"github.com/setanarut/vec"
+	"github.com/setanarut/tilecollider"
 )
 
-var (
-	playerEntity      ecs.Entity
-	playerSpawnPos    vec2
-	playerBody        *cm.Body
-	playerPos         vec.Vec2
-	playerInv         *arc.Inventory
-	playerAnim        *anim.AnimationPlayer
-	playerDrawOptions *arc.DrawOptions
-)
+type vec2 = v.Vec
 
-// func EntityRemoveCallback(w *ecs.World, e ecs.EntityEvent) {
-// 	fmt.Println(w.Alive(e.Entity))
-// }
-
-// var ls = listener.NewCallback(
-// 	EntityRemoveCallback,
-// 	event.EntityRemoved,
-// )
-
-type Spawn struct{}
+var Mario ecs.Entity
+var Map *tilemap.TileMap
+var Collider *tilecollider.Collider[uint16]
 
 func (s *Spawn) Init() {
-	// kar.WorldECS.SetListener(&ls)
-	gameWorld = world.NewWorld(
-		kar.WorldSize.X,
-		kar.WorldSize.Y,
-		kar.ChunkSize,
-		kar.BlockSize,
-	)
-	findSpawnPosition()
-	// playerSpawnPos = vec.Vec2{400, 400}
-	playerEntity = arc.SpawnMario(playerSpawnPos)
-	playerBody = arc.MapBody.Get(playerEntity).Body
-	_, playerDrawOptions, playerAnim, _, playerInv = arc.MapPlayer.Get(playerEntity)
-	gameWorld.LoadChunks(playerSpawnPos)
+	Mario = arc.SpawnMario(50, 0)
+
+	// Map = tilemap.MakeTileMap(7, 8, 16, 16)
+
+	tm := [][]uint16{
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}}
+
+	Map = tilemap.NewTileMap(tm, 48, 48)
+
+	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
 
 }
-func (s *Spawn) Update() {
-
-	if debugDrawingEnabled {
-		vectorg.GlobalTransform.Reset()
-		cmDrawer.GeoM.Reset()
-		Camera.ApplyCameraTransform(cmDrawer.GeoM)
-		Camera.ApplyCameraTransform(vectorg.GlobalTransform)
-	}
-
-	playerPos = playerBody.Position()
-	// playerBody.SetVelocityUpdateFunc(PlayerFlyVelocityFunc)
-	if kar.WorldECS.Alive(playerEntity) {
-		gameWorld.UpdateChunks(playerBody.Position())
-	}
-}
-
+func (s *Spawn) Update() {}
 func (s *Spawn) Draw() {
+	kar.Screen.Fill(color.RGBA{64, 68, 108, 255})
 }
 
-func findSpawnPosition() {
-	for y := range 300 {
-		posUp := gameWorld.Image.Gray16At(10, y).Y
-		posDown := gameWorld.Image.Gray16At(10, y+1).Y
-		if posDown != items.Air && posUp == items.Air {
-			playerSpawnPos = world.PixelToWorld(10, y)
-			break
-		}
-	}
-}
+type Spawn struct{}

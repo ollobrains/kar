@@ -36,6 +36,8 @@ type Controller struct {
 	IsOnFloor  bool
 	IsSkidding bool
 
+	SkiddingJumpEnabled bool
+
 	// Input durumları
 	IsLeftKeyPressed     bool
 	IsRightKeyPressed    bool
@@ -72,10 +74,10 @@ func NewController(velX, velY float64, tc *tilecollider.Collider[uint16]) *Contr
 		JumpReleaseTimer:                    5,
 		MaxWalkSpeed:                        2.0,
 		MaxRunSpeed:                         3.0,
-		WalkAcceleration:                    0.06,
-		WalkDeceleration:                    0.06,
-		RunAcceleration:                     0.02,
-		RunDeceleration:                     0.02,
+		WalkAcceleration:                    0.04,
+		WalkDeceleration:                    0.04,
+		RunAcceleration:                     0.04,
+		RunDeceleration:                     0.04,
 	}
 }
 
@@ -184,7 +186,7 @@ func (c *Controller) UpdateState() {
 			c.changeState("jumping")
 			c.VelY = c.JumpPower
 			c.JumpTimer = 0
-		} else if c.VelX != 0 {
+		} else if c.HorizontalVelocity > 0.01 {
 			if c.HorizontalVelocity > c.MaxWalkSpeed {
 				c.changeState("running")
 			} else {
@@ -277,17 +279,9 @@ func (c *Controller) UpdateState() {
 		}
 
 	case "skidding":
-		// Kayma sırasında daha hızlı yavaşlama
-		// if c.VelX > 0 {
-		// 	c.VelX = max(0, c.VelX-c.RunDeceleration)
-		// } else {
-		// 	c.VelX = min(0, c.VelX+c.RunDeceleration)
-		// }
-		// Kayma durumundan çıkış kontrolleri
-		if c.HorizontalVelocity < 0 {
+		if c.HorizontalVelocity < 0.01 {
 			c.changeState("idle")
-		} else if !((c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed)) {
-			// Eğer zıt yön tuşuna basılı değilse
+		} else if !c.IsSkidding {
 			if c.HorizontalVelocity > c.MaxWalkSpeed {
 				c.changeState("running")
 			} else {
@@ -295,6 +289,17 @@ func (c *Controller) UpdateState() {
 			}
 		}
 
+		if c.SkiddingJumpEnabled {
+			if c.IsJumpKeyJustPressed {
+				c.changeState("jumping")
+				if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+					c.VelY = c.JumpPower * c.JumpBoostMultiplier
+				} else {
+					c.VelY = c.JumpPower
+				}
+				c.JumpTimer = 0
+			}
+		}
 	}
 
 	// Düşme durumunda da IsOnFloor'u false yap

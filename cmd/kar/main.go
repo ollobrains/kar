@@ -39,7 +39,7 @@ func (g *Game) Init() {
 	g.systems = []kar.ISystem{
 		&system.Input{},
 		&system.Spawn{},
-		&system.Controller{},
+		&system.Player{},
 		&system.Render{},
 	}
 

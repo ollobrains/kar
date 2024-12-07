@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// ebiten.SetTPS(8)
 	game := NewGame()
 	game.Init()

@@ -1,6 +1,6 @@
 module kar
 
-go 1.23.2
+go 1.23.4
 
 require (
 	github.com/anthonynsimon/bild v0.14.0
@@ -9,13 +9,13 @@ require (
 	github.com/setanarut/cm v1.13.2
 	github.com/setanarut/kamera/v2 v2.9.1
 	github.com/setanarut/vec v1.1.1
-	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
-	golang.org/x/text v0.20.0
+	golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d
+	golang.org/x/text v0.21.0
 )
 
 require (
 	github.com/setanarut/fastnoise v1.1.1 // indirect
-	golang.org/x/image v0.22.0 // indirect
+	golang.org/x/image v0.23.0 // indirect
 )
 
 require (
@@ -26,6 +26,6 @@ require (
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/mlange-42/arche v0.13.3
 	github.com/setanarut/tilecollider v1.4.6
-	golang.org/x/sync v0.9.0 // indirect
-	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/sync v0.10.0 // indirect
+	golang.org/x/sys v0.28.0 // indirect
 )

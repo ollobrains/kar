@@ -5,6 +5,8 @@ import (
 	"kar/arc"
 )
 
+var CurrentState string
+
 type Player struct {
 	controller *Controller
 }
@@ -32,8 +34,10 @@ func (c *Player) Update() {
 		}
 
 		c.controller.UpdateState()
+		CurrentState = c.controller.CurrentState
 	}
 }
 
 func (c *Player) Draw() {
+
 }

@@ -33,7 +33,9 @@ type Controller struct {
 	ShortJumpVelocity                   float64 // Kısa zıplama için hız
 	JumpReleaseTimer                    float64 // Zıplama tuşu bırakıldığında geçen süre
 
-	IsOnFloor bool
+	IsOnFloor  bool
+	IsSkidding bool
+
 	// Input durumları
 	IsLeftKeyPressed     bool
 	IsRightKeyPressed    bool
@@ -106,20 +108,23 @@ func (c *Controller) UpdateInput() {
 }
 
 func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
+	c.IsSkidding = (c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed)
 	maxSpeed := c.MaxWalkSpeed
 	currentAccel := c.WalkAcceleration
 	currentDecel := c.WalkDeceleration
 	c.HorizontalVelocity = math.Abs(c.VelX)
 
-	// Koşma durumunda maksimum hızı ve ivmelenmeyi ayarla
-	if c.IsRunKeyPressed {
-		maxSpeed = c.MaxRunSpeed
-		currentAccel = c.RunAcceleration
-		currentDecel = c.RunDeceleration
-	} else if c.HorizontalVelocity > c.MaxWalkSpeed {
-		// Koşma tuşu bırakıldığında ve hız yürüme hızından fazlaysa
-		// RunDeceleration kullan
-		currentDecel = c.RunDeceleration
+	if !c.IsSkidding {
+		// Koşma durumunda maksimum hızı ve ivmelenmeyi ayarla
+		if c.IsRunKeyPressed {
+			maxSpeed = c.MaxRunSpeed
+			currentAccel = c.RunAcceleration
+			currentDecel = c.RunDeceleration
+		} else if c.HorizontalVelocity > c.MaxWalkSpeed {
+			// Koşma tuşu bırakıldığında ve hız yürüme hızından fazlaysa
+			// RunDeceleration kullan
+			currentDecel = c.RunDeceleration
+		}
 	}
 
 	if c.IsRightKeyPressed {
@@ -188,10 +193,10 @@ func (c *Controller) UpdateState() {
 		}
 
 	case "walking":
-		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 0, 23)
+		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
 
 		// Kayma durumu kontrolü
-		if (c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed) {
+		if c.IsSkidding {
 			c.changeState("skidding")
 			break
 		}
@@ -215,10 +220,10 @@ func (c *Controller) UpdateState() {
 		}
 
 	case "running":
-		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 0, 23)
+		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
 
 		// Kayma durumu kontrolü
-		if (c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed) {
+		if c.IsSkidding {
 			c.changeState("skidding")
 			break
 		}
@@ -235,7 +240,7 @@ func (c *Controller) UpdateState() {
 				c.VelY = c.JumpPower
 			}
 			c.JumpTimer = 0
-		} else if c.HorizontalVelocity <= 0 {
+		} else if c.HorizontalVelocity < 0.01 {
 			c.changeState("idle")
 		} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
 			c.changeState("walking")
@@ -272,8 +277,14 @@ func (c *Controller) UpdateState() {
 		}
 
 	case "skidding":
+		// Kayma sırasında daha hızlı yavaşlama
+		// if c.VelX > 0 {
+		// 	c.VelX = max(0, c.VelX-c.RunDeceleration)
+		// } else {
+		// 	c.VelX = min(0, c.VelX+c.RunDeceleration)
+		// }
 		// Kayma durumundan çıkış kontrolleri
-		if c.HorizontalVelocity < 0.01 {
+		if c.HorizontalVelocity < 0 {
 			c.changeState("idle")
 		} else if !((c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed)) {
 			// Eğer zıt yön tuşuna basılı değilse
@@ -283,13 +294,6 @@ func (c *Controller) UpdateState() {
 				c.changeState("walking")
 			}
 		}
-
-		// // Kayma sırasında daha hızlı yavaşlama
-		// if c.VelX > 0 {
-		// 	c.VelX = max(0, c.VelX-c.Deceleration*2)
-		// } else {
-		// 	c.VelX = min(0, c.VelX+c.Deceleration*2)
-		// }
 
 	}
 

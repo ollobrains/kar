@@ -5,6 +5,7 @@ import (
 	"kar"
 	"kar/arc"
 
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
@@ -68,4 +69,7 @@ func (rn *Render) Draw() {
 		kar.Camera.Draw(anim.CurrentFrame, kar.GlobalDIO, kar.Screen)
 
 	}
+
+	ebitenutil.DebugPrintAt(kar.Screen, CurrentState, 10, 10)
+
 }

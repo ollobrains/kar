@@ -235,7 +235,7 @@ func (c *Controller) UpdateState() {
 				c.VelY = c.JumpPower
 			}
 			c.JumpTimer = 0
-		} else if c.VelX == 0 {
+		} else if c.HorizontalVelocity <= 0 {
 			c.changeState("idle")
 		} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
 			c.changeState("walking")
@@ -262,7 +262,7 @@ func (c *Controller) UpdateState() {
 
 	case "falling":
 		if c.IsOnFloor {
-			if c.VelX == 0 {
+			if c.HorizontalVelocity <= 0 {
 				c.changeState("idle")
 			} else if c.IsRunKeyPressed {
 				c.changeState("running")
@@ -273,7 +273,7 @@ func (c *Controller) UpdateState() {
 
 	case "skidding":
 		// Kayma durumundan çıkış kontrolleri
-		if c.VelX == 0 {
+		if c.HorizontalVelocity < 0.01 {
 			c.changeState("idle")
 		} else if !((c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed)) {
 			// Eğer zıt yön tuşuna basılı değilse

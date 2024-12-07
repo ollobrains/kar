@@ -25,9 +25,9 @@ func (c *Player) Update() {
 		rect.X += dx
 		rect.Y += dy
 
-		if c.controller.VelX > 0 {
+		if c.controller.VelX > 0.01 {
 			dop.FlipX = false
-		} else if c.controller.VelX < 0 {
+		} else if c.controller.VelX < -0.01 {
 			dop.FlipX = true
 		}
 

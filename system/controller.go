@@ -179,132 +179,146 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	}
 }
 
-func (c *Controller) UpdateState() {
-	switch c.CurrentState {
-	case "idle":
-		if c.IsJumpKeyJustPressed {
-			c.changeState("jumping")
-			c.VelY = c.JumpPower
-			c.JumpTimer = 0
-		} else if c.HorizontalVelocity > 0.01 {
-			if c.HorizontalVelocity > c.MaxWalkSpeed {
-				c.changeState("running")
-			} else {
-				c.changeState("walking")
-			}
-		}
-
-	case "walking":
-		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
-
-		// Kayma durumu kontrolü
-		if c.IsSkidding {
-			c.changeState("skidding")
-			break
-		}
-
-		if c.VelY > 0 && !c.IsOnFloor {
-			c.changeState("falling")
-		}
-
-		if c.IsJumpKeyJustPressed {
-			c.changeState("jumping")
-			if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
-				c.VelY = c.JumpPower * c.JumpBoostMultiplier
-			} else {
-				c.VelY = c.JumpPower
-			}
-			c.JumpTimer = 0
-		} else if c.HorizontalVelocity <= 0 {
-			c.changeState("idle")
-		} else if c.HorizontalVelocity > c.MaxWalkSpeed {
+func (c *Controller) Skidding() {
+	if c.HorizontalVelocity < 0.01 {
+		c.changeState("idle")
+	} else if !c.IsSkidding {
+		if c.HorizontalVelocity > c.MaxWalkSpeed {
 			c.changeState("running")
-		}
-
-	case "running":
-		c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
-
-		// Kayma durumu kontrolü
-		if c.IsSkidding {
-			c.changeState("skidding")
-			break
-		}
-
-		if c.VelY > 0 && !c.IsOnFloor {
-			c.changeState("falling")
-		}
-
-		if c.IsJumpKeyJustPressed {
-			c.changeState("jumping")
-			if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
-				c.VelY = c.JumpPower * c.JumpBoostMultiplier
-			} else {
-				c.VelY = c.JumpPower
-			}
-			c.JumpTimer = 0
-		} else if c.HorizontalVelocity < 0.01 {
-			c.changeState("idle")
-		} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
+		} else {
 			c.changeState("walking")
-		}
-
-	case "jumping":
-		if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
-			c.VelY = c.ShortJumpVelocity
-			c.JumpTimer = c.JumpHoldTime // Zıplama süresini bitir
-		} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
-			speedFactor := (c.HorizontalVelocity / c.MaxRunSpeed) * c.SpeedJumpFactor
-			c.VelY += c.JumpBoost * (1 + speedFactor)
-			c.JumpTimer++
-		} else if c.VelY >= 0 {
-			c.changeState("falling")
-		}
-
-		if c.IsLeftKeyPressed && c.VelX > 0 {
-
-			c.VelX -= c.Deceleration
-		} else if c.IsRightKeyPressed && c.VelX < 0 {
-			c.VelX += c.Deceleration
-		}
-
-	case "falling":
-		if c.IsOnFloor {
-			if c.HorizontalVelocity <= 0 {
-				c.changeState("idle")
-			} else if c.IsRunKeyPressed {
-				c.changeState("running")
-			} else {
-				c.changeState("walking")
-			}
-		}
-
-	case "skidding":
-		if c.HorizontalVelocity < 0.01 {
-			c.changeState("idle")
-		} else if !c.IsSkidding {
-			if c.HorizontalVelocity > c.MaxWalkSpeed {
-				c.changeState("running")
-			} else {
-				c.changeState("walking")
-			}
-		}
-
-		if c.SkiddingJumpEnabled {
-			if c.IsJumpKeyJustPressed {
-				c.changeState("jumping")
-				if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
-					c.VelY = c.JumpPower * c.JumpBoostMultiplier
-				} else {
-					c.VelY = c.JumpPower
-				}
-				c.JumpTimer = 0
-			}
 		}
 	}
 
-	// Düşme durumunda da IsOnFloor'u false yap
-	if c.VelY > 0 {
-		c.IsOnFloor = false
+	if c.SkiddingJumpEnabled {
+		if c.IsJumpKeyJustPressed {
+			c.changeState("jumping")
+			if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+				c.VelY = c.JumpPower * c.JumpBoostMultiplier
+			} else {
+				c.VelY = c.JumpPower
+			}
+			c.JumpTimer = 0
+		}
+	}
+}
+
+func (c *Controller) Falling() {
+	if c.IsOnFloor {
+		if c.HorizontalVelocity <= 0 {
+			c.changeState("idle")
+		} else if c.IsRunKeyPressed {
+			c.changeState("running")
+		} else {
+			c.changeState("walking")
+		}
+	}
+}
+
+func (c *Controller) Jumping() {
+	if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
+		c.VelY = c.ShortJumpVelocity
+		c.JumpTimer = c.JumpHoldTime // Zıplama süresini bitir
+	} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
+		speedFactor := (c.HorizontalVelocity / c.MaxRunSpeed) * c.SpeedJumpFactor
+		c.VelY += c.JumpBoost * (1 + speedFactor)
+		c.JumpTimer++
+	} else if c.VelY >= 0 {
+		c.changeState("falling")
+	}
+
+	if c.IsLeftKeyPressed && c.VelX > 0 {
+
+		c.VelX -= c.Deceleration
+	} else if c.IsRightKeyPressed && c.VelX < 0 {
+		c.VelX += c.Deceleration
+	}
+}
+
+func (c *Controller) Running() {
+	c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
+
+	// Kayma durumu kontrolü
+	if c.IsSkidding {
+		c.changeState("skidding")
+		return
+	}
+
+	if c.VelY > 0 && !c.IsOnFloor {
+		c.changeState("falling")
+	}
+
+	if c.IsJumpKeyJustPressed {
+		c.changeState("jumping")
+		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+			c.VelY = c.JumpPower * c.JumpBoostMultiplier
+		} else {
+			c.VelY = c.JumpPower
+		}
+		c.JumpTimer = 0
+	} else if c.HorizontalVelocity < 0.01 {
+		c.changeState("idle")
+	} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
+		c.changeState("walking")
+	}
+}
+
+func (c *Controller) Walking() {
+	c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
+
+	// Kayma durumu kontrolü
+	if c.IsSkidding {
+		c.changeState("skidding")
+		return
+	}
+
+	if c.VelY > 0 && !c.IsOnFloor {
+		c.changeState("falling")
+	}
+
+	if c.IsJumpKeyJustPressed {
+		c.changeState("jumping")
+		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+			c.VelY = c.JumpPower * c.JumpBoostMultiplier
+		} else {
+			c.VelY = c.JumpPower
+		}
+		c.JumpTimer = 0
+	} else if c.HorizontalVelocity <= 0 {
+		c.changeState("idle")
+	} else if c.HorizontalVelocity > c.MaxWalkSpeed {
+		c.changeState("running")
+	}
+}
+
+func (c *Controller) Idle() {
+	if c.IsJumpKeyJustPressed {
+		c.changeState("jumping")
+		c.VelY = c.JumpPower
+		c.JumpTimer = 0
+	} else if c.HorizontalVelocity > 0.01 {
+		if c.HorizontalVelocity > c.MaxWalkSpeed {
+			c.changeState("running")
+		} else {
+			c.changeState("walking")
+		}
+	}
+}
+
+func (c *Controller) UpdateState() {
+	switch c.CurrentState {
+	case "idle":
+		c.Idle()
+	case "walking":
+		c.Walking()
+	case "running":
+		c.Running()
+	case "jumping":
+		c.Jumping()
+	case "falling":
+		c.Falling()
+	case "skidding":
+		c.Skidding()
 	}
 }
 

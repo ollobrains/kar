@@ -175,17 +175,20 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	}
 }
 
+func (c *Controller) ResetVelocity() {
+	c.VelX = 0
+	c.HorizontalVelocity = 0
+}
+
 func (c *Controller) Skidding() {
-	// Skidding'den jumping'e geçerken hızı sıfırla ve sabit değer ver
 	if c.SkiddingJumpEnabled && c.IsJumpKeyJustPressed {
-		c.VelX = 0               // Mevcut hızı sıfırla
-		c.HorizontalVelocity = 0 // Yatay hız değerini de sıfırla
+		c.ResetVelocity()
 
 		// Yeni yöne doğru çok küçük sabit değerle başla
 		if c.InputAxis.X > 0 {
-			c.VelX = 0.3 // Daha küçük sabit değer
+			c.VelX = 0.3
 		} else if c.InputAxis.X < 0 {
-			c.VelX = -0.3 // Daha küçük sabit değer
+			c.VelX = -0.3
 		}
 
 		c.VelY = c.JumpPower * 0.7 // Zıplama gücünü azalt

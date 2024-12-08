@@ -1,7 +1,6 @@
 package system
 
 import (
-	"image/color"
 	"kar"
 	"kar/arc"
 	"kar/engine/v"
@@ -44,7 +43,7 @@ func (s *Spawn) Init() {
 }
 func (s *Spawn) Update() {}
 func (s *Spawn) Draw() {
-	kar.Screen.Fill(color.RGBA{64, 68, 108, 255})
+	kar.Screen.Fill(kar.BackgroundColor)
 }
 
 type Spawn struct{}

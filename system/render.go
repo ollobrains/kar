@@ -1,7 +1,6 @@
 package system
 
 import (
-	"image/color"
 	"kar"
 	"kar/arc"
 
@@ -31,6 +30,8 @@ func (rn *Render) Update() {
 }
 
 func (rn *Render) Draw() {
+
+	// Draw tilemap
 	for y, row := range Map.Grid {
 		for x, value := range row {
 			if value != 0 {
@@ -42,21 +43,19 @@ func (rn *Render) Draw() {
 					float32(py),
 					float32(Map.TileW),
 					float32(Map.TileH),
-					color.Gray{127},
+					kar.TileColor,
 					false,
 				)
 			}
 		}
 	}
 
-	// draw player
+	// Draw player
 	q := arc.FilterDraw.Query(&kar.WorldECS)
 	for q.Next() {
 		dop, anim, rect := q.Get()
 		sclX := dop.Scale
-
 		kar.GlobalDIO.GeoM.Reset()
-
 		if dop.FlipX {
 			sclX *= -1
 			kar.GlobalDIO.GeoM.Scale(sclX, dop.Scale)
@@ -65,11 +64,11 @@ func (rn *Render) Draw() {
 			kar.GlobalDIO.GeoM.Scale(sclX, dop.Scale)
 			kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
 		}
-
 		kar.Camera.Draw(anim.CurrentFrame, kar.GlobalDIO, kar.Screen)
-
 	}
 
+	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
+	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.InputAxisLast.String(), 10, 20)
 
 }

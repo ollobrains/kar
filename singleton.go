@@ -1,6 +1,7 @@
 package kar
 
 import (
+	"image/color"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -23,7 +24,9 @@ var (
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO = &ebiten.DrawImageOptions{}
+	GlobalDIO       = &ebiten.DrawImageOptions{}
+	BackgroundColor = rgb(75, 125, 251)
+	TileColor       = rgb(181, 86, 35)
 )
 
 func init() {
@@ -36,4 +39,8 @@ func init() {
 	// 	log.Fatal(err)
 	// }
 	// DesktopPath = homePath + "/Desktop/"
+}
+
+func rgb(r, g, b uint8) color.RGBA {
+	return color.RGBA{r, g, b, 255}
 }

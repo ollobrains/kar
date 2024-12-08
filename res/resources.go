@@ -28,12 +28,9 @@ var (
 )
 
 var cracks = util.ImgFromFS(fs, "assets/img/overlay/cracks.png")
-var Border *ebiten.Image
+var Border = util.ReadEbImgFS(fs, "assets/img/overlay/border48.png")
 
 func init() {
-
-	Border = util.ReadEbImgFS(fs, "assets/img/overlay/border48.png")
-
 	Images[items.Air] = util.ReadEbImgFS(fs, "assets/img/air.png")
 	Frames[items.Andesite] = blockImgs("andesite.png")
 	Frames[items.Bedrock] = blockImgs("bedrock.png")

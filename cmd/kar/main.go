@@ -10,7 +10,6 @@ import (
 
 func main() {
 
-	// ebiten.SetTPS(8)
 	game := NewGame()
 	game.Init()
 	ebiten.SetScreenClearedEveryFrame(false)
@@ -38,7 +37,6 @@ func NewGame() *Game {
 
 func (g *Game) Init() {
 	g.systems = []kar.ISystem{
-		&system.Input{},
 		&system.Spawn{},
 		&system.Player{},
 		&system.Render{},

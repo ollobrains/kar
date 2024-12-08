@@ -39,15 +39,16 @@ type Controller struct {
 	SkiddingJumpEnabled bool
 
 	// Input durumları
-	IsLeftKeyPressed     bool
-	IsRightKeyPressed    bool
 	IsJumpKeyPressed     bool
 	IsJumpKeyJustPressed bool
 	IsRunKeyPressed      bool
-	WalkAcceleration     float64
-	WalkDeceleration     float64
-	RunAcceleration      float64
-	RunDeceleration      float64
+	InputAxis            vec2
+	InputAxisLast        vec2
+
+	WalkAcceleration float64
+	WalkDeceleration float64
+	RunAcceleration  float64
+	RunDeceleration  float64
 
 	HorizontalVelocity float64
 	// Durum değişikliği için yeni alan
@@ -102,51 +103,46 @@ func (c *Controller) SetScale(s float64) {
 	c.RunDeceleration *= s
 }
 func (c *Controller) UpdateInput() {
+	if !c.InputAxis.Equals(vec2{}) {
+		c.InputAxisLast = c.InputAxis
+	}
+	c.InputAxis = c.Axis()
+
 	c.IsRunKeyPressed = ebiten.IsKeyPressed(ebiten.KeyShift)
-	c.IsLeftKeyPressed = ebiten.IsKeyPressed(ebiten.KeyA)
-	c.IsRightKeyPressed = ebiten.IsKeyPressed(ebiten.KeyD)
 	c.IsJumpKeyPressed = ebiten.IsKeyPressed(ebiten.KeySpace)
 	c.IsJumpKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeySpace)
 }
 
 func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
-	c.IsSkidding = (c.VelX > 0 && c.IsLeftKeyPressed) || (c.VelX < 0 && c.IsRightKeyPressed)
+	c.IsSkidding = (c.VelX > 0 && c.InputAxis.X < 0) || (c.VelX < 0 && c.InputAxis.X > 0)
 	maxSpeed := c.MaxWalkSpeed
 	currentAccel := c.WalkAcceleration
 	currentDecel := c.WalkDeceleration
 	c.HorizontalVelocity = math.Abs(c.VelX)
 
 	if !c.IsSkidding {
-		// Koşma durumunda maksimum hızı ve ivmelenmeyi ayarla
 		if c.IsRunKeyPressed {
 			maxSpeed = c.MaxRunSpeed
 			currentAccel = c.RunAcceleration
 			currentDecel = c.RunDeceleration
 		} else if c.HorizontalVelocity > c.MaxWalkSpeed {
-			// Koşma tuşu bırakıldığında ve hız yürüme hızından fazlaysa
-			// RunDeceleration kullan
 			currentDecel = c.RunDeceleration
 		}
 	}
 
-	if c.IsRightKeyPressed {
+	if c.InputAxis.X > 0 {
 		if c.VelX > maxSpeed {
-			// Hız maksimumun üzerindeyse yavaşla
 			c.VelX = max(maxSpeed, c.VelX-currentDecel)
 		} else {
-			// Normal ivmelenme
 			c.VelX = min(maxSpeed, c.VelX+currentAccel)
 		}
-	} else if c.IsLeftKeyPressed {
+	} else if c.InputAxis.X < 0 {
 		if c.VelX < -maxSpeed {
-			// Hız maksimumun üzerindeyse yavaşla
 			c.VelX = min(-maxSpeed, c.VelX+currentDecel)
 		} else {
-			// Normal ivmelenme
 			c.VelX = max(-maxSpeed, c.VelX-currentAccel)
 		}
 	} else {
-		// Hareket tuşları basılı değilse
 		if c.VelX > 0 {
 			c.VelX = max(0, c.VelX-currentDecel)
 		} else if c.VelX < 0 {
@@ -180,6 +176,25 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 }
 
 func (c *Controller) Skidding() {
+	// Skidding'den jumping'e geçerken hızı sıfırla ve sabit değer ver
+	if c.SkiddingJumpEnabled && c.IsJumpKeyJustPressed {
+		c.VelX = 0               // Mevcut hızı sıfırla
+		c.HorizontalVelocity = 0 // Yatay hız değerini de sıfırla
+
+		// Yeni yöne doğru çok küçük sabit değerle başla
+		if c.InputAxis.X > 0 {
+			c.VelX = 0.3 // Daha küçük sabit değer
+		} else if c.InputAxis.X < 0 {
+			c.VelX = -0.3 // Daha küçük sabit değer
+		}
+
+		c.VelY = c.JumpPower * 0.7 // Zıplama gücünü azalt
+		c.JumpTimer = 0
+		c.changeState("jumping")
+		return
+	}
+
+	// Mevcut mantık devam eder...
 	if c.HorizontalVelocity < 0.01 {
 		c.changeState("idle")
 	} else if !c.IsSkidding {
@@ -187,18 +202,6 @@ func (c *Controller) Skidding() {
 			c.changeState("running")
 		} else {
 			c.changeState("walking")
-		}
-	}
-
-	if c.SkiddingJumpEnabled {
-		if c.IsJumpKeyJustPressed {
-			c.changeState("jumping")
-			if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
-				c.VelY = c.JumpPower * c.JumpBoostMultiplier
-			} else {
-				c.VelY = c.JumpPower
-			}
-			c.JumpTimer = 0
 		}
 	}
 }
@@ -216,21 +219,35 @@ func (c *Controller) Falling() {
 }
 
 func (c *Controller) Jumping() {
-	if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
-		c.VelY = c.ShortJumpVelocity
-		c.JumpTimer = c.JumpHoldTime // Zıplama süresini bitir
-	} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
-		speedFactor := (c.HorizontalVelocity / c.MaxRunSpeed) * c.SpeedJumpFactor
-		c.VelY += c.JumpBoost * (1 + speedFactor)
-		c.JumpTimer++
-	} else if c.VelY >= 0 {
-		c.changeState("falling")
+	// Skidding'den geldiyse özel durum
+	if c.previousState == "skidding" {
+		if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
+			c.VelY = c.ShortJumpVelocity * 0.7 // Kısa zıplama gücünü azalt
+			c.JumpTimer = c.JumpHoldTime
+		} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
+			c.VelY += c.JumpBoost * 0.7 // Boost gücünü azalt
+			c.JumpTimer++
+		} else if c.VelY >= 0 {
+			c.changeState("falling")
+		}
+	} else {
+		// Normal jumping mantığı aynen devam eder
+		if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
+			c.VelY = c.ShortJumpVelocity
+			c.JumpTimer = c.JumpHoldTime
+		} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
+			speedFactor := (c.HorizontalVelocity / c.MaxRunSpeed) * c.SpeedJumpFactor
+			c.VelY += c.JumpBoost * (1 + speedFactor)
+			c.JumpTimer++
+		} else if c.VelY >= 0 {
+			c.changeState("falling")
+		}
 	}
 
-	if c.IsLeftKeyPressed && c.VelX > 0 {
-
+	// Yatay hareket kontrolü
+	if c.InputAxis.X < 0 && c.VelX > 0 {
 		c.VelX -= c.Deceleration
-	} else if c.IsRightKeyPressed && c.VelX < 0 {
+	} else if c.InputAxis.X > 0 && c.VelX < 0 {
 		c.VelX += c.Deceleration
 	}
 }
@@ -386,4 +403,20 @@ func (c *Controller) changeState(newState string) {
 	case "skidding":
 		c.enterSkidding()
 	}
+}
+
+func (c *Controller) Axis() (axis vec2) {
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
+		axis.Y -= 1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
+		axis.Y += 1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		axis.X -= 1
+	}
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		axis.X += 1
+	}
+	return axis
 }

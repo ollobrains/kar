@@ -18,7 +18,7 @@ func (rn *Render) Update() {
 
 	if kar.WorldECS.Alive(Mario) {
 		rect := arc.MapRect.Get(Mario)
-		kar.Camera.LookAt(rect.X, rect.Y-50)
+		kar.Camera.LookAt(rect.X, rect.Y)
 	}
 
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
@@ -70,6 +70,6 @@ func (rn *Render) Draw() {
 
 	}
 
-	ebitenutil.DebugPrintAt(kar.Screen, CurrentState, 10, 10)
+	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
 
 }

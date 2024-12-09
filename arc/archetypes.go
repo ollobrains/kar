@@ -51,7 +51,7 @@ func SpawnMario(x, y float64) ecs.Entity {
 	a.SetState("idleRight")
 	i := NewInventory()
 	d := &DrawOptions{Scale: 3}
-	r := &Rect{X: x, Y: y, W: 48, H: 48}
+	r := &Rect{X: x, Y: y, W: 12 * 3, H: 16 * 3}
 	entity := MapPlayer.NewWith(h, d, a, r, i)
 	return entity
 }

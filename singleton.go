@@ -24,13 +24,14 @@ var (
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO       = &ebiten.DrawImageOptions{}
-	BackgroundColor = rgb(75, 125, 251)
-	TileColor       = rgb(181, 86, 35)
+	GlobalDIO             = &ebiten.DrawImageOptions{}
+	BackgroundColor       = rgb(30, 47, 91)
+	TileColor             = rgb(181, 86, 35)
+	TargetTileBorderColor = rgb(30, 255, 0)
 )
 
 func init() {
-	Camera.Smoothing = kamera.SmoothDamp
+	Camera.Smoothing = kamera.Lerp
 	Camera.SmoothingOptions.SmoothDampTime = 0.3
 	Camera.SmoothingOptions.SmoothDampMaxSpeed = 1000
 

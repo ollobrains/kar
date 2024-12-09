@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"kar"
 	"kar/arc"
 
@@ -15,10 +16,7 @@ func (rn *Render) Init() {
 
 func (rn *Render) Update() {
 
-	if kar.WorldECS.Alive(Mario) {
-		rect := arc.MapRect.Get(Mario)
-		kar.Camera.LookAt(rect.X, rect.Y)
-	}
+	kar.Camera.LookAt(playerCenterX, playerCenterY)
 
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
@@ -67,8 +65,22 @@ func (rn *Render) Draw() {
 		kar.Camera.Draw(anim.CurrentFrame, kar.GlobalDIO, kar.Screen)
 	}
 
+	// Draw target tile
+	px, py := float64(targetBlockX*Map.TileW), float64(targetBlockY*Map.TileH)
+	px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
+	vector.StrokeRect(
+		kar.Screen,
+		float32(px),
+		float32(py),
+		float32(Map.TileW),
+		float32(Map.TileH),
+		1,
+		kar.TargetTileBorderColor,
+		false,
+	)
+
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.InputAxisLast.String(), 10, 20)
-
+	ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("%d %d", targetBlockX, targetBlockY), 10, 30)
 }

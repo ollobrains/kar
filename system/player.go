@@ -1,6 +1,7 @@
 package system
 
 import (
+	"image"
 	"kar"
 	"kar/arc"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var targetBlockX, targetBlockY int
+var targetBlock image.Point
 var playerCenterX, playerCenterY float64
 
 type Player struct {
@@ -36,17 +37,16 @@ func (c *Player) Update() {
 			dop.FlipX = true
 		}
 
-		// if ebiten.IsKeyPressed(ebiten.KeySpace) {
-
-		// }
-
-		targetBlockX, targetBlockY = Map.GetTileCoords(playerCenterX, playerCenterY)
-		targetBlockX += int(PlayerController.InputAxisLast.X)
-		targetBlockY += int(PlayerController.InputAxisLast.Y)
+		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
+		targetBlock = Map.Raycast(playerTile, PlayerController.InputAxisLast)
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			Map.SetTile(targetBlockX, targetBlockY, 1)
+			if !targetBlock.Eq(image.Point{}) {
+				placePos := targetBlock.Sub(PlayerController.InputAxisLast)
+				if !placePos.Eq(playerTile) {
+					Map.SetTile(placePos, 1)
+				}
+			}
 		}
-
 	}
 }
 

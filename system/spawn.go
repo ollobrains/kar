@@ -3,14 +3,11 @@ package system
 import (
 	"kar"
 	"kar/arc"
-	"kar/engine/v"
 	"kar/tilemap"
 
 	"github.com/mlange-42/arche/ecs"
 	"github.com/setanarut/tilecollider"
 )
-
-type vec2 = v.Vec
 
 var tm = [][]uint16{
 	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},

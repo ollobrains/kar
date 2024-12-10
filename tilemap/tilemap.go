@@ -2,6 +2,7 @@ package tilemap
 
 import (
 	"fmt"
+	"image"
 	"math"
 )
 
@@ -50,31 +51,29 @@ func MakeGrid(width, height int) [][]uint16 {
 	return tm
 }
 
-func Raycast(tm [][]uint16, x, y int, dirX, dirY int) (pos [2]int, id uint16, ok bool) {
-	cursorX, cursorY := x, y
+func (t *TileMap) Raycast(pos, dir image.Point) image.Point {
 	for range 3 {
-		cursorX += dirX
-		cursorY += dirY
-		if tm[cursorY][cursorX] != 0 {
-			return [2]int{cursorX, cursorY}, tm[cursorY][cursorX], true
+		pos = pos.Add(dir)
+		if t.GetTile(pos) != 0 {
+			return pos
 		}
 	}
-	return [2]int{cursorX, cursorY}, 0, false
+	return image.Point{}
 }
 
-// GetTileCoords, verilen piksel koordinatlarına karşılık gelen döşeme koordinatlarını döndürür
-func (t *TileMap) GetTileCoords(x, y float64) (int, int) {
-	return int(math.Floor(x / float64(t.TileW))), int(math.Floor(y / float64(t.TileH)))
+func (t *TileMap) GetTileCoords(x, y float64) image.Point {
+	return image.Point{int(math.Floor(x / float64(t.TileW))), int(math.Floor(y / float64(t.TileH)))}
 }
 
-// GetTileCoordsFromCenter, verilen karakter boyutlarını kullanarak merkez noktadan döşeme koordinatlarını hesaplar
-func (t *TileMap) GetTileCoordsFromCenter(x, y, w, h float64) (int, int) {
-	return int(math.Floor((x + w/2) / float64(t.TileW))), int(math.Floor((y + h/2) / float64(t.TileH)))
-}
-
-func (t *TileMap) SetTile(x, y int, id uint16) {
-	if x < 0 || x >= t.W || y < 0 || y >= t.H {
+func (t *TileMap) SetTile(pos image.Point, id uint16) {
+	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
 		return
 	}
-	t.Grid[y][x] = id
+	t.Grid[pos.Y][pos.X] = id
+}
+func (t *TileMap) GetTile(pos image.Point) uint16 {
+	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
+		return 0
+	}
+	return t.Grid[pos.Y][pos.X]
 }

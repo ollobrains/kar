@@ -1,6 +1,7 @@
 package system
 
 import (
+	"image"
 	"kar/engine/mathutil"
 	"math"
 
@@ -42,8 +43,8 @@ type Controller struct {
 	IsJumpKeyPressed     bool
 	IsJumpKeyJustPressed bool
 	IsRunKeyPressed      bool
-	InputAxis            vec2
-	InputAxisLast        vec2
+	InputAxis            image.Point
+	InputAxisLast        image.Point
 
 	WalkAcceleration float64
 	WalkDeceleration float64
@@ -103,7 +104,7 @@ func (c *Controller) SetScale(s float64) {
 	c.RunDeceleration *= s
 }
 func (c *Controller) UpdateInput() {
-	if !c.InputAxis.Equals(vec2{}) {
+	if !c.InputAxis.Eq(image.Point{}) {
 		c.InputAxisLast = c.InputAxis
 	}
 	c.InputAxis = c.Axis()
@@ -408,7 +409,7 @@ func (c *Controller) changeState(newState string) {
 	}
 }
 
-func (c *Controller) Axis() (axis vec2) {
+func (c *Controller) Axis() (axis image.Point) {
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		axis.Y -= 1
 	}

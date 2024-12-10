@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"kar"
 	"kar/arc"
 
@@ -66,7 +65,7 @@ func (rn *Render) Draw() {
 	}
 
 	// Draw target tile
-	px, py := float64(targetBlockX*Map.TileW), float64(targetBlockY*Map.TileH)
+	px, py := float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH)
 	px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
 	vector.StrokeRect(
 		kar.Screen,
@@ -81,6 +80,6 @@ func (rn *Render) Draw() {
 
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
-	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.InputAxisLast.String(), 10, 20)
-	ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("%d %d", targetBlockX, targetBlockY), 10, 30)
+	ebitenutil.DebugPrintAt(kar.Screen, "InputLast"+PlayerController.InputAxisLast.String(), 10, 20)
+	ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlock.String(), 10, 30)
 }

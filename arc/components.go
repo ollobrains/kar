@@ -9,6 +9,16 @@ type Rect struct {
 	X, Y, W, H float64
 }
 
+// Overlaps checks if the rectangle overlaps with another rectangle
+func (r *Rect) Overlaps(x, y, w, h float64) bool {
+	// Check if there is no overlap
+	if r.X+r.W <= x || x+w <= r.X || r.Y+r.H <= y || y+h <= r.Y {
+		return false
+	}
+	// Otherwise, they overlap
+	return true
+}
+
 func (r *Rect) String() string {
 	x := "X: " + strconv.FormatFloat(r.X, 'f', -1, 64)
 	y := "Y: " + strconv.FormatFloat(r.X, 'f', -1, 64)

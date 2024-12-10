@@ -7,16 +7,14 @@ require (
 	github.com/hajimehoshi/ebiten/v2 v2.8.5
 	github.com/setanarut/anim v1.0.2
 	github.com/setanarut/cm v1.13.2
-	github.com/setanarut/kamera/v2 v2.9.1
+	github.com/setanarut/kamera/v2 v2.92.0
 	github.com/setanarut/vec v1.1.1
-	golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d
+	golang.org/x/exp v0.0.0-20241210172134-14434422244c
+	golang.org/x/image v0.23.0
 	golang.org/x/text v0.21.0
 )
 
-require (
-	github.com/setanarut/fastnoise v1.1.1 // indirect
-	golang.org/x/image v0.23.0 // indirect
-)
+require github.com/setanarut/fastnoise v1.1.1 // indirect
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20241016134836-cc2e38a7c0ee // indirect

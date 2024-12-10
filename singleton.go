@@ -19,21 +19,25 @@ const TimerTick time.Duration = time.Second / 60
 const DeltaTime float64 = 1.0 / 60.0
 
 var (
-	ScreenW, ScreenH = 800.0, 600.0
+	ScreenW, ScreenH = 854.0, 480.0
 	Screen           *ebiten.Image
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO             = &ebiten.DrawImageOptions{}
-	BackgroundColor       = rgb(30, 47, 91)
-	TileColor             = rgb(181, 86, 35)
-	TargetTileBorderColor = rgb(30, 255, 0)
+	GlobalDIO              = &ebiten.DrawImageOptions{}
+	BackgroundColor        = rgb(30, 47, 91)
+	TileColor              = rgb(181, 86, 35)
+	TargetTileBorderColor  = rgb(30, 255, 0)
+	BlockPlacementDistance = 4
+	DrawPlayerDebugHitBox  = false
 )
 
 func init() {
-	Camera.Smoothing = kamera.Lerp
-	Camera.SmoothingOptions.SmoothDampTime = 0.3
-	Camera.SmoothingOptions.SmoothDampMaxSpeed = 1000
+	Camera.Smoothing = kamera.SmoothDamp
+	Camera.SmoothingOptions.SmoothDampTimeX = 0.3
+	Camera.SmoothingOptions.SmoothDampTimeY = 1
+	Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000
+	Camera.SmoothingOptions.SmoothDampMaxSpeedY = 1000
 
 	// homePath, err := os.UserHomeDir()
 	// if err != nil {

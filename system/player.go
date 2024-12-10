@@ -11,6 +11,7 @@ import (
 
 var targetBlock image.Point
 var playerCenterX, playerCenterY float64
+var isBlockPlaceable bool
 
 type Player struct {
 }
@@ -27,24 +28,33 @@ func (c *Player) Update() {
 		PlayerController.UpdateInput()
 
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
+
+		if PlayerController.VelX > 0.01 {
+			dop.FlipX = false // sağa gidiyor
+			PlayerController.InputAxisLast.X = 1
+		} else if PlayerController.VelX < -0.01 {
+			dop.FlipX = true // sola gidiyor
+			PlayerController.InputAxisLast.X = -1
+		}
+
 		rect.X += dx
 		rect.Y += dy
 		PlayerController.UpdateState()
 
-		if PlayerController.VelX > 0.01 {
-			dop.FlipX = false
-		} else if PlayerController.VelX < -0.01 {
-			dop.FlipX = true
+		var hit bool
+		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
+		targetBlock, hit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
+
+		if hit {
+			targetBlock = targetBlock.Sub(PlayerController.InputAxisLast)
+			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(targetBlock))
+		} else {
+			isBlockPlaceable = false
 		}
 
-		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
-		targetBlock = Map.Raycast(playerTile, PlayerController.InputAxisLast)
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			if !targetBlock.Eq(image.Point{}) {
-				placePos := targetBlock.Sub(PlayerController.InputAxisLast)
-				if !placePos.Eq(playerTile) {
-					Map.SetTile(placePos, 1)
-				}
+			if hit && isBlockPlaceable {
+				Map.SetTile(targetBlock, 1)
 			}
 		}
 	}

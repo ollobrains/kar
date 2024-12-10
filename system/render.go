@@ -6,6 +6,7 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"golang.org/x/image/colornames"
 )
 
 type Render struct{}
@@ -47,10 +48,11 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	// Draw player
 	q := arc.FilterDraw.Query(&kar.WorldECS)
 	for q.Next() {
 		dop, anim, rect := q.Get()
+
+		// Draw player
 		sclX := dop.Scale
 		kar.GlobalDIO.GeoM.Reset()
 		if dop.FlipX {
@@ -62,21 +64,47 @@ func (rn *Render) Draw() {
 			kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
 		}
 		kar.Camera.Draw(anim.CurrentFrame, kar.GlobalDIO, kar.Screen)
+
+		// Draw player hit box for debug
+		if kar.DrawPlayerDebugHitBox {
+			x, y := kar.Camera.ApplyCameraTransformToPoint(rect.X, rect.Y)
+			vector.StrokeRect(
+				kar.Screen,
+				float32(x),
+				float32(y),
+				float32(rect.W),
+				float32(rect.H),
+				1,
+				colornames.Magenta,
+				false,
+			)
+			// Draw player center
+			vector.DrawFilledCircle(
+				kar.Screen,
+				float32(x+rect.W*0.5),
+				float32(y+rect.H*0.5),
+				2,
+				colornames.Magenta,
+				false,
+			)
+		}
 	}
 
 	// Draw target tile
-	px, py := float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH)
-	px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
-	vector.StrokeRect(
-		kar.Screen,
-		float32(px),
-		float32(py),
-		float32(Map.TileW),
-		float32(Map.TileH),
-		1,
-		kar.TargetTileBorderColor,
-		false,
-	)
+	if isBlockPlaceable {
+		px, py := float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH)
+		px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
+		vector.StrokeRect(
+			kar.Screen,
+			float32(px),
+			float32(py),
+			float32(Map.TileW),
+			float32(Map.TileH),
+			1,
+			kar.TargetTileBorderColor,
+			false,
+		)
+	}
 
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)

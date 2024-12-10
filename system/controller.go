@@ -104,11 +104,11 @@ func (c *Controller) SetScale(s float64) {
 	c.RunDeceleration *= s
 }
 func (c *Controller) UpdateInput() {
+	c.InputAxis = c.Axis()
+
 	if !c.InputAxis.Eq(image.Point{}) {
 		c.InputAxisLast = c.InputAxis
 	}
-	c.InputAxis = c.Axis()
-
 	c.IsRunKeyPressed = ebiten.IsKeyPressed(ebiten.KeyShift)
 	c.IsJumpKeyPressed = ebiten.IsKeyPressed(ebiten.KeySpace)
 	c.IsJumpKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeySpace)

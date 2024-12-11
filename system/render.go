@@ -34,16 +34,10 @@ func (rn *Render) Draw() {
 		for x, value := range row {
 			if value != 0 {
 				px, py := float64(x*Map.TileW), float64(y*Map.TileH)
-				px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
-				vector.DrawFilledRect(
-					kar.Screen,
-					float32(px),
-					float32(py),
-					float32(Map.TileW),
-					float32(Map.TileH),
-					kar.TileColor,
-					false,
-				)
+				kar.GlobalDIO.GeoM.Reset()
+				kar.GlobalDIO.GeoM.Scale(3, 3)
+				kar.GlobalDIO.GeoM.Translate(px, py)
+				kar.Camera.Draw(GetSprite(value), kar.GlobalDIO, kar.Screen)
 			}
 		}
 	}

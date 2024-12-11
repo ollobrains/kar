@@ -4,6 +4,7 @@ import (
 	"image"
 	"kar"
 	"kar/arc"
+	"kar/engine/mathutil"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -54,7 +55,7 @@ func (c *Player) Update() {
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
 			if hit && isBlockPlaceable {
-				Map.SetTile(targetBlock, 1)
+				Map.SetTile(targetBlock, uint16(mathutil.RandRangeInt(1, 100)))
 			}
 		}
 	}

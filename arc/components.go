@@ -11,12 +11,7 @@ type Rect struct {
 
 // Overlaps checks if the rectangle overlaps with another rectangle
 func (r *Rect) Overlaps(x, y, w, h float64) bool {
-	// Check if there is no overlap
-	if r.X+r.W <= x || x+w <= r.X || r.Y+r.H <= y || y+h <= r.Y {
-		return false
-	}
-	// Otherwise, they overlap
-	return true
+	return r.X+r.W > x && x+w > r.X && r.Y+r.H > y && y+h > r.Y
 }
 
 func (r *Rect) String() string {

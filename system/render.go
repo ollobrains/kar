@@ -3,6 +3,7 @@ package system
 import (
 	"kar"
 	"kar/arc"
+	"kar/res"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -84,21 +85,9 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	// Draw target tile
-	if isBlockPlaceable {
-		px, py := float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH)
-		px, py = kar.Camera.ApplyCameraTransformToPoint(px, py)
-		vector.StrokeRect(
-			kar.Screen,
-			float32(px),
-			float32(py),
-			float32(Map.TileW),
-			float32(Map.TileH),
-			1,
-			kar.TargetTileBorderColor,
-			false,
-		)
-	}
+	// // Draw target tile border
+	kar.GlobalDIO.GeoM.Translate(float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH))
+	kar.Camera.Draw(res.Border, kar.GlobalDIO, kar.Screen)
 
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)

@@ -27,17 +27,16 @@ var (
 	GlobalDIO              = &ebiten.DrawImageOptions{}
 	BackgroundColor        = rgb(30, 47, 91)
 	TileColor              = rgb(181, 86, 35)
-	TargetTileBorderColor  = rgb(30, 255, 0)
 	BlockPlacementDistance = 4
 	DrawPlayerDebugHitBox  = false
 )
 
 func init() {
-	Camera.Smoothing = kamera.SmoothDamp
-	Camera.SmoothingOptions.SmoothDampTimeX = 0.3
-	Camera.SmoothingOptions.SmoothDampTimeY = 1
-	Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000
-	Camera.SmoothingOptions.SmoothDampMaxSpeedY = 1000
+	Camera.Smoothing = kamera.Lerp
+	// Camera.SmoothingOptions.SmoothDampTimeX = 0.3
+	// Camera.SmoothingOptions.SmoothDampTimeY = 1
+	// Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000
+	// Camera.SmoothingOptions.SmoothDampMaxSpeedY = 1000
 
 	// homePath, err := os.UserHomeDir()
 	// if err != nil {

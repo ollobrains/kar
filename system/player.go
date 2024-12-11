@@ -11,6 +11,7 @@ import (
 )
 
 var targetBlock image.Point
+var placeBlock image.Point
 var playerCenterX, playerCenterY float64
 var isBlockPlaceable bool
 
@@ -47,15 +48,15 @@ func (c *Player) Update() {
 		targetBlock, hit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
 
 		if hit {
-			targetBlock = targetBlock.Sub(PlayerController.InputAxisLast)
-			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(targetBlock))
+			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
+			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
 		} else {
 			isBlockPlaceable = false
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
 			if hit && isBlockPlaceable {
-				Map.SetTile(targetBlock, uint16(mathutil.RandRangeInt(1, 100)))
+				Map.SetTile(placeBlock, uint16(mathutil.RandRangeInt(1, 100)))
 			}
 		}
 	}

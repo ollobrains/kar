@@ -10,21 +10,24 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var targetBlock image.Point
-var targetBlockID uint16
-var placeBlock image.Point
-var playerCenterX, playerCenterY float64
-var isBlockPlaceable bool
-var damage float64 = 0.05
+var (
+	targetBlock                  image.Point
+	targetBlockID                uint16
+	placeBlock                   image.Point
+	playerCenterX, playerCenterY float64
+	isBlockPlaceable             bool
+	raycastHit                   bool
+	damage                       float64 = 0.05
+)
 
-type Player struct {
+type PlayerSys struct {
 }
 
-func (c *Player) Update() {
-	q := arc.FilterMovement.Query(&kar.WorldECS)
+func (c *PlayerSys) Update() {
+	q := arc.FilterPlayer.Query(&kar.WorldECS)
 	for q.Next() {
 
-		rect, anim, dop := q.Get()
+		_, dop, anim, rect, _ := q.Get()
 
 		playerCenterX, playerCenterY = rect.X+rect.W/2, rect.Y+rect.H/2
 
@@ -45,11 +48,10 @@ func (c *Player) Update() {
 		rect.Y += dy
 		PlayerController.UpdateState()
 
-		var hit bool
 		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
-		targetBlock, hit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
+		targetBlock, raycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
 		targetBlockID = Map.TileID(targetBlock)
-		if hit {
+		if raycastHit {
 			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
 			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
 		} else {
@@ -58,12 +60,13 @@ func (c *Player) Update() {
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			if hit && isBlockPlaceable {
-				Map.SetTile(placeBlock, items.RandomBlock())
+			if raycastHit && isBlockPlaceable && PlayerInventory.SelectedQuantity() > 0 {
+				Map.SetTile(placeBlock, PlayerInventory.SelectedID())
+				PlayerInventory.RemoveItemFromSelected()
 			}
 		}
 
-		if hit {
+		if raycastHit {
 			if ebiten.IsKeyPressed(ebiten.KeyRight) {
 				if items.IsBreakable(targetBlockID) {
 					blockHealth += damage
@@ -77,13 +80,17 @@ func (c *Player) Update() {
 			}
 		}
 	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyTab) {
+		PlayerInventory.SelectNextSlot()
+	}
 }
 
 var blockHealth float64
 
-func (c *Player) Draw() {
+func (c *PlayerSys) Draw() {
 
 }
-func (c *Player) Init() {
+func (c *PlayerSys) Init() {
 
 }

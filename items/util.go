@@ -1,7 +1,7 @@
 package items
 
 import (
-	"kar/engine/mathutil"
+	"math/rand/v2"
 )
 
 var BlockIDs []uint16
@@ -26,6 +26,5 @@ func IsBlock(id uint16) bool {
 }
 
 func RandomBlock() uint16 {
-	index := mathutil.RandRangeInt(0, len(BlockIDs)-1)
-	return BlockIDs[index]
+	return BlockIDs[rand.IntN(len(BlockIDs))]
 }

@@ -17,18 +17,13 @@ var fs embed.FS
 var (
 	Images          = make(map[uint16]*ebiten.Image, 0)
 	Frames          = make(map[uint16][]*ebiten.Image, 0)
-	AtlasPlayer     = util.ReadEbImgFS(fs, "assets/img/player/player.png")
 	Hotbar          = util.ReadEbImgFS(fs, "assets/img/gui/hotbar.png")
 	HotbarSelection = util.ReadEbImgFS(fs, "assets/img/gui/hotbarBorder.png")
 	Font            = util.LoadFontFromFS("assets/font/pixelcode.otf", 18, fs)
+	PlayerAtlas     = util.ReadEbImgFS(fs, "assets/img/player/player.png")
+	cracks          = util.ImgFromFS(fs, "assets/img/overlay/cracks.png")
+	Border          = util.ReadEbImgFS(fs, "assets/img/overlay/border48.png")
 )
-
-var (
-	Mario = util.ReadEbImgFS(fs, "assets/img/player/mario.png")
-)
-
-var cracks = util.ImgFromFS(fs, "assets/img/overlay/cracks.png")
-var Border = util.ReadEbImgFS(fs, "assets/img/overlay/border48.png")
 
 func init() {
 	Images[items.Air] = util.ReadEbImgFS(fs, "assets/img/air.png")

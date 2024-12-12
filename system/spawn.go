@@ -25,10 +25,11 @@ var tm = [][]uint16{
 	{109, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 109},
 	{109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109, 109}}
 
-var Mario ecs.Entity
+var PlayerEntity ecs.Entity
+var PlayerInventory *arc.Inventory
+var PlayerController = NewController(0, 10, Collider)
 var Map = tilemap.NewTileMap(tm, 48, 48)
 var Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
-var PlayerController = NewController(0, 10, Collider)
 
 func init() {
 	PlayerController.Collider = Collider
@@ -37,7 +38,13 @@ func init() {
 }
 
 func (s *Spawn) Init() {
-	Mario = arc.SpawnMario(50, 400)
+	PlayerEntity = arc.SpawnPlayer(50, 400)
+	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
+
+	for i := range PlayerInventory.Slots {
+		PlayerInventory.SetSlot(i, items.RandomBlock(), 10)
+	}
+
 }
 func (s *Spawn) Update() {}
 func (s *Spawn) Draw() {

@@ -12,8 +12,8 @@ import (
 var (
 	// MapHealth               = gn.NewMap[Health](&kar.WorldECS)
 	// MapAnimPlayer           = gn.NewMap1[anim.AnimationPlayer](&kar.WorldECS)
-	MapRect = gn.NewMap1[Rect](&kar.WorldECS)
-	// MapInventory            = gn.NewMap1[Inventory](&kar.WorldECS)
+	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
+	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
 	// MapPlatformerController = gn.NewMap1[PlatformerController](&kar.WorldECS)
 	// MapDraw                 = gn.NewMap3[DrawOptions, anim.AnimationPlayer, Rect](&kar.WorldECS)
 	MapPlayer = gn.NewMap5[
@@ -32,17 +32,18 @@ var (
 		Rect,
 		Inventory]()
 
-	FilterDraw       = gn.NewFilter3[DrawOptions, anim.AnimationPlayer, Rect]()
 	FilterMovement   = gn.NewFilter3[Rect, anim.AnimationPlayer, DrawOptions]()
+	FilterDraw       = gn.NewFilter3[DrawOptions, anim.AnimationPlayer, Rect]()
 	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
+	FilterInv        = gn.NewFilter1[Inventory]()
 )
 
 func init() {
 }
 
-func SpawnMario(x, y float64) ecs.Entity {
+func SpawnPlayer(x, y float64) ecs.Entity {
 	h := &Health{100, 100}
-	a := anim.NewAnimationPlayer(res.Mario)
+	a := anim.NewAnimationPlayer(res.PlayerAtlas)
 	a.NewAnimationState("idleRight", 0, 0, 16, 16, 1, false, false).FPS = 1
 	a.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
 	a.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)

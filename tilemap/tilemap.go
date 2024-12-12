@@ -54,7 +54,7 @@ func MakeGrid(width, height int) [][]uint16 {
 func (t *TileMap) Raycast(pos, dir image.Point, dist int) (image.Point, bool) {
 	for range dist {
 		pos = pos.Add(dir)
-		if t.GetTile(pos) != 0 {
+		if t.TileID(pos) != 0 {
 			return pos, true
 		}
 	}
@@ -71,11 +71,17 @@ func (t *TileMap) SetTile(pos image.Point, id uint16) {
 	}
 	t.Grid[pos.Y][pos.X] = id
 }
-func (t *TileMap) GetTile(pos image.Point) uint16 {
+func (t *TileMap) TileID(pos image.Point) uint16 {
 	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
 		return 0
 	}
 	return t.Grid[pos.Y][pos.X]
+}
+func (t *TileMap) TileID2(x, y int) uint16 {
+	if x < 0 || x >= t.W || y < 0 || y >= t.H {
+		return 0
+	}
+	return t.Grid[y][x]
 }
 
 func (t *TileMap) GetTileRect(pos image.Point) (x, y, w, h float64) {

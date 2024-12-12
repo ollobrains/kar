@@ -294,7 +294,7 @@ var Property = map[uint16]ItemProperty{
 		DisplayName: "Dirt",
 		Drops:       Dirt,
 		Stackable:   64,
-		MaxHealth:   10,
+		MaxHealth:   5,
 		Category:    Block,
 	},
 	DirtPath: {

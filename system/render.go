@@ -42,7 +42,7 @@ func (rn *Render) Draw() {
 				kar.GlobalDIO.GeoM.Scale(3, 3)
 				kar.GlobalDIO.GeoM.Translate(px, py)
 				if x == targetBlock.X && y == targetBlock.Y {
-					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 11)
+					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
 					if res.Frames[tileID] != nil {
 						kar.Camera.Draw(res.Frames[tileID][int(i)], kar.GlobalDIO, kar.Screen)
 					}

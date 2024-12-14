@@ -17,7 +17,7 @@ var (
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
 	raycastHit                   bool
-	damage                       float64 = 0.05
+	damage                       float64 = 0.1
 )
 
 type PlayerSys struct {
@@ -69,6 +69,10 @@ func (c *PlayerSys) Update() {
 		if raycastHit {
 			if ebiten.IsKeyPressed(ebiten.KeyRight) {
 				if items.IsBreakable(targetBlockID) {
+					blockHardness := items.Property[targetBlockID].MaxHealth
+					if blockHealth < blockHardness/4 {
+						blockHealth += blockHardness / 4
+					}
 					blockHealth += damage
 				}
 				if blockHealth >= items.Property[targetBlockID].MaxHealth {

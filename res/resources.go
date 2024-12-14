@@ -178,7 +178,7 @@ func toEbiten(st []image.Image) []*ebiten.Image {
 func makeStages(block, stages image.Image) []image.Image {
 	frames := make([]image.Image, 0)
 	frames = append(frames, block)
-	for i := range 10 {
+	for i := range 4 {
 		x := i * 16
 		rec := image.Rect(x, 0, x+16, x+16)
 		si := stages.(*image.NRGBA).SubImage(rec)

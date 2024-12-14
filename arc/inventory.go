@@ -74,26 +74,29 @@ func (i *Inventory) RemoveItem(id uint16) bool {
 	}
 	return false
 }
-func (i *Inventory) RemoveItemFromSelected() {
+func (i *Inventory) RemoveItemFromSelectedSlot() {
 	if i.Slots[i.SelectedSlot].Quantity > 0 {
 		i.Slots[i.SelectedSlot].Quantity--
 	}
 }
-func (i *Inventory) SelectedID() uint16 {
+func (i *Inventory) SelectedSlotID() uint16 {
 	return i.Slots[i.SelectedSlot].ID
 }
-func (i *Inventory) SelectedQuantity() uint8 {
+func (i *Inventory) SelectedSlotQuantity() uint8 {
 	return i.Slots[i.SelectedSlot].Quantity
 }
 
-func (i *Inventory) DeleteSlot(index int) {
+func (i *Inventory) ClearSlot(index int) {
 	i.Slots[index] = ItemStack{}
 }
 
-func (i *Inventory) DeleteAllSlots() {
+func (i *Inventory) ClearAllSlots() {
 	for si := range i.Slots {
 		i.Slots[si] = ItemStack{}
 	}
+}
+func (i *Inventory) ClearSelectedSlot() {
+	i.ClearSlot(i.SelectedSlot)
 }
 
 func (i *Inventory) HasEmptySlot() (index int, ok bool) {

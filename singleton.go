@@ -1,7 +1,7 @@
 package kar
 
 import (
-	"image/color"
+	"kar/engine/util"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -25,8 +25,7 @@ var (
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
 	GlobalDIO              = &ebiten.DrawImageOptions{}
-	BackgroundColor        = rgb(30, 47, 91)
-	TileColor              = rgb(181, 86, 35)
+	BackgroundColor        = util.HexToRGBA("#124e89")
 	BlockPlacementDistance = 4
 	DrawPlayerDebugHitBox  = false
 )
@@ -43,8 +42,4 @@ func init() {
 	// 	log.Fatal(err)
 	// }
 	// DesktopPath = homePath + "/Desktop/"
-}
-
-func rgb(r, g, b uint8) color.RGBA {
-	return color.RGBA{r, g, b, 255}
 }

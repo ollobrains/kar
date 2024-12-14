@@ -317,12 +317,14 @@ func (c *Controller) Idle() {
 		c.changeState("jumping")
 		c.VelY = c.JumpPower
 		c.JumpTimer = 0
-	} else if c.HorizontalVelocity > 0.01 {
+	} else if c.IsOnFloor && c.HorizontalVelocity > 0.01 {
 		if c.HorizontalVelocity > c.MaxWalkSpeed {
 			c.changeState("running")
 		} else {
 			c.changeState("walking")
 		}
+	} else if !c.IsOnFloor && c.VelY > 0.01 {
+		c.changeState("falling")
 	}
 }
 

@@ -59,7 +59,6 @@ const (
 	GoldenSword
 	GrassBlock
 	GrassBlockSnow
-	Gravel
 	IronAxe
 	IronHoe
 	IronIngot

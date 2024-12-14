@@ -409,13 +409,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block,
 	},
-	Gravel: {
-		DisplayName: "Gravel",
-		Drops:       Gravel,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
 
 	IronAxe: {
 		DisplayName: "Iron Axe",

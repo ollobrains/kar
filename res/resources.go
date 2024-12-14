@@ -61,7 +61,6 @@ func init() {
 	Frames[items.GoldOre] = blockImgs("gold_ore.png")
 	Frames[items.GrassBlock] = blockImgs("grass_block.png")
 	Frames[items.GrassBlockSnow] = blockImgs("grass_block_snow.png")
-	Frames[items.Gravel] = blockImgs("gravel.png")
 	Frames[items.IronOre] = blockImgs("iron_ore.png")
 	Frames[items.LapisOre] = blockImgs("lapis_ore.png")
 	Frames[items.NetherBricks] = blockImgs("nether_bricks.png")

@@ -11,13 +11,14 @@ import (
 )
 
 var (
+	damage                       float64 = 0.1
+	blockHealth                  float64
 	targetBlock                  image.Point
 	targetBlockID                uint16
 	placeBlock                   image.Point
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
 	raycastHit                   bool
-	damage                       float64 = 0.1
 )
 
 type PlayerSys struct {
@@ -60,9 +61,9 @@ func (c *PlayerSys) Update() {
 		}
 
 		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			if raycastHit && isBlockPlaceable && PlayerInventory.SelectedQuantity() > 0 {
-				Map.SetTile(placeBlock, PlayerInventory.SelectedID())
-				PlayerInventory.RemoveItemFromSelected()
+			if raycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
+				Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
+				PlayerInventory.RemoveItemFromSelectedSlot()
 			}
 		}
 
@@ -88,9 +89,10 @@ func (c *PlayerSys) Update() {
 	if inpututil.IsKeyJustPressed(ebiten.KeyTab) {
 		PlayerInventory.SelectNextSlot()
 	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
+		PlayerInventory.ClearSlot(PlayerInventory.SelectedSlot)
+	}
 }
-
-var blockHealth float64
 
 func (c *PlayerSys) Draw() {
 

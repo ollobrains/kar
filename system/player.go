@@ -4,7 +4,6 @@ import (
 	"image"
 	"kar"
 	"kar/arc"
-	"kar/items"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -18,7 +17,7 @@ var (
 	placeBlock                   image.Point
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
-	raycastHit                   bool
+	IsRaycastHit                 bool
 )
 
 type PlayerSys struct {
@@ -37,6 +36,18 @@ func (c *PlayerSys) Update() {
 
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
 
+		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
+		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
+		targetBlockID = Map.TileID(targetBlock)
+
+		if IsRaycastHit {
+			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
+			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
+		} else {
+			isBlockPlaceable = false
+			blockHealth = 0
+		}
+
 		if PlayerController.VelX > 0.01 {
 			dop.FlipX = false // sağa gidiyor
 			PlayerController.InputAxisLast.X = 1
@@ -49,41 +60,13 @@ func (c *PlayerSys) Update() {
 		rect.Y += dy
 		PlayerController.UpdateState()
 
-		playerTile := Map.GetTileCoords(playerCenterX, playerCenterY)
-		targetBlock, raycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
-		targetBlockID = Map.TileID(targetBlock)
-		if raycastHit {
-			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
-			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
-		} else {
-			isBlockPlaceable = false
-			blockHealth = 0
-		}
-
-		if inpututil.IsKeyJustPressed(ebiten.KeyLeft) {
-			if raycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
+		if PlayerController.IsPlaceKeyJustPressed {
+			if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
 				Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
 				PlayerInventory.RemoveItemFromSelectedSlot()
 			}
 		}
 
-		if raycastHit {
-			if ebiten.IsKeyPressed(ebiten.KeyRight) {
-				if items.IsBreakable(targetBlockID) {
-					blockHardness := items.Property[targetBlockID].MaxHealth
-					if blockHealth < blockHardness/4 {
-						blockHealth += blockHardness / 4
-					}
-					blockHealth += damage
-				}
-				if blockHealth >= items.Property[targetBlockID].MaxHealth {
-					Map.SetTile(targetBlock, 0)
-					blockHealth = 0
-				}
-			} else {
-				blockHealth = 0
-			}
-		}
 	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyTab) {

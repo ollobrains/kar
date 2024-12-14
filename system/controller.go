@@ -3,6 +3,7 @@ package system
 import (
 	"image"
 	"kar/engine/mathutil"
+	"kar/items"
 	"math"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -36,15 +37,18 @@ type Controller struct {
 
 	IsOnFloor  bool
 	IsSkidding bool
+	IsFalling  bool
 
 	SkiddingJumpEnabled bool
 
 	// Input durumları
-	IsJumpKeyPressed     bool
-	IsJumpKeyJustPressed bool
-	IsRunKeyPressed      bool
-	InputAxis            image.Point
-	InputAxisLast        image.Point
+	IsBreakKeyPressed     bool
+	IsPlaceKeyJustPressed bool
+	IsJumpKeyPressed      bool
+	IsJumpKeyJustPressed  bool
+	IsRunKeyPressed       bool
+	InputAxis             image.Point
+	InputAxisLast         image.Point
 
 	WalkAcceleration float64
 	WalkDeceleration float64
@@ -109,13 +113,14 @@ func (c *Controller) UpdateInput() {
 	if !c.InputAxis.Eq(image.Point{}) {
 		c.InputAxisLast = c.InputAxis
 	}
+	c.IsBreakKeyPressed = ebiten.IsKeyPressed(ebiten.KeyRight)
 	c.IsRunKeyPressed = ebiten.IsKeyPressed(ebiten.KeyShift)
 	c.IsJumpKeyPressed = ebiten.IsKeyPressed(ebiten.KeySpace)
+	c.IsPlaceKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeyLeft)
 	c.IsJumpKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeySpace)
 }
 
 func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
-	c.IsSkidding = (c.VelX > 0 && c.InputAxis.X < 0) || (c.VelX < 0 && c.InputAxis.X > 0)
 	maxSpeed := c.MaxWalkSpeed
 	currentAccel := c.WalkAcceleration
 	currentDecel := c.WalkDeceleration
@@ -151,9 +156,9 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 		}
 	}
 
+	c.IsSkidding = (c.VelX > 0 && c.InputAxis.X == -1) || (c.VelX < 0 && c.InputAxis.X == 1)
 	c.VelY += c.Gravity
 	c.VelY = min(c.MaxFallSpeed, c.VelY)
-
 	return c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
 }
 
@@ -219,6 +224,37 @@ func (c *Controller) Falling() {
 		} else {
 			c.changeState("walking")
 		}
+	}
+}
+
+func (c *Controller) Digging() {
+
+	if IsRaycastHit {
+		if PlayerController.IsBreakKeyPressed {
+			if items.IsBreakable(targetBlockID) {
+				blockHardness := items.Property[targetBlockID].MaxHealth
+				if blockHealth < blockHardness/4 {
+					blockHealth += blockHardness / 4
+				}
+				blockHealth += damage
+			}
+			if blockHealth >= items.Property[targetBlockID].MaxHealth {
+				Map.SetTile(targetBlock, 0)
+				blockHealth = 0
+			}
+		} else {
+			blockHealth = 0
+		}
+	}
+
+	if !c.IsOnFloor && c.VelY > 0.01 {
+		c.changeState("falling")
+	} else if !c.IsBreakKeyPressed && c.IsOnFloor {
+		c.changeState("idle")
+	} else if !c.IsBreakKeyPressed && c.IsJumpKeyJustPressed {
+		c.changeState("jumping")
+		c.VelY = c.JumpPower
+		c.JumpTimer = 0
 	}
 }
 
@@ -313,6 +349,7 @@ func (c *Controller) Walking() {
 }
 
 func (c *Controller) Idle() {
+
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
 		c.VelY = c.JumpPower
@@ -325,6 +362,8 @@ func (c *Controller) Idle() {
 		}
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
+	} else if c.IsBreakKeyPressed && IsRaycastHit {
+		c.changeState("digging")
 	}
 }
 
@@ -340,6 +379,8 @@ func (c *Controller) UpdateState() {
 		c.Jumping()
 	case "falling":
 		c.Falling()
+	case "digging":
+		c.Digging()
 	case "skidding":
 		c.Skidding()
 	}
@@ -358,6 +399,9 @@ func (c *Controller) enterRunning() {
 
 func (c *Controller) enterIdle() {
 	c.AnimPlayer.SetStateAndReset("idleRight")
+}
+func (c *Controller) enterDigging() {
+	c.AnimPlayer.SetStateAndReset("dig")
 }
 
 func (c *Controller) enterJumping() {
@@ -398,6 +442,8 @@ func (c *Controller) changeState(newState string) {
 	switch newState {
 	case "idle":
 		c.enterIdle()
+	case "digging":
+		c.enterDigging()
 	case "walking":
 		c.enterWalking()
 	case "running":

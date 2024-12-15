@@ -49,6 +49,7 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	a.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
 	a.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)
 	a.NewAnimationState("dig", 16*7, 0, 16, 16, 2, false, false).FPS = 8
+	a.NewAnimationState("digRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
 
 	a.SetState("idleRight")
 	i := NewInventory()

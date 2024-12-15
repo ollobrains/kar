@@ -18,6 +18,7 @@ var (
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
 	IsRaycastHit                 bool
+	DOP                          *arc.DrawOptions
 )
 
 type PlayerSys struct {
@@ -32,6 +33,7 @@ func (c *PlayerSys) Update() {
 		playerCenterX, playerCenterY = rect.X+rect.W/2, rect.Y+rect.H/2
 
 		PlayerController.AnimPlayer = anim
+		DOP = dop
 		PlayerController.UpdateInput()
 
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
@@ -46,14 +48,6 @@ func (c *PlayerSys) Update() {
 		} else {
 			isBlockPlaceable = false
 			blockHealth = 0
-		}
-
-		if PlayerController.VelX > 0.01 {
-			dop.FlipX = false // sağa gidiyor
-			PlayerController.InputAxisLast.X = 1
-		} else if PlayerController.VelX < -0.01 {
-			dop.FlipX = true // sola gidiyor
-			PlayerController.InputAxisLast.X = -1
 		}
 
 		rect.X += dx

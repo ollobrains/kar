@@ -159,6 +159,14 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 	c.IsSkidding = (c.VelX > 0 && c.InputAxis.X == -1) || (c.VelX < 0 && c.InputAxis.X == 1)
 	c.VelY += c.Gravity
 	c.VelY = min(c.MaxFallSpeed, c.VelY)
+
+	if PlayerController.VelX > 0.01 {
+		DOP.FlipX = false // sağa gidiyor
+		PlayerController.InputAxisLast.X = 1
+	} else if PlayerController.VelX < -0.01 {
+		DOP.FlipX = true // sola gidiyor
+		PlayerController.InputAxisLast.X = -1
+	}
 	return c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
 }
 
@@ -230,21 +238,18 @@ func (c *Controller) Falling() {
 func (c *Controller) Digging() {
 
 	if IsRaycastHit {
-		if PlayerController.IsBreakKeyPressed {
-			if items.IsBreakable(targetBlockID) {
-				blockHardness := items.Property[targetBlockID].MaxHealth
-				if blockHealth < blockHardness/4 {
-					blockHealth += blockHardness / 4
-				}
-				blockHealth += damage
+		if items.IsBreakable(targetBlockID) {
+			blockHardness := items.Property[targetBlockID].MaxHealth
+			if blockHealth < blockHardness/4 {
+				blockHealth += blockHardness / 4
 			}
-			if blockHealth >= items.Property[targetBlockID].MaxHealth {
-				Map.SetTile(targetBlock, 0)
-				blockHealth = 0
-			}
-		} else {
+			blockHealth += damage
+		}
+		if blockHealth >= items.Property[targetBlockID].MaxHealth {
+			Map.SetTile(targetBlock, items.Air)
 			blockHealth = 0
 		}
+
 	}
 
 	if !c.IsOnFloor && c.VelY > 0.01 {
@@ -401,7 +406,20 @@ func (c *Controller) enterIdle() {
 	c.AnimPlayer.SetStateAndReset("idleRight")
 }
 func (c *Controller) enterDigging() {
-	c.AnimPlayer.SetStateAndReset("dig")
+
+	if c.InputAxisLast.X == 1 {
+		c.AnimPlayer.SetStateAndReset("digRight")
+	} else if c.InputAxisLast.X == -1 {
+		c.AnimPlayer.SetStateAndReset("digRight")
+		DOP.FlipX = true
+	} else if c.InputAxisLast.Y == 1 {
+		c.AnimPlayer.SetStateAndReset("dig")
+	} else if c.InputAxisLast.Y == -1 {
+		c.AnimPlayer.SetStateAndReset("dig")
+	}
+}
+func (c *Controller) exitDigging() {
+	blockHealth = 0
 }
 
 func (c *Controller) enterJumping() {
@@ -421,19 +439,21 @@ func (c *Controller) changeState(newState string) {
 		return
 	}
 
-	// // Mevcut durumdan çık
-	// switch c.CurrentState {
-	// case "idle":
-	// 	c.exitIdle()
-	// case "walking":
-	// 	c.exitWalking()
-	// case "running":
-	// 	c.exitRunning()
-	// case "jumping":
-	// 	c.exitJumping()
-	// case "falling":
-	// 	c.exitFalling()
-	// }
+	// Mevcut durumdan çık
+	switch c.CurrentState {
+	case "digging":
+		c.exitDigging()
+		// case "idle":
+		// c.exitIdle()
+		// case "walking":
+		// 	c.exitWalking()
+		// case "running":
+		// 	c.exitRunning()
+		// case "jumping":
+		// 	c.exitJumping()
+		// case "falling":
+		// 	c.exitFalling()
+	}
 
 	c.previousState = c.CurrentState
 	c.CurrentState = newState

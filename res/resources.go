@@ -175,7 +175,7 @@ func makeStages(block, stages image.Image) []image.Image {
 		x := i * 16
 		rec := image.Rect(x, 0, x+16, x+16)
 		si := stages.(*image.NRGBA).SubImage(rec)
-		frames = append(frames, blend.Overlay(block, si))
+		frames = append(frames, blend.Normal(block, si))
 	}
 	return frames
 }

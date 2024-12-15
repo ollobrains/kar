@@ -93,13 +93,9 @@ func (c *Controller) SetScale(s float64) {
 	c.MaxFallSpeed *= s
 	c.Acceleration *= s
 	c.Deceleration *= s
-	// c.JumpHoldTime *= s
 	c.JumpBoost *= s
 	c.MinSpeedThresForJumpBoostMultiplier *= s
-	// c.JumpBoostMultiplier *= s
-	// c.SpeedJumpFactor *= s
 	c.ShortJumpVelocity *= s
-	// c.JumpReleaseTimer *= s
 	c.MaxWalkSpeed *= s
 	c.MaxRunSpeed *= s
 	c.WalkAcceleration *= s
@@ -236,9 +232,11 @@ func (c *Controller) Falling() {
 }
 
 func (c *Controller) Attacking() {
+
 	breakDist := targetBlock.Sub(playerTile)
 	dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
-	if IsRaycastHit && dist <= 1 {
+
+	if IsRaycastHit && dist <= MinAttackBlockDist {
 		if items.IsBreakable(targetBlockID) {
 			blockHardness := items.Property[targetBlockID].MaxHealth
 			if blockHealth < blockHardness/4 {
@@ -251,6 +249,10 @@ func (c *Controller) Attacking() {
 			blockHealth = 0
 		}
 
+	}
+
+	if !IsRaycastHit {
+		c.changeState("idle")
 	}
 
 	if !c.IsOnFloor && c.VelY > 0.01 {
@@ -355,6 +357,8 @@ func (c *Controller) Walking() {
 }
 
 func (c *Controller) Idle() {
+	breakDist := targetBlock.Sub(playerTile)
+	dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
 
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
@@ -368,7 +372,7 @@ func (c *Controller) Idle() {
 		}
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
-	} else if c.IsBreakKeyPressed && IsRaycastHit {
+	} else if c.IsBreakKeyPressed && IsRaycastHit && dist <= MinAttackBlockDist {
 		c.changeState("attacking")
 	}
 }

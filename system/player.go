@@ -11,6 +11,7 @@ import (
 
 var (
 	damage                       float64 = 0.1
+	MinAttackBlockDist           float64 = 2.0
 	blockHealth                  float64
 	targetBlock                  image.Point
 	placeBlock                   image.Point
@@ -40,7 +41,11 @@ func (c *PlayerSys) Update() {
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
 
 		playerTile = Map.GetTileCoords(playerCenterX, playerCenterY)
+		targetBlockTemp := targetBlock
 		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
+		if !targetBlock.Eq(targetBlockTemp) {
+			blockHealth = 0
+		}
 		targetBlockID = Map.TileID(targetBlock)
 
 		if IsRaycastHit {

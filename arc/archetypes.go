@@ -48,8 +48,9 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	a.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
 	a.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
 	a.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)
-	a.NewAnimationState("dig", 16*7, 0, 16, 16, 2, false, false).FPS = 8
-	a.NewAnimationState("digRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
+	a.NewAnimationState("attack", 16*7, 0, 16, 16, 2, false, false).FPS = 8
+	a.NewAnimationState("attackRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
+	a.NewAnimationState("attackUp", 16*11, 0, 16, 16, 2, false, false).FPS = 8
 
 	a.SetState("idleRight")
 	i := NewInventory()

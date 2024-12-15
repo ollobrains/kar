@@ -3,7 +3,6 @@ package items
 // Item ID
 const (
 	Air uint16 = iota
-	Andesite
 	Arrow
 	Bedrock
 	BeetrootSeeds
@@ -17,7 +16,6 @@ const (
 	Coal
 	CoalBlock
 	CoalOre
-	CoarseDirt
 	CobbledDeepslate
 	Cobblestone
 	CopperIngot
@@ -33,7 +31,6 @@ const (
 	DeepslateGoldOre
 	DeepslateIronOre
 	DeepslateLapisOre
-	DeepslateRedstoneOre
 	Diamond
 	DiamondAxe
 	DiamondHoe
@@ -42,7 +39,6 @@ const (
 	DiamondShovel
 	DiamondSword
 	Dirt
-	DirtPath
 	Emerald
 	EmeraldOre
 	EnchantingTable
@@ -95,8 +91,6 @@ const (
 	RedNetherBricks
 	RedSand
 	RedSandstone
-	Redstone
-	RedstoneOre
 	RedstoneTorch
 	RedstoneTorchOff
 	RootedDirt

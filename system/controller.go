@@ -235,9 +235,10 @@ func (c *Controller) Falling() {
 	}
 }
 
-func (c *Controller) Digging() {
-
-	if IsRaycastHit {
+func (c *Controller) Attacking() {
+	breakDist := targetBlock.Sub(playerTile)
+	dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
+	if IsRaycastHit && dist <= 1 {
 		if items.IsBreakable(targetBlockID) {
 			blockHardness := items.Property[targetBlockID].MaxHealth
 			if blockHealth < blockHardness/4 {
@@ -368,7 +369,7 @@ func (c *Controller) Idle() {
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
 	} else if c.IsBreakKeyPressed && IsRaycastHit {
-		c.changeState("digging")
+		c.changeState("attacking")
 	}
 }
 
@@ -384,8 +385,8 @@ func (c *Controller) UpdateState() {
 		c.Jumping()
 	case "falling":
 		c.Falling()
-	case "digging":
-		c.Digging()
+	case "attacking":
+		c.Attacking()
 	case "skidding":
 		c.Skidding()
 	}
@@ -405,20 +406,20 @@ func (c *Controller) enterRunning() {
 func (c *Controller) enterIdle() {
 	c.AnimPlayer.SetStateAndReset("idleRight")
 }
-func (c *Controller) enterDigging() {
+func (c *Controller) enterAttacking() {
 
 	if c.InputAxisLast.X == 1 {
-		c.AnimPlayer.SetStateAndReset("digRight")
+		c.AnimPlayer.SetStateAndReset("attackRight")
 	} else if c.InputAxisLast.X == -1 {
-		c.AnimPlayer.SetStateAndReset("digRight")
+		c.AnimPlayer.SetStateAndReset("attackRight")
 		DOP.FlipX = true
 	} else if c.InputAxisLast.Y == 1 {
-		c.AnimPlayer.SetStateAndReset("dig")
+		c.AnimPlayer.SetStateAndReset("attack")
 	} else if c.InputAxisLast.Y == -1 {
-		c.AnimPlayer.SetStateAndReset("dig")
+		c.AnimPlayer.SetStateAndReset("attackUp")
 	}
 }
-func (c *Controller) exitDigging() {
+func (c *Controller) exitAttacking() {
 	blockHealth = 0
 }
 
@@ -441,8 +442,8 @@ func (c *Controller) changeState(newState string) {
 
 	// Mevcut durumdan çık
 	switch c.CurrentState {
-	case "digging":
-		c.exitDigging()
+	case "attacking":
+		c.exitAttacking()
 		// case "idle":
 		// c.exitIdle()
 		// case "walking":
@@ -462,8 +463,8 @@ func (c *Controller) changeState(newState string) {
 	switch newState {
 	case "idle":
 		c.enterIdle()
-	case "digging":
-		c.enterDigging()
+	case "attacking":
+		c.enterAttacking()
 	case "walking":
 		c.enterWalking()
 	case "running":

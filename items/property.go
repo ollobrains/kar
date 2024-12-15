@@ -34,13 +34,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   1000,
 		Category:    None | Unbreakable,
 	},
-	Andesite: {
-		DisplayName: "Andesite",
-		Drops:       Andesite,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
 	Arrow: {
 		DisplayName: "Arrow",
 		Drops:       Arrow,
@@ -128,12 +121,6 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
-	},
-	CoarseDirt: {
-		DisplayName: "Coarse Dirt",
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
 	},
 	CobbledDeepslate: {
 		DisplayName: "Cobbled Deepslate",
@@ -239,13 +226,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
 	},
-	DeepslateRedstoneOre: {
-		DisplayName: "Deepslate Redstone Ore",
-		Drops:       Redstone,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block | OreBlock,
-	},
 	Diamond: {
 		DisplayName: "Diamond",
 		Stackable:   64,
@@ -295,13 +275,6 @@ var Property = map[uint16]ItemProperty{
 		Drops:       Dirt,
 		Stackable:   64,
 		MaxHealth:   5,
-		Category:    Block,
-	},
-	DirtPath: {
-		DisplayName: "Dirt Path",
-		Drops:       DirtPath,
-		Stackable:   64,
-		MaxHealth:   10,
 		Category:    Block,
 	},
 	Emerald: {
@@ -644,19 +617,7 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block,
 	},
-	Redstone: {
-		DisplayName: "Redstone",
-		Stackable:   64,
-		MaxHealth:   1,
-		Category:    Item | DropItem | RawOre,
-	},
-	RedstoneOre: {
-		DisplayName: "Redstone Ore",
-		Drops:       Redstone,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block | OreBlock,
-	},
+
 	RedstoneTorch: {
 		DisplayName: "Redstone Torch",
 		Drops:       RedstoneTorch,

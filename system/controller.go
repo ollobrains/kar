@@ -233,10 +233,11 @@ func (c *Controller) Falling() {
 
 func (c *Controller) Attacking() {
 
-	breakDist := targetBlock.Sub(playerTile)
-	dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
+	// breakDist := targetBlock.Sub(playerTile)
+	// dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
 
-	if IsRaycastHit && dist <= MinAttackBlockDist {
+	// if IsRaycastHit && dist <= MinAttackBlockDist {
+	if IsRaycastHit {
 		if items.IsBreakable(targetBlockID) {
 			blockHardness := items.Property[targetBlockID].MaxHealth
 			if blockHealth < blockHardness/4 {
@@ -357,8 +358,8 @@ func (c *Controller) Walking() {
 }
 
 func (c *Controller) Idle() {
-	breakDist := targetBlock.Sub(playerTile)
-	dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
+	// breakDist := targetBlock.Sub(playerTile)
+	// dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
 
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
@@ -372,7 +373,8 @@ func (c *Controller) Idle() {
 		}
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
-	} else if c.IsBreakKeyPressed && IsRaycastHit && dist <= MinAttackBlockDist {
+		// } else if c.IsBreakKeyPressed && IsRaycastHit && dist <= MinAttackBlockDist {
+	} else if c.IsBreakKeyPressed && IsRaycastHit {
 		c.changeState("attacking")
 	}
 }

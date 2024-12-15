@@ -24,10 +24,9 @@ var (
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO              = &ebiten.DrawImageOptions{}
-	BackgroundColor        = util.HexToRGBA("#124e89")
-	BlockPlacementDistance = 4
-	DrawPlayerDebugHitBox  = false
+	GlobalDIO             = &ebiten.DrawImageOptions{}
+	BackgroundColor       = util.HexToRGBA("#124e89")
+	DrawPlayerDebugHitBox = false
 )
 
 func init() {

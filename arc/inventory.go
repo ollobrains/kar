@@ -49,11 +49,10 @@ func (i *Inventory) SetSlot(slotIndex int, id uint16, quantity uint8) {
 }
 
 func (i *Inventory) SelectNextSlot() {
-	if i.SelectedSlot+1 < len(i.Slots) {
-		i.SelectedSlot++
-	} else {
-		i.SelectedSlot = 0
-	}
+	i.SelectedSlot = (i.SelectedSlot + 1) % 9
+}
+func (i *Inventory) SelectPrevSlot() {
+	i.SelectedSlot = (i.SelectedSlot - 1 + 9) % 9
 }
 func (i *Inventory) RemoveHandItem(id uint16) bool {
 	ok := i.HasHandItem(id)
@@ -97,7 +96,7 @@ func (i *Inventory) ClearAllSlots() {
 }
 func (i *Inventory) RandomFillAllSlots() {
 	for idx := range i.Slots {
-		i.SetSlot(idx, items.RandomBlock(), 10)
+		i.SetSlot(idx, items.RandomBlock(), 64)
 	}
 }
 

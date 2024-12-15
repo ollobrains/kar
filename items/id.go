@@ -16,20 +16,11 @@ const (
 	Coal
 	CoalBlock
 	CoalOre
-	CobbledDeepslate
 	Cobblestone
 	CopperIngot
 	CopperOre
 	CraftingTable
 	CrossbowStandby
-	Deepslate
-	DeepslateCoalOre
-	DeepslateCopperOre
-	DeepslateDiamondOre
-	DeepslateEmeraldOre
-	DeepslateGoldOre
-	DeepslateIronOre
-	DeepslateLapisOre
 	Diamond
 	DiamondAxe
 	DiamondHoe
@@ -38,8 +29,6 @@ const (
 	DiamondShovel
 	DiamondSword
 	Dirt
-	Emerald
-	EmeraldOre
 	EnchantingTable
 	EndPortalFrame
 	FletchingTable
@@ -66,17 +55,6 @@ const (
 	LavaBucket
 	MelonSeeds
 	MilkBucket
-	NetherBricks
-	NetherGoldOre
-	NetherQuartzOre
-	NetheriteAxe
-	NetheriteHoe
-	NetheriteIngot
-	NetheritePickaxe
-	NetheriteScrap
-	NetheriteShovel
-	NetheriteSword
-	Netherrack
 	OakLeaves
 	OakLog
 	OakPlanks
@@ -87,12 +65,8 @@ const (
 	RawCopper
 	RawGold
 	RawIron
-	RedNetherBricks
-	RedSand
-	RedSandstone
 	RootedDirt
 	Sand
-	Sandstone
 	SmoothStone
 	Snow
 	Snowball

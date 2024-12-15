@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	damage                       float64 = 0.1
-	MinAttackBlockDist           float64 = 2.0
+	damage float64 = 0.1
+	// MinAttackBlockDist           float64 = 2.0
+	BlockPlacementDistance       = 3
 	blockHealth                  float64
 	targetBlock                  image.Point
 	placeBlock                   image.Point
@@ -42,7 +43,7 @@ func (c *PlayerSys) Update() {
 
 		playerTile = Map.GetTileCoords(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlock
-		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.BlockPlacementDistance)
+		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, BlockPlacementDistance)
 		if !targetBlock.Eq(targetBlockTemp) {
 			blockHealth = 0
 		}
@@ -69,7 +70,10 @@ func (c *PlayerSys) Update() {
 
 	}
 
-	if inpututil.IsKeyJustPressed(ebiten.KeyTab) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+		PlayerInventory.SelectPrevSlot()
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
 		PlayerInventory.SelectNextSlot()
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {

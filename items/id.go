@@ -22,7 +22,6 @@ const (
 	CopperOre
 	CraftingTable
 	CrossbowStandby
-	CryingObsidian
 	Deepslate
 	DeepslateCoalOre
 	DeepslateCopperOre
@@ -91,18 +90,12 @@ const (
 	RedNetherBricks
 	RedSand
 	RedSandstone
-	RedstoneTorch
-	RedstoneTorchOff
 	RootedDirt
 	Sand
 	Sandstone
-	SmithingTable
 	SmoothStone
 	Snow
 	Snowball
-	SoulSand
-	SoulSoil
-	SoulTorch
 	Stick
 	Stone
 	StoneAxe

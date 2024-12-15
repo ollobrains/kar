@@ -163,12 +163,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   1,
 		Category:    Item | Weapon,
 	},
-	CryingObsidian: {
-		DisplayName: "CryingObsidian",
-		Stackable:   64,
-		MaxHealth:   20,
-		Category:    Block,
-	},
 	Deepslate: {
 		DisplayName: "Deepslate Stone",
 		Drops:       CobbledDeepslate,
@@ -617,22 +611,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block,
 	},
-
-	RedstoneTorch: {
-		DisplayName: "Redstone Torch",
-		Drops:       RedstoneTorch,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Item,
-	},
-	RedstoneTorchOff: {
-		DisplayName: "Redstone Torch Off",
-		Drops:       RedstoneTorchOff,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Item,
-	},
-
 	RootedDirt: {
 		DisplayName: "Rooted Dirt",
 		Drops:       RootedDirt,
@@ -654,13 +632,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block,
 	},
-	SmithingTable: {
-		DisplayName: "Snow",
-		Drops:       Air,
-		Stackable:   1,
-		MaxHealth:   10,
-		Category:    Block,
-	},
 	SmoothStone: {
 		DisplayName: "Smooth Stone",
 		Drops:       SmoothStone,
@@ -672,7 +643,7 @@ var Property = map[uint16]ItemProperty{
 		DisplayName: "Snow",
 		Drops:       Dirt,
 		Stackable:   64,
-		MaxHealth:   10,
+		MaxHealth:   5,
 		Category:    Block,
 	},
 	Snowball: {
@@ -682,29 +653,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Item,
 	},
-	SoulSand: {
-		DisplayName: "Soul Sand",
-		Drops:       SoulSand,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
-
-	SoulSoil: {
-		DisplayName: "Soul Soil",
-		Drops:       SoulSoil,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
-	SoulTorch: {
-		DisplayName: "Soul Torch",
-		Drops:       Air,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Item,
-	},
-
 	Stick: {
 		DisplayName: "Stick",
 		Stackable:   64,

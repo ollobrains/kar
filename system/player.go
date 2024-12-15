@@ -73,7 +73,10 @@ func (c *PlayerSys) Update() {
 		PlayerInventory.SelectNextSlot()
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
-		PlayerInventory.ClearSlot(PlayerInventory.SelectedSlot)
+		PlayerInventory.ClearSelectedSlot()
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+		PlayerInventory.RandomFillAllSlots()
 	}
 }
 

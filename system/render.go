@@ -20,7 +20,6 @@ func (rn *Render) Init() {
 func (rn *Render) Update() {
 
 	kar.Camera.LookAt(playerCenterX, playerCenterY)
-
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
 	for q.Next() {
@@ -53,23 +52,19 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	iq := arc.FilterItemDraw.Query(&kar.WorldECS)
-
-	for iq.Next() {
-		id, dop, rect := iq.Get()
-
+	// Draw Item
+	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
+	for itemQuery.Next() {
+		id, _, dop, rect := itemQuery.Get()
 		kar.GlobalDIO.GeoM.Reset()
-
 		kar.GlobalDIO.GeoM.Scale(dop.Scale, dop.Scale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
-
 		kar.Camera.Draw(GetSprite(id.ID), kar.GlobalDIO, kar.Screen)
-
 	}
 
-	q := arc.FilterPlayerDraw.Query(&kar.WorldECS)
-	for q.Next() {
-		dop, anim, rect := q.Get()
+	playerQuery := arc.FilterPlayer.Query(&kar.WorldECS)
+	for playerQuery.Next() {
+		_, dop, anim, rect, _ := playerQuery.Get()
 
 		// Draw player
 		sclX := dop.Scale

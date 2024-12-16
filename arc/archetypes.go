@@ -11,6 +11,7 @@ import (
 
 var (
 	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
+	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
 	MapItem      = gn.NewMap4[ItemID, Health, DrawOptions, Rect](&kar.WorldECS)
 	MapPlayer    = gn.NewMap5[
 		Health,
@@ -20,20 +21,22 @@ var (
 		Inventory](&kar.WorldECS)
 )
 
+// Query Filters
 var (
-	FilterPlayer = gn.NewFilter5[
+	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
+	FilterItem       = gn.NewFilter4[ItemID, Health, DrawOptions, Rect]()
+	FilterPlayer     = gn.NewFilter5[
 		Health,
 		DrawOptions,
 		anim.AnimationPlayer,
 		Rect,
 		Inventory]()
-
-	FilterPlayerDraw = gn.NewFilter3[DrawOptions, anim.AnimationPlayer, Rect]()
-	FilterItemDraw   = gn.NewFilter3[ItemID, DrawOptions, Rect]()
-	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
 )
 
 func init() {
+	FilterAnimPlayer.Register(&kar.WorldECS)
+	FilterItem.Register(&kar.WorldECS)
+	FilterPlayer.Register(&kar.WorldECS)
 }
 
 func SpawnPlayer(x, y float64) ecs.Entity {

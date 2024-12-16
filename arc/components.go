@@ -34,7 +34,7 @@ type AnimationFrameIndex struct {
 	Index int
 }
 
-type Item struct {
+type ItemID struct {
 	ID uint16
 }
 

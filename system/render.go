@@ -53,7 +53,21 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	q := arc.FilterDraw.Query(&kar.WorldECS)
+	iq := arc.FilterItemDraw.Query(&kar.WorldECS)
+
+	for iq.Next() {
+		id, dop, rect := iq.Get()
+
+		kar.GlobalDIO.GeoM.Reset()
+
+		kar.GlobalDIO.GeoM.Scale(dop.Scale, dop.Scale)
+		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
+
+		kar.Camera.Draw(GetSprite(id.ID), kar.GlobalDIO, kar.Screen)
+
+	}
+
+	q := arc.FilterPlayerDraw.Query(&kar.WorldECS)
 	for q.Next() {
 		dop, anim, rect := q.Get()
 

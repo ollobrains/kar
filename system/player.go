@@ -12,12 +12,12 @@ import (
 var (
 	damage float64 = 0.1
 	// MinAttackBlockDist           float64 = 2.0
-	BlockPlacementDistance       = 3
-	blockHealth                  float64
-	targetBlock                  image.Point
-	placeBlock                   image.Point
-	playerTile                   image.Point
-	targetBlockID                uint16
+	BlockPlacementDistance = 3
+	blockHealth            float64
+	targetBlock            image.Point
+	placeBlock             image.Point
+	playerTile             image.Point
+	// targetBlockID                uint16
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
 	IsRaycastHit                 bool
@@ -29,6 +29,7 @@ type PlayerSys struct {
 
 func (c *PlayerSys) Update() {
 	q := arc.FilterPlayer.Query(&kar.WorldECS)
+
 	for q.Next() {
 
 		_, dop, anim, rect, _ := q.Get()
@@ -41,13 +42,14 @@ func (c *PlayerSys) Update() {
 
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
 
-		playerTile = Map.GetTileCoords(playerCenterX, playerCenterY)
+		playerTile = Map.WorldToTile(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlock
 		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, BlockPlacementDistance)
 		if !targetBlock.Eq(targetBlockTemp) {
 			blockHealth = 0
 		}
-		targetBlockID = Map.TileID(targetBlock)
+
+		// targetBlockID = Map.TileID(targetBlock)
 
 		if IsRaycastHit {
 			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)

@@ -61,9 +61,21 @@ func (t *TileMap) Raycast(pos, dir image.Point, dist int) (image.Point, bool) {
 	return image.Point{}, false
 }
 
-func (t *TileMap) GetTileCoords(x, y float64) image.Point {
+func (t *TileMap) WorldToTile(x, y float64) image.Point {
 	return image.Point{int(math.Floor(x / float64(t.TileW))), int(math.Floor(y / float64(t.TileH)))}
 }
+
+func (t *TileMap) TileToWorld(pos image.Point) (float64, float64) {
+	a := float64(pos.X + t.TileW/2)
+	b := float64(pos.Y + t.TileH/2)
+	return a, b
+}
+
+// func (t *TileMap) NearestBlockCenter(x, y float64) (float64, float64) {
+// 	xCenter := math.Floor(x/float64(t.TileW)) + float64(t.TileW)/2
+// 	yCenter := math.Floor(y/float64(t.TileH)) + float64(t.TileH)/2
+// 	return xCenter, yCenter
+// }
 
 func (t *TileMap) SetTile(pos image.Point, id uint16) {
 	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
@@ -76,12 +88,6 @@ func (t *TileMap) TileID(pos image.Point) uint16 {
 		return 0
 	}
 	return t.Grid[pos.Y][pos.X]
-}
-func (t *TileMap) TileID2(x, y int) uint16 {
-	if x < 0 || x >= t.W || y < 0 || y >= t.H {
-		return 0
-	}
-	return t.Grid[y][x]
 }
 
 func (t *TileMap) GetTileRect(pos image.Point) (x, y, w, h float64) {

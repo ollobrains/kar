@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"kar"
 	"kar/arc"
 
@@ -32,7 +31,6 @@ func (itm *Item) Update() {
 	// The world is unlocked again.
 	// Actually remove the collected entities.
 	for _, e := range toRemove {
-		fmt.Println("çarptı")
 		kar.WorldECS.RemoveEntity(e)
 	}
 

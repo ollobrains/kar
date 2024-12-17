@@ -53,7 +53,7 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	// Draw Item
+	// Draw Items
 	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
 	for itemQuery.Next() {
 		id, _, dop, rect := itemQuery.Get()
@@ -79,9 +79,13 @@ func (rn *Render) Draw() {
 			kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
 		}
 		kar.Camera.DrawWithColorM(anim.CurrentFrame, kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+	}
 
-		// Draw player hit box for debug
-		if kar.DrawPlayerDebugHitBox {
+	// Draw all rects for debug
+	if kar.DrawDebugHitboxes {
+		rectQ := arc.FilterRect.Query(&kar.WorldECS)
+		for rectQ.Next() {
+			rect := rectQ.Get()
 			x, y := kar.Camera.ApplyCameraTransformToPoint(rect.X, rect.Y)
 			vector.StrokeRect(
 				kar.Screen,
@@ -112,5 +116,6 @@ func (rn *Render) Draw() {
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
 	ebitenutil.DebugPrintAt(kar.Screen, "InputLast"+PlayerController.InputAxisLast.String(), 10, 30)
-	// ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlock.String()+items.Property[targetBlockID].DisplayName, 10, 50)
+	ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlock.String(), 10, 50)
+	ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 50+20)
 }

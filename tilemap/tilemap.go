@@ -66,8 +66,8 @@ func (t *TileMap) WorldToTile(x, y float64) image.Point {
 }
 
 func (t *TileMap) TileToWorld(pos image.Point) (float64, float64) {
-	a := float64(pos.X + t.TileW/2)
-	b := float64(pos.Y + t.TileH/2)
+	a := float64((pos.X * t.TileW) + t.TileW/2)
+	b := float64((pos.Y * t.TileH) + t.TileH/2)
 	return a, b
 }
 

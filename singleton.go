@@ -25,17 +25,18 @@ var (
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO             = &colorm.DrawImageOptions{}
-	GlobalColorM          = colorm.ColorM{}
-	BackgroundColor       = util.HexToRGBA("#124e89")
-	DrawPlayerDebugHitBox = false
+	GlobalDIO         = &colorm.DrawImageOptions{}
+	GlobalColorM      = colorm.ColorM{}
+	BackgroundColor   = util.HexToRGBA("#124e89")
+	DrawDebugHitboxes = false
+	ItemScale         = 1.0
 )
 
 func init() {
 	// GlobalColorM.ChangeHSV(1, 0, 1)
 	Camera.SmoothType = kamera.Lerp
-	Camera.SmoothOptions.LerpSpeedX = 0.09
-	Camera.SmoothOptions.LerpSpeedY = 0.02
+	// Camera.SmoothOptions.LerpSpeedX = 0.09
+	// Camera.SmoothOptions.LerpSpeedY = 0.02
 	// Camera.SmoothingOptions.SmoothDampTimeX = 0.3
 	// Camera.SmoothingOptions.SmoothDampTimeY = 1
 	// Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000

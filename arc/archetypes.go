@@ -23,6 +23,8 @@ var (
 
 // Query Filters
 var (
+	FilterCollision  = gn.NewFilter2[Rect, ItemID]()
+	FilterRect       = gn.NewFilter1[Rect]()
 	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
 	FilterItem       = gn.NewFilter4[ItemID, Health, DrawOptions, Rect]()
 	FilterPlayer     = gn.NewFilter5[
@@ -34,6 +36,8 @@ var (
 )
 
 func init() {
+	FilterRect.Register(&kar.WorldECS)
+	FilterCollision.Register(&kar.WorldECS)
 	FilterAnimPlayer.Register(&kar.WorldECS)
 	FilterItem.Register(&kar.WorldECS)
 	FilterPlayer.Register(&kar.WorldECS)
@@ -57,7 +61,7 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 func SpawnItem(x, y float64, id uint16) ecs.Entity {
 	i := &ItemID{ID: id}
 	h := &Health{Health: 100, MaxHealth: 100}
-	d := &DrawOptions{Scale: 2}
-	r := &Rect{X: x, Y: y, W: 16 * 2, H: 16 * 2}
+	d := &DrawOptions{Scale: kar.ItemScale}
+	r := &Rect{X: x, Y: y, W: 16 * kar.ItemScale, H: 16 * kar.ItemScale}
 	return MapItem.NewWith(i, h, d, r)
 }

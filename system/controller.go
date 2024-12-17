@@ -2,7 +2,7 @@ package system
 
 import (
 	"image"
-	"kar/arc"
+	"kar"
 	"kar/engine/mathutil"
 	"kar/items"
 	"math"
@@ -247,16 +247,18 @@ func (c *Controller) Attacking() {
 			}
 			blockHealth += damage
 		}
-
 		// Destroy block
 		if blockHealth >= items.Property[targetBlockID].MaxHealth {
 			blockHealth = 0
 			Map.SetTile(targetBlock, items.Air)
+			// spawn drop item
 			x, y := Map.TileToWorld(targetBlock)
-			arc.SpawnItem(x, y, targetBlockID)
-			// kar.WorldECS.NewEntityWith()
+			toSpawn = append(toSpawn, SpawnData{
+				X:  x - 8*kar.ItemScale,
+				Y:  y - 8*kar.ItemScale,
+				Id: targetBlockID,
+			})
 		}
-
 	}
 
 	if !IsRaycastHit {

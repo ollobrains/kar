@@ -12,12 +12,11 @@ import (
 var (
 	damage float64 = 0.1
 	// MinAttackBlockDist           float64 = 2.0
-	BlockPlacementDistance = 3
-	blockHealth            float64
-	targetBlock            image.Point
-	placeBlock             image.Point
-	playerTile             image.Point
-	// targetBlockID                uint16
+	BlockPlacementDistance       = 3
+	blockHealth                  float64
+	targetBlock                  image.Point
+	placeBlock                   image.Point
+	playerTile                   image.Point
 	playerCenterX, playerCenterY float64
 	isBlockPlaceable             bool
 	IsRaycastHit                 bool
@@ -45,11 +44,11 @@ func (c *PlayerSys) Update() {
 		playerTile = Map.WorldToTile(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlock
 		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, BlockPlacementDistance)
+
+		// eğer block odağı değiştiyse saldırıyı sıfırla
 		if !targetBlock.Eq(targetBlockTemp) {
 			blockHealth = 0
 		}
-
-		// targetBlockID = Map.TileID(targetBlock)
 
 		if IsRaycastHit {
 			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
@@ -62,16 +61,14 @@ func (c *PlayerSys) Update() {
 		rect.X += dx
 		rect.Y += dy
 		PlayerController.UpdateState()
-
-		if PlayerController.IsPlaceKeyJustPressed {
-			if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
-				Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
-				PlayerInventory.RemoveItemFromSelectedSlot()
-			}
-		}
-
 	}
 
+	if PlayerController.IsPlaceKeyJustPressed {
+		if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
+			Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
+			PlayerInventory.RemoveItemFromSelectedSlot()
+		}
+	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
 		PlayerInventory.SelectPrevSlot()
 	}

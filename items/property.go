@@ -20,7 +20,7 @@ const (
 
 type ItemProperty struct {
 	DisplayName string
-	Drops       uint16
+	DropID      uint16
 	Stackable   uint8
 	MaxHealth   float64
 	Category    Category
@@ -29,14 +29,14 @@ type ItemProperty struct {
 var Property = map[uint16]ItemProperty{
 	Air: {
 		DisplayName: "",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   0,
 		MaxHealth:   1000,
 		Category:    None | Unbreakable,
 	},
 	Arrow: {
 		DisplayName: "Arrow",
-		Drops:       Arrow,
+		DropID:      Arrow,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Weapon | Item | DropItem,
@@ -44,21 +44,21 @@ var Property = map[uint16]ItemProperty{
 
 	Bedrock: {
 		DisplayName: "Bedrock",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   0,
 		MaxHealth:   1000,
 		Category:    Block | Unbreakable,
 	},
 	BeetrootSeeds: {
 		DisplayName: "Beetroot Seeds",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item | Unbreakable | DropItem,
 	},
 	Bow: {
 		DisplayName: "Bow",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item | Weapon,
@@ -66,28 +66,28 @@ var Property = map[uint16]ItemProperty{
 
 	Bread: {
 		DisplayName: "Bread",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item | Food,
 	},
 	BrewingStand: {
 		DisplayName: "Brewing Stand",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	Bucket: {
 		DisplayName: "Bucket",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Item | Tool,
 	},
 	CartographyTable: {
 		DisplayName: "Cartography Table",
-		Drops:       0,
+		DropID:      0,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
@@ -124,7 +124,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	Cobblestone: {
 		DisplayName: "Cobblestone",
-		Drops:       Cobblestone,
+		DropID:      Cobblestone,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
@@ -137,14 +137,14 @@ var Property = map[uint16]ItemProperty{
 	},
 	CopperOre: {
 		DisplayName: "Copper Ore",
-		Drops:       RawCopper,
+		DropID:      RawCopper,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
 	},
 	CraftingTable: {
 		DisplayName: "Crafting Table",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
@@ -178,7 +178,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	DiamondOre: {
 		DisplayName: "Diamond Ore",
-		Drops:       Diamond,
+		DropID:      Diamond,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
@@ -203,7 +203,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	Dirt: {
 		DisplayName: "Dirt",
-		Drops:       Dirt,
+		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   5,
 		Category:    Block,
@@ -211,35 +211,35 @@ var Property = map[uint16]ItemProperty{
 
 	EnchantingTable: {
 		DisplayName: "Enchanting Table",
-		Drops:       EnchantingTable,
+		DropID:      EnchantingTable,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	EndPortalFrame: {
 		DisplayName: "EndPortalFrame",
-		Drops:       EndPortalFrame,
+		DropID:      EndPortalFrame,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	FletchingTable: {
 		DisplayName: "Fletching Table",
-		Drops:       FletchingTable,
+		DropID:      FletchingTable,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	Furnace: {
 		DisplayName: "Furnace",
-		Drops:       Furnace,
+		DropID:      Furnace,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	FurnaceOn: {
 		DisplayName: "Furnace On",
-		Drops:       Furnace,
+		DropID:      Furnace,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,
@@ -252,7 +252,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	GoldOre: {
 		DisplayName: "Gold Ore",
-		Drops:       RawGold,
+		DropID:      RawGold,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
@@ -289,14 +289,14 @@ var Property = map[uint16]ItemProperty{
 	},
 	GrassBlock: {
 		DisplayName: "Grass Block",
-		Drops:       Dirt,
+		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	GrassBlockSnow: {
 		DisplayName: "Grass Block Snow",
-		Drops:       Dirt,
+		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
@@ -321,7 +321,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	IronOre: {
 		DisplayName: "Iron Ore",
-		Drops:       RawIron,
+		DropID:      RawIron,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
@@ -352,77 +352,77 @@ var Property = map[uint16]ItemProperty{
 	},
 	LapisOre: {
 		DisplayName: "Lapis Ore",
-		Drops:       LapisLazuli,
+		DropID:      LapisLazuli,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
 	},
 	LavaBucket: {
 		DisplayName: "Lava Bucket",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Item | Tool,
 	},
 	MelonSeeds: {
 		DisplayName: "Melon Seeds",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item | Unbreakable | DropItem,
 	},
 	MilkBucket: {
 		DisplayName: "Milk Bucket",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Item | Tool,
 	},
 	OakLeaves: {
 		DisplayName: "Leaves",
-		Drops:       OakLeaves,
+		DropID:      OakLeaves,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakLog: {
 		DisplayName: "Log",
-		Drops:       OakLog,
+		DropID:      OakLog,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakPlanks: {
 		DisplayName: "Tree Plank",
-		Drops:       OakPlanks,
+		DropID:      OakPlanks,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakSapling: {
 		DisplayName: "Sapling",
-		Drops:       OakSapling,
+		DropID:      OakSapling,
 		Stackable:   64,
 		MaxHealth:   1,
 		Category:    Block | Item,
 	},
 	Obsidian: {
 		DisplayName: "Obsidian",
-		Drops:       Obsidian,
+		DropID:      Obsidian,
 		Stackable:   64,
 		MaxHealth:   20,
 		Category:    Block,
 	},
 	PowderSnowBucket: {
 		DisplayName: "Powder Snow Bucket",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   1,
 		MaxHealth:   1,
 		Category:    Tool | Item,
 	},
 	PumpkinSeeds: {
 		DisplayName: "Pumpkin Seeds",
-		Drops:       Air,
+		DropID:      Air,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item | Unbreakable | DropItem,
@@ -447,14 +447,14 @@ var Property = map[uint16]ItemProperty{
 	},
 	RootedDirt: {
 		DisplayName: "Rooted Dirt",
-		Drops:       RootedDirt,
+		DropID:      RootedDirt,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	Sand: {
 		DisplayName: "Sand",
-		Drops:       Sand,
+		DropID:      Sand,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
@@ -462,21 +462,21 @@ var Property = map[uint16]ItemProperty{
 
 	SmoothStone: {
 		DisplayName: "Smooth Stone",
-		Drops:       SmoothStone,
+		DropID:      SmoothStone,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	Snow: {
 		DisplayName: "Snow",
-		Drops:       Dirt,
+		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   5,
 		Category:    Block,
 	},
 	Snowball: {
 		DisplayName: "Snowball",
-		Drops:       Snowball,
+		DropID:      Snowball,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Item,
@@ -490,7 +490,7 @@ var Property = map[uint16]ItemProperty{
 
 	Stone: {
 		DisplayName: "Stone",
-		Drops:       Cobblestone,
+		DropID:      Cobblestone,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
@@ -503,7 +503,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	StoneBricks: {
 		DisplayName: "Stone Bricks",
-		Drops:       StoneBricks,
+		DropID:      StoneBricks,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
@@ -534,7 +534,7 @@ var Property = map[uint16]ItemProperty{
 	},
 	Tnt: {
 		DisplayName: "TNT",
-		Drops:       Tnt,
+		DropID:      Tnt,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,

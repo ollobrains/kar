@@ -15,7 +15,7 @@ func (r *Rect) Overlaps(x, y, w, h float64) bool {
 }
 
 // Overlaps checks if the rectangle overlaps with another rectangle
-func (r *Rect) OverlapsR(box *Rect) bool {
+func (r *Rect) OverlapsRect(box *Rect) bool {
 	return r.X+r.W > box.X && box.X+box.W > r.X && r.Y+r.H > box.Y && box.Y+box.H > r.Y
 }
 

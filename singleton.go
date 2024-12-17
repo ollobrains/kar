@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/colorm"
 	"github.com/mlange-42/arche/ecs"
 	"github.com/setanarut/kamera/v2"
 )
@@ -24,15 +25,17 @@ var (
 	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
-	GlobalDIO             = &ebiten.DrawImageOptions{}
+	GlobalDIO             = &colorm.DrawImageOptions{}
+	GlobalColorM          = colorm.ColorM{}
 	BackgroundColor       = util.HexToRGBA("#124e89")
 	DrawPlayerDebugHitBox = false
 )
 
 func init() {
-	Camera.Smoothing = kamera.Lerp
-	Camera.SmoothingOptions.LerpSpeedX = 0.09
-	Camera.SmoothingOptions.LerpSpeedY = 0.02
+	// GlobalColorM.ChangeHSV(1, 0, 1)
+	Camera.SmoothType = kamera.Lerp
+	Camera.SmoothOptions.LerpSpeedX = 0.09
+	Camera.SmoothOptions.LerpSpeedY = 0.02
 	// Camera.SmoothingOptions.SmoothDampTimeX = 0.3
 	// Camera.SmoothingOptions.SmoothDampTimeY = 1
 	// Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000

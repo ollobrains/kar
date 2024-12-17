@@ -5,6 +5,7 @@ import (
 	"kar/res"
 	"strconv"
 
+	"github.com/hajimehoshi/ebiten/v2/colorm"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
@@ -26,13 +27,13 @@ func (gui *DrawHotbar) Draw() {
 		kar.GlobalDIO.GeoM.Translate(-64, -11)
 		kar.GlobalDIO.GeoM.Scale(2, 2)
 		kar.GlobalDIO.GeoM.Translate((kar.ScreenW/2)-1, kar.ScreenH-40)
-		kar.Screen.DrawImage(res.Hotbar, kar.GlobalDIO)
+		colorm.DrawImage(kar.Screen, res.Hotbar, kar.GlobalColorM, kar.GlobalDIO)
 
 		// Draw hotbar selected border
 		kar.GlobalDIO.GeoM.Translate(-2, -2)
 		selectedOffsetX := float64(PlayerInventory.SelectedSlot) * 40
 		kar.GlobalDIO.GeoM.Translate(selectedOffsetX, 0)
-		kar.Screen.DrawImage(res.HotbarSelection, kar.GlobalDIO)
+		colorm.DrawImage(kar.Screen, res.HotbarSelection, kar.GlobalColorM, kar.GlobalDIO)
 
 		// Draw hotbar slots
 		for x := range 9 {
@@ -43,7 +44,8 @@ func (gui *DrawHotbar) Draw() {
 			kar.GlobalDIO.GeoM.Scale(2, 2)
 			kar.GlobalDIO.GeoM.Translate(offsetX, kar.ScreenH-40)
 			if PlayerInventory.Slots[x].Quantity > 0 {
-				kar.Screen.DrawImage(GetSprite(PlayerInventory.Slots[x].ID), kar.GlobalDIO)
+				colorm.DrawImage(kar.Screen, GetSprite(PlayerInventory.Slots[x].ID), kar.GlobalColorM, kar.GlobalDIO)
+
 			}
 			gui.itemQuantityTextDO.GeoM.Reset()
 			gui.itemQuantityTextDO.GeoM.Translate(offsetX-8, kar.ScreenH-45)

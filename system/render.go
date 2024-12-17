@@ -43,10 +43,11 @@ func (rn *Render) Draw() {
 				if x == targetBlock.X && y == targetBlock.Y {
 					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
 					if res.Frames[tileID] != nil {
-						kar.Camera.Draw(res.Frames[tileID][int(i)], kar.GlobalDIO, kar.Screen)
+						kar.Camera.DrawWithColorM(res.Frames[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 					}
 				} else {
-					kar.Camera.Draw(GetSprite(tileID), kar.GlobalDIO, kar.Screen)
+					kar.Camera.DrawWithColorM(GetSprite(tileID), kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+
 				}
 			}
 		}
@@ -59,7 +60,7 @@ func (rn *Render) Draw() {
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(dop.Scale, dop.Scale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
-		kar.Camera.Draw(GetSprite(id.ID), kar.GlobalDIO, kar.Screen)
+		kar.Camera.DrawWithColorM(GetSprite(id.ID), kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
 	playerQuery := arc.FilterPlayer.Query(&kar.WorldECS)
@@ -77,7 +78,7 @@ func (rn *Render) Draw() {
 			kar.GlobalDIO.GeoM.Scale(sclX, dop.Scale)
 			kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
 		}
-		kar.Camera.Draw(anim.CurrentFrame, kar.GlobalDIO, kar.Screen)
+		kar.Camera.DrawWithColorM(anim.CurrentFrame, kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 
 		// Draw player hit box for debug
 		if kar.DrawPlayerDebugHitBox {
@@ -106,7 +107,7 @@ func (rn *Render) Draw() {
 
 	// // Draw target tile border
 	kar.GlobalDIO.GeoM.Translate(float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH))
-	kar.Camera.Draw(res.Border, kar.GlobalDIO, kar.Screen)
+	kar.Camera.DrawWithColorM(res.Border, kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)

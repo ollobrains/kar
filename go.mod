@@ -20,7 +20,7 @@ require (
 	github.com/go-text/typesetting v0.2.0 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/mlange-42/arche v0.13.3
-	github.com/setanarut/kamera/v2 v2.92.0
+	github.com/setanarut/kamera/v2 v2.94.0
 	github.com/setanarut/tilecollider v1.4.6
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect

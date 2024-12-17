@@ -567,13 +567,13 @@ var Property = map[uint16]ItemProperty{
 		DisplayName: "Wheat Crops",
 		Stackable:   64,
 		MaxHealth:   10,
-		Category:    Block | Unbreakable | Harvestable,
+		Category:    Block | Harvestable,
 	},
 	WheatSeeds: {
 		DisplayName: "Wheat Seeds",
 		Stackable:   64,
 		MaxHealth:   10,
-		Category:    Item | Unbreakable | DropItem,
+		Category:    Item | DropItem,
 	},
 	WoodenAxe: {
 		DisplayName: "Wooden Axe",

@@ -12,7 +12,6 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
-	"github.com/setanarut/vec"
 	"golang.org/x/text/language"
 )
 
@@ -22,11 +21,6 @@ func CheckIndex[T any](slice []T, index int) bool {
 		return false
 	}
 	return true
-}
-
-func ImageCenterOffset(img image.Image) vec.Vec2 {
-	o := vec.Vec2{float64(img.Bounds().Dx()), float64(img.Bounds().Dy())}
-	return o.Scale(0.5).Neg()
 }
 
 // HexToRGBA converts hex color to color.RGBA with "#FFFFFF" format

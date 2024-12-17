@@ -31,6 +31,8 @@ var (
 
 func init() {
 	Camera.Smoothing = kamera.Lerp
+	Camera.SmoothingOptions.LerpSpeedX = 0.09
+	Camera.SmoothingOptions.LerpSpeedY = 0.02
 	// Camera.SmoothingOptions.SmoothDampTimeX = 0.3
 	// Camera.SmoothingOptions.SmoothDampTimeY = 1
 	// Camera.SmoothingOptions.SmoothDampMaxSpeedX = 1000

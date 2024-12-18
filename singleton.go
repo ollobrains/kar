@@ -27,7 +27,7 @@ var (
 	// DesktopPath      string
 	GlobalDIO         = &colorm.DrawImageOptions{}
 	GlobalColorM      = colorm.ColorM{}
-	BackgroundColor   = util.HexToRGBA("#124e89")
+	BackgroundColor   = util.HexToRGBA("#20053d")
 	DrawDebugHitboxes = false
 	ItemScale         = 1.0
 )

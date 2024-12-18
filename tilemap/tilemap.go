@@ -51,12 +51,22 @@ func MakeGrid(width, height int) [][]uint16 {
 	return tm
 }
 
+// IsSingleAxis checks if only one component of image.Point is non-zero
+func IsSingleAxis(axis image.Point) bool {
+	// True if exactly one of the components is non-zero
+	return (axis.X != 0 && axis.Y == 0) || (axis.X == 0 && axis.Y != 0)
+}
+
 func (t *TileMap) Raycast(pos, dir image.Point, dist int) (image.Point, bool) {
-	for range dist {
-		pos = pos.Add(dir)
-		if t.TileID(pos) != 0 {
-			return pos, true
+	if IsSingleAxis(dir) {
+		for range dist {
+			pos = pos.Add(dir)
+			if t.TileID(pos) != 0 {
+				return pos, true
+			}
 		}
+	} else {
+		return image.Point{}, false
 	}
 	return image.Point{}, false
 }

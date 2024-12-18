@@ -34,10 +34,6 @@ func HexToRGBA(hex string) color.RGBA {
 	}
 }
 
-func RGB(r, g, b uint8) color.RGBA {
-	return color.RGBA{r, g, b, 255}
-}
-
 func ReadEbImgFS(fs embed.FS, filePath string) *ebiten.Image {
 	return ebiten.NewImageFromImage(ImgFromFS(fs, filePath))
 }

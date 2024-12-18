@@ -43,6 +43,7 @@ func (c *PlayerSys) Update() {
 
 		playerTile = Map.WorldToTile(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlock
+
 		targetBlock, IsRaycastHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, BlockPlacementDistance)
 
 		// eğer block odağı değiştiyse saldırıyı sıfırla

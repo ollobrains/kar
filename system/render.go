@@ -53,19 +53,9 @@ func (rn *Render) Draw() {
 		}
 	}
 
-	// Draw Items
-	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
-	for itemQuery.Next() {
-		id, _, dop, rect := itemQuery.Get()
-		kar.GlobalDIO.GeoM.Reset()
-		kar.GlobalDIO.GeoM.Scale(dop.Scale, dop.Scale)
-		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
-		kar.Camera.DrawWithColorM(GetSprite(id.ID), kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
-	}
-
 	playerQuery := arc.FilterPlayer.Query(&kar.WorldECS)
 	for playerQuery.Next() {
-		_, dop, anim, rect, _ := playerQuery.Get()
+		anim, _, dop, rect, _ := playerQuery.Get()
 
 		// Draw player
 		sclX := dop.Scale
@@ -107,6 +97,16 @@ func (rn *Render) Draw() {
 				false,
 			)
 		}
+	}
+
+	// Draw Items
+	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
+	for itemQuery.Next() {
+		id, _, rect := itemQuery.Get()
+		kar.GlobalDIO.GeoM.Reset()
+		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
+		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
+		kar.Camera.DrawWithColorM(GetSprite(id.ID), kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
 	// // Draw target tile border

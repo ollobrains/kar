@@ -30,6 +30,7 @@ var (
 	BackgroundColor   = util.HexToRGBA("#20053d")
 	DrawDebugHitboxes = false
 	ItemScale         = 1.0
+	PlayerScale       = 1.0
 )
 
 func init() {

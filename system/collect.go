@@ -27,7 +27,7 @@ func (c *Collect) Update() {
 				}
 			}
 
-			dy := Collider.CollideY(rect.X, rect.Y, rect.W, rect.H, itemGravity)
+			dy := Collider.CollideY(rect.X, rect.Y+16, rect.W, rect.H, itemGravity)
 			rect.Y += dy
 		}
 		for _, e := range toRemove {

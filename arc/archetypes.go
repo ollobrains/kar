@@ -12,11 +12,11 @@ import (
 var (
 	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
 	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
-	MapItem      = gn.NewMap4[ItemID, Health, DrawOptions, Rect](&kar.WorldECS)
+	MapItem      = gn.NewMap3[ItemID, Health, Rect](&kar.WorldECS)
 	MapPlayer    = gn.NewMap5[
+		anim.AnimationPlayer,
 		Health,
 		DrawOptions,
-		anim.AnimationPlayer,
 		Rect,
 		Inventory](&kar.WorldECS)
 )
@@ -26,11 +26,11 @@ var (
 	FilterCollision  = gn.NewFilter2[Rect, ItemID]()
 	FilterRect       = gn.NewFilter1[Rect]()
 	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
-	FilterItem       = gn.NewFilter4[ItemID, Health, DrawOptions, Rect]()
+	FilterItem       = gn.NewFilter3[ItemID, Health, Rect]()
 	FilterPlayer     = gn.NewFilter5[
+		anim.AnimationPlayer,
 		Health,
 		DrawOptions,
-		anim.AnimationPlayer,
 		Rect,
 		Inventory]()
 )
@@ -44,24 +44,27 @@ func init() {
 }
 
 func SpawnPlayer(x, y float64) ecs.Entity {
-	h := &Health{Health: 100, MaxHealth: 100}
-	a := anim.NewAnimationPlayer(res.PlayerAtlas)
-	a.NewAnimationState("idleRight", 0, 0, 16, 16, 1, false, false).FPS = 1
-	a.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
-	a.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
-	a.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)
-	a.NewAnimationState("attack", 16*7, 0, 16, 16, 2, false, false).FPS = 8
-	a.NewAnimationState("attackRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
-	a.NewAnimationState("attackUp", 16*11, 0, 16, 16, 2, false, false).FPS = 8
-	a.SetState("idleRight")
-	d := &DrawOptions{Scale: 3}
-	r := &Rect{X: x, Y: y, W: 16 * 3, H: 16 * 3}
-	return MapPlayer.NewWith(h, d, a, r, NewInventory())
+	AP := anim.NewAnimationPlayer(res.PlayerAtlas)
+	AP.NewAnimationState("idleRight", 0, 0, 16, 16, 1, false, false).FPS = 1
+	AP.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
+	AP.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
+	AP.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)
+	AP.NewAnimationState("attack", 16*7, 0, 16, 16, 2, false, false).FPS = 8
+	AP.NewAnimationState("attackRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
+	AP.NewAnimationState("attackUp", 16*11, 0, 16, 16, 2, false, false).FPS = 8
+	AP.SetState("idleRight")
+	return MapPlayer.NewWith(
+		AP,
+		&Health{100, 100},
+		&DrawOptions{Scale: 3},
+		&Rect{x, y, 16 * 3, 16 * 3},
+		NewInventory(),
+	)
 }
 func SpawnItem(x, y float64, id uint16) ecs.Entity {
-	i := &ItemID{ID: id}
-	h := &Health{Health: 100, MaxHealth: 100}
-	d := &DrawOptions{Scale: kar.ItemScale}
-	r := &Rect{X: x, Y: y, W: 16 * kar.ItemScale, H: 16 * kar.ItemScale}
-	return MapItem.NewWith(i, h, d, r)
+	return MapItem.NewWith(
+		&ItemID{id},
+		&Health{Health: 100, MaxHealth: 100},
+		&Rect{x, y, 16 * kar.ItemScale, 16 * kar.ItemScale},
+	)
 }

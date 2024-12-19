@@ -2,7 +2,6 @@ package system
 
 import (
 	"image"
-	"kar"
 	"kar/engine/mathutil"
 	"kar/items"
 	"math"
@@ -43,10 +42,6 @@ type Controller struct {
 	SkiddingJumpEnabled bool
 
 	// Input durumları
-	isWPressed            bool
-	isSPressed            bool
-	isAPressed            bool
-	isDPressed            bool
 	IsBreakKeyPressed     bool
 	IsPlaceKeyJustPressed bool
 	IsJumpKeyPressed      bool
@@ -109,30 +104,24 @@ func (c *Controller) SetScale(s float64) {
 	c.RunDeceleration *= s
 }
 func (c *Controller) UpdateInput() {
-	c.isWPressed = ebiten.IsKeyPressed(ebiten.KeyW)
-	c.isSPressed = ebiten.IsKeyPressed(ebiten.KeyS)
-	c.isAPressed = ebiten.IsKeyPressed(ebiten.KeyA)
-	c.isDPressed = ebiten.IsKeyPressed(ebiten.KeyD)
 	c.IsBreakKeyPressed = ebiten.IsKeyPressed(ebiten.KeyRight)
 	c.IsRunKeyPressed = ebiten.IsKeyPressed(ebiten.KeyShift)
 	c.IsJumpKeyPressed = ebiten.IsKeyPressed(ebiten.KeySpace)
 	c.IsPlaceKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeyLeft)
 	c.IsJumpKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeySpace)
-
 	c.InputAxis = image.Point{}
-	if c.isWPressed {
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		c.InputAxis.Y -= 1
 	}
-	if c.isSPressed {
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		c.InputAxis.Y += 1
 	}
-	if c.isAPressed {
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		c.InputAxis.X -= 1
 	}
-	if c.isDPressed {
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		c.InputAxis.X += 1
 	}
-
 	if !c.InputAxis.Eq(image.Point{}) {
 		c.InputAxisLast = c.InputAxis
 	}
@@ -254,11 +243,6 @@ func (c *Controller) Falling() {
 }
 
 func (c *Controller) Attacking() {
-
-	// breakDist := targetBlock.Sub(playerTile)
-	// dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
-
-	// if IsRaycastHit && dist <= MinAttackBlockDist {
 	if IsRaycastHit {
 		targetBlockID := Map.TileID(targetBlock)
 		if items.IsBreakable(targetBlockID) {
@@ -274,11 +258,7 @@ func (c *Controller) Attacking() {
 			Map.SetTile(targetBlock, items.Air)
 			// spawn drop item
 			x, y := Map.TileToWorld(targetBlock)
-			toSpawn = append(toSpawn, SpawnData{
-				X:  x - 8*kar.ItemScale,
-				Y:  y - 8*kar.ItemScale,
-				Id: targetBlockID,
-			})
+			AppendToSpawnList(x, y, targetBlockID)
 		}
 	}
 

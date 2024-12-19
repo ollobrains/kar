@@ -4,6 +4,7 @@ import (
 	"image"
 	"kar"
 	"kar/arc"
+	"kar/items"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -31,7 +32,7 @@ func (c *PlayerSys) Update() {
 
 	for q.Next() {
 
-		_, dop, anim, rect, _ := q.Get()
+		anim, _, dop, rect, _ := q.Get()
 
 		playerCenterX, playerCenterY = rect.X+rect.W/2, rect.Y+rect.H/2
 
@@ -64,10 +65,21 @@ func (c *PlayerSys) Update() {
 		PlayerController.UpdateState()
 	}
 
+	// Place block
 	if PlayerController.IsPlaceKeyJustPressed {
 		if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
 			Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
 			PlayerInventory.RemoveItemFromSelectedSlot()
+		}
+	}
+	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
+		if PlayerInventory.SelectedSlotQuantity() > 0 {
+			facingTile := playerTile.Add(image.Point{PlayerController.InputAxisLast.X, 0})
+			if Map.TileID(facingTile) == items.Air {
+				x, y := Map.TileToWorld(facingTile)
+				AppendToSpawnList(x, y, PlayerInventory.SelectedSlotID())
+				PlayerInventory.RemoveItemFromSelectedSlot()
+			}
 		}
 	}
 	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {

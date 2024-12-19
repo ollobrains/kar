@@ -25,19 +25,28 @@ var tm = [][]uint16{
 	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
 	{items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone}}
 
-// Reproduction is a helper for delaying reproduction events
+var (
+	PlayerEntity     ecs.Entity
+	PlayerInventory  *arc.Inventory
+	PlayerController = NewController(0, 10, Collider)
+	Map              = tilemap.NewTileMap(tm, 48, 48)
+	Collider         = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
+	ToSpawn          = []SpawnData{}
+)
+
+// SpawnData is a helper for delaying spawn events
 type SpawnData struct {
 	X, Y float64
 	Id   uint16
 }
 
-var PlayerEntity ecs.Entity
-var PlayerInventory *arc.Inventory
-var PlayerController = NewController(0, 10, Collider)
-var Map = tilemap.NewTileMap(tm, 48, 48)
-var Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
-
-var toSpawn = []SpawnData{}
+func AppendToSpawnList(x, y float64, id uint16) {
+	ToSpawn = append(ToSpawn, SpawnData{
+		X:  x - 8*kar.ItemScale,
+		Y:  y - 8*kar.ItemScale,
+		Id: id,
+	})
+}
 
 func init() {
 	PlayerController.Collider = Collider
@@ -52,10 +61,10 @@ func (s *Spawn) Init() {
 }
 func (s *Spawn) Update() {
 	// Spawn item
-	for _, spawnData := range toSpawn {
+	for _, spawnData := range ToSpawn {
 		arc.SpawnItem(spawnData.X, spawnData.Y, spawnData.Id)
 	}
-	toSpawn = toSpawn[:0]
+	ToSpawn = ToSpawn[:0]
 }
 func (s *Spawn) Draw() {
 	kar.Screen.Fill(kar.BackgroundColor)

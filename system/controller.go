@@ -43,6 +43,10 @@ type Controller struct {
 	SkiddingJumpEnabled bool
 
 	// Input durumları
+	isWPressed            bool
+	isSPressed            bool
+	isAPressed            bool
+	isDPressed            bool
 	IsBreakKeyPressed     bool
 	IsPlaceKeyJustPressed bool
 	IsJumpKeyPressed      bool
@@ -105,16 +109,33 @@ func (c *Controller) SetScale(s float64) {
 	c.RunDeceleration *= s
 }
 func (c *Controller) UpdateInput() {
-	c.InputAxis = c.Axis()
-
-	if !c.InputAxis.Eq(image.Point{}) {
-		c.InputAxisLast = c.InputAxis
-	}
+	c.isWPressed = ebiten.IsKeyPressed(ebiten.KeyW)
+	c.isSPressed = ebiten.IsKeyPressed(ebiten.KeyS)
+	c.isAPressed = ebiten.IsKeyPressed(ebiten.KeyA)
+	c.isDPressed = ebiten.IsKeyPressed(ebiten.KeyD)
 	c.IsBreakKeyPressed = ebiten.IsKeyPressed(ebiten.KeyRight)
 	c.IsRunKeyPressed = ebiten.IsKeyPressed(ebiten.KeyShift)
 	c.IsJumpKeyPressed = ebiten.IsKeyPressed(ebiten.KeySpace)
 	c.IsPlaceKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeyLeft)
 	c.IsJumpKeyJustPressed = inpututil.IsKeyJustPressed(ebiten.KeySpace)
+
+	c.InputAxis = image.Point{}
+	if c.isWPressed {
+		c.InputAxis.Y -= 1
+	}
+	if c.isSPressed {
+		c.InputAxis.Y += 1
+	}
+	if c.isAPressed {
+		c.InputAxis.X -= 1
+	}
+	if c.isDPressed {
+		c.InputAxis.X += 1
+	}
+
+	if !c.InputAxis.Eq(image.Point{}) {
+		c.InputAxisLast = c.InputAxis
+	}
 }
 
 func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
@@ -491,20 +512,4 @@ func (c *Controller) changeState(newState string) {
 	case "skidding":
 		c.enterSkidding()
 	}
-}
-
-func (c *Controller) Axis() (axis image.Point) {
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		axis.Y -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		axis.Y += 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		axis.X -= 1
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		axis.X += 1
-	}
-	return axis
 }

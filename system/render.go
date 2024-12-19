@@ -115,7 +115,7 @@ func (rn *Render) Draw() {
 
 	// Draw debug info
 	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
-	ebitenutil.DebugPrintAt(kar.Screen, "InputLast"+PlayerController.InputAxisLast.String(), 10, 30)
+	ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
 	ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlock.String(), 10, 50)
 	ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 50+20)
 }

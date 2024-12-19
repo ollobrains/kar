@@ -51,14 +51,9 @@ func MakeGrid(width, height int) [][]uint16 {
 	return tm
 }
 
-// IsSingleAxis checks if only one component of image.Point is non-zero
-func IsSingleAxis(axis image.Point) bool {
-	// True if exactly one of the components is non-zero
-	return (axis.X != 0 && axis.Y == 0) || (axis.X == 0 && axis.Y != 0)
-}
-
 func (t *TileMap) Raycast(pos, dir image.Point, dist int) (image.Point, bool) {
-	if IsSingleAxis(dir) {
+	// True if exactly one of the components is non-zero
+	if (dir.X != 0 && dir.Y == 0) || (dir.X == 0 && dir.Y != 0) {
 		for range dist {
 			pos = pos.Add(dir)
 			if t.TileID(pos) != 0 {
@@ -80,12 +75,6 @@ func (t *TileMap) TileToWorld(pos image.Point) (float64, float64) {
 	b := float64((pos.Y * t.TileH) + t.TileH/2)
 	return a, b
 }
-
-// func (t *TileMap) NearestBlockCenter(x, y float64) (float64, float64) {
-// 	xCenter := math.Floor(x/float64(t.TileW)) + float64(t.TileW)/2
-// 	yCenter := math.Floor(y/float64(t.TileH)) + float64(t.TileH)/2
-// 	return xCenter, yCenter
-// }
 
 func (t *TileMap) SetTile(pos image.Point, id uint16) {
 	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {

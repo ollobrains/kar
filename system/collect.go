@@ -20,20 +20,16 @@ func (c *Collect) Update() {
 		for collisionQuery.Next() {
 			PlayerRect := arc.MapRect.GetUnchecked(PlayerEntity)
 			rect, itemID, countdown := collisionQuery.Get()
-
-			countdown.Duration--
-			countdown.Duration = max(countdown.Duration, 0)
-
-			if countdown.Duration == 0 {
+			if countdown.Duration != 0 {
+				countdown.Duration--
+			} else {
 				if PlayerRect.OverlapsRect(rect) {
 					ok := PlayerInventory.AddItemIfEmpty(itemID.ID)
 					if ok {
 						toRemove = append(toRemove, collisionQuery.Entity())
 					}
-
 				}
 			}
-
 			dy := Collider.CollideY(rect.X, rect.Y, rect.W, rect.H, itemGravity)
 			rect.Y += dy
 		}

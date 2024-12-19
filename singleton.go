@@ -22,7 +22,7 @@ const DeltaTime float64 = 1.0 / 60.0
 var (
 	ScreenW, ScreenH = 854.0, 480.0
 	Screen           *ebiten.Image
-	Camera           = kamera.NewCamera(0, 0, ScreenW, ScreenH)
+	Camera           = kamera.NewCamera(400, 450, ScreenW, ScreenH)
 	WorldECS         = ecs.NewWorld()
 	// DesktopPath      string
 	GlobalDIO         = &colorm.DrawImageOptions{}
@@ -35,7 +35,6 @@ var (
 
 func init() {
 	// GlobalColorM.ChangeHSV(1, 0, 1)
-	Camera.SmoothType = kamera.Lerp
 	// Camera.SmoothOptions.LerpSpeedX = 0.09
 	// Camera.SmoothOptions.LerpSpeedY = 0.02
 	// Camera.SmoothingOptions.SmoothDampTimeX = 0.3

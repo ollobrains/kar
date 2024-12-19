@@ -66,6 +66,6 @@ func SpawnItem(x, y float64, id uint16) ecs.Entity {
 		&ItemID{id},
 		&Health{Health: 100, MaxHealth: 100},
 		&Rect{x, y, 16 * kar.ItemScale, 16 * kar.ItemScale},
-		&CollisionCountdown{120},
+		&CollisionCountdown{60},
 	)
 }

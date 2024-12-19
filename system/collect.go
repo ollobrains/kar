@@ -7,7 +7,7 @@ import (
 	"github.com/mlange-42/arche/ecs"
 )
 
-var itemGravity float64 = 3
+var itemGravity float64 = 5
 var toRemove []ecs.Entity
 
 type Collect struct {
@@ -31,6 +31,7 @@ func (c *Collect) Update() {
 				}
 			}
 			dy := Collider.CollideY(rect.X, rect.Y, rect.W, rect.H, itemGravity)
+
 			rect.Y += dy
 		}
 		for _, e := range toRemove {

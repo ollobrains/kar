@@ -9,16 +9,19 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/setanarut/kamera/v2"
 	"golang.org/x/image/colornames"
 )
 
 type Render struct{}
 
 func (rn *Render) Init() {
+	kar.Camera.SmoothType = kamera.None
 }
 
 func (rn *Render) Update() {
 
+	// kar.Camera.LookAt(400, 450)
 	kar.Camera.LookAt(playerCenterX, playerCenterY)
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
@@ -32,9 +35,15 @@ func (rn *Render) Update() {
 func (rn *Render) Draw() {
 
 	// Draw tilemap
-	for y, row := range Map.Grid {
-		for x, tileID := range row {
+	camMin := Map.WorldToTile(kar.Camera.TopLeft())
+	camMin.X = min(max(camMin.X, 0), Map.W)
+	camMin.Y = min(max(camMin.Y, 0), Map.H)
+	camMaxX := min(max(camMin.X+19, 0), Map.W)
+	camMaxY := min(max(camMin.Y+11, 0), Map.H)
 
+	for y := camMin.Y; y < camMaxY; y++ {
+		for x := camMin.X; x < camMaxX; x++ {
+			tileID := Map.Grid[y][x]
 			if tileID != 0 {
 				px, py := float64(x*Map.TileW), float64(y*Map.TileH)
 				kar.GlobalDIO.GeoM.Reset()
@@ -50,6 +59,7 @@ func (rn *Render) Draw() {
 
 				}
 			}
+
 		}
 	}
 

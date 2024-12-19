@@ -19,15 +19,22 @@ func (c *Collect) Update() {
 		collisionQuery := arc.FilterCollision.Query(&kar.WorldECS)
 		for collisionQuery.Next() {
 			PlayerRect := arc.MapRect.GetUnchecked(PlayerEntity)
-			rect, itemID := collisionQuery.Get()
-			if PlayerRect.OverlapsRect(rect) {
-				ok := PlayerInventory.AddItemIfEmpty(itemID.ID)
-				if ok {
-					toRemove = append(toRemove, collisionQuery.Entity())
+			rect, itemID, countdown := collisionQuery.Get()
+
+			countdown.Duration--
+			countdown.Duration = max(countdown.Duration, 0)
+
+			if countdown.Duration == 0 {
+				if PlayerRect.OverlapsRect(rect) {
+					ok := PlayerInventory.AddItemIfEmpty(itemID.ID)
+					if ok {
+						toRemove = append(toRemove, collisionQuery.Entity())
+					}
+
 				}
 			}
 
-			dy := Collider.CollideY(rect.X, rect.Y+16, rect.W, rect.H, itemGravity)
+			dy := Collider.CollideY(rect.X, rect.Y, rect.W, rect.H, itemGravity)
 			rect.Y += dy
 		}
 		for _, e := range toRemove {

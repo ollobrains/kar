@@ -2,7 +2,6 @@ package arc
 
 import (
 	"strconv"
-	"time"
 )
 
 type Rect struct {
@@ -30,9 +29,8 @@ type DrawOptions struct {
 	FlipX bool
 }
 
-type Timer struct {
-	Duration time.Duration
-	Elapsed  time.Duration
+type CollisionCountdown struct {
+	Duration int
 }
 
 type AnimationFrameIndex struct {

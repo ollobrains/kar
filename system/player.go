@@ -51,10 +51,15 @@ func (c *PlayerSys) Update() {
 			blockHealth = 0
 		}
 
-		if IsRaycastHit {
-			placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
-			isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
-		} else {
+		// if IsRaycastHit {
+		// 	// placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
+		// 	// isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
+		// } else {
+		// 	isBlockPlaceable = false
+		// 	blockHealth = 0
+		// }
+
+		if !IsRaycastHit {
 			isBlockPlaceable = false
 			blockHealth = 0
 		}
@@ -62,15 +67,25 @@ func (c *PlayerSys) Update() {
 		rect.X += dx
 		rect.Y += dy
 		PlayerController.UpdateState()
-	}
 
-	// Place block
-	if PlayerController.IsPlaceKeyJustPressed {
-		if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
-			Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
-			PlayerInventory.RemoveItemFromSelectedSlot()
+		// Place block
+		if PlayerController.IsPlaceKeyJustPressed {
+			if IsRaycastHit {
+				placeBlock = targetBlock.Sub(PlayerController.InputAxisLast)
+				isBlockPlaceable = !rect.Overlaps(Map.GetTileRect(placeBlock))
+			}
+			queryItem := arc.FilterItem.Query(&kar.WorldECS)
+			for queryItem.Next() {
+				_, _, itemRect, _ := queryItem.Get()
+				isBlockPlaceable = !itemRect.Overlaps(Map.GetTileRect(placeBlock))
+			}
+			if IsRaycastHit && isBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
+				Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
+				PlayerInventory.RemoveItemFromSelectedSlot()
+			}
 		}
 	}
+
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
 		if PlayerInventory.SelectedSlotQuantity() > 0 {
 			AppendToSpawnList(playerCenterX, playerCenterY, PlayerInventory.SelectedSlotID())

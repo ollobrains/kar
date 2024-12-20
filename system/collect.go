@@ -36,9 +36,8 @@ func (c *Collect) Update() {
 					}
 				}
 			}
-			dy := Collider.CollideY(rect.X, rect.Y+13, rect.W, rect.H, itemGravity)
+			dy := Collider.CollideY(rect.X, rect.Y+16, rect.W, rect.H, itemGravity)
 			rect.Y += dy
-
 			rect.Y += sinspace[timers.AnimationIndex]
 			timers.AnimationIndex = (timers.AnimationIndex + 1) % sinspaceLen
 		}

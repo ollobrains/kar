@@ -29,8 +29,9 @@ type DrawOptions struct {
 	FlipX bool
 }
 
-type CollisionCountdown struct {
-	Duration int
+type ItemTimers struct {
+	CollisionCountdown int
+	AnimationIndex     int
 }
 
 type AnimationFrameIndex struct {

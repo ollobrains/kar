@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"embed"
 	"image"
-	"image/color"
 	"image/png"
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -21,17 +19,6 @@ func CheckIndex[T any](slice []T, index int) bool {
 		return false
 	}
 	return true
-}
-
-// HexToRGBA converts hex color to color.RGBA with "#FFFFFF" format
-func HexToRGBA(hex string) color.RGBA {
-	values, _ := strconv.ParseUint(string(hex[1:]), 16, 32)
-	return color.RGBA{
-		R: uint8(values >> 16),
-		G: uint8((values >> 8) & 0xFF),
-		B: uint8(values & 0xFF),
-		A: 255,
-	}
 }
 
 func ReadEbImgFS(fs embed.FS, filePath string) *ebiten.Image {

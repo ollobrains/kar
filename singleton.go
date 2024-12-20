@@ -1,7 +1,8 @@
 package kar
 
 import (
-	"kar/engine/util"
+	"image/color"
+	"kar/items"
 	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -27,11 +28,22 @@ var (
 	// DesktopPath      string
 	GlobalDIO         = &colorm.DrawImageOptions{}
 	GlobalColorM      = colorm.ColorM{}
-	BackgroundColor   = util.HexToRGBA("#20053d")
+	BackgroundColor   = rgb(38, 0, 121)
 	DrawDebugHitboxes = false
 	ItemScale         = 1.0
 	PlayerScale       = 1.0
 )
+var ItemColorMap = map[uint16]color.RGBA{
+	items.Air:        rgb(1, 1, 1),
+	items.GrassBlock: rgb(0, 186, 53),
+	items.Dirt:       rgb(133, 75, 54),
+	items.Sand:       rgb(199, 193, 158),
+	items.Stone:      rgb(139, 139, 139),
+	items.CoalOre:    rgb(0, 0, 0),
+	items.GoldOre:    rgb(255, 221, 0),
+	items.IronOre:    rgb(171, 162, 147),
+	items.DiamondOre: rgb(0, 247, 255),
+}
 
 func init() {
 	// GlobalColorM.ChangeHSV(1, 0, 1)
@@ -47,4 +59,8 @@ func init() {
 	// 	log.Fatal(err)
 	// }
 	// DesktopPath = homePath + "/Desktop/"
+}
+
+func rgb(r, g, b uint8) color.RGBA {
+	return color.RGBA{r, g, b, 255}
 }

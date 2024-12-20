@@ -12,7 +12,7 @@ import (
 var (
 	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
 	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
-	MapItem      = gn.NewMap4[ItemID, Health, Rect, CollisionCountdown](&kar.WorldECS)
+	MapItem      = gn.NewMap4[ItemID, Health, Rect, ItemTimers](&kar.WorldECS)
 	MapPlayer    = gn.NewMap5[
 		anim.AnimationPlayer,
 		Health,
@@ -23,10 +23,10 @@ var (
 
 // Query Filters
 var (
-	FilterCollision  = gn.NewFilter3[Rect, ItemID, CollisionCountdown]()
+	FilterCollision  = gn.NewFilter3[Rect, ItemID, ItemTimers]()
 	FilterRect       = gn.NewFilter1[Rect]()
 	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
-	FilterItem       = gn.NewFilter4[ItemID, Health, Rect, CollisionCountdown]()
+	FilterItem       = gn.NewFilter4[ItemID, Health, Rect, ItemTimers]()
 	FilterPlayer     = gn.NewFilter5[
 		anim.AnimationPlayer,
 		Health,
@@ -66,6 +66,6 @@ func SpawnItem(x, y float64, id uint16) ecs.Entity {
 		&ItemID{id},
 		&Health{Health: 100, MaxHealth: 100},
 		&Rect{x, y, 16 * kar.ItemScale, 16 * kar.ItemScale},
-		&CollisionCountdown{60},
+		&ItemTimers{60, 0},
 	)
 }

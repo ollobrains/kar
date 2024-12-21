@@ -98,10 +98,6 @@ func init() {
 	recipes = make(map[uint16][]Recipe)
 	recipes[Torch] = []Recipe{
 		[][]uint16{
-			{Charcoal},
-			{Stick},
-		},
-		[][]uint16{
 			{Coal},
 			{Stick},
 		},

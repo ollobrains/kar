@@ -3,68 +3,41 @@ package items
 // Item ID
 const (
 	Air uint16 = iota
-	Arrow
 	Bedrock
-	BeetrootSeeds
-	Bow
 	Bread
-	BrewingStand
 	Bucket
-	CartographyTable
-	Charcoal
 	Coal
 	CoalBlock
 	CoalOre
 	Cobblestone
-	CopperIngot
-	CopperOre
 	CraftingTable
-	CrossbowStandby
 	Diamond
 	DiamondAxe
-	DiamondHoe
 	DiamondOre
 	DiamondPickaxe
 	DiamondShovel
-	DiamondSword
 	Dirt
-	EnchantingTable
-	EndPortalFrame
-	FletchingTable
 	Furnace
 	FurnaceOn
 	GoldenAxe
-	GoldenHoe
 	GoldenPickaxe
 	GoldenShovel
-	GoldenSword
 	GoldIngot
 	GoldOre
 	GrassBlock
 	GrassBlockSnow
 	IronAxe
-	IronHoe
 	IronIngot
 	IronOre
 	IronPickaxe
 	IronShovel
-	IronSword
-	LapisLazuli
-	LapisOre
-	LavaBucket
-	MelonSeeds
-	MilkBucket
 	OakLeaves
 	OakLog
 	OakPlanks
 	OakSapling
 	Obsidian
-	PowderSnowBucket
-	PumpkinSeeds
-	RawCopper
 	RawGold
 	RawIron
-	RootedDirt
 	Sand
 	SmoothStone
 	Snow
@@ -73,20 +46,14 @@ const (
 	Stone
 	StoneAxe
 	StoneBricks
-	StoneHoe
 	StonePickaxe
 	StoneShovel
-	StoneSword
 	Tnt
 	Torch
-	TorchflowerSeeds
 	WaterBucket
 	Wheat
 	WheatCrops
-	WheatSeeds
 	WoodenAxe
-	WoodenHoe
 	WoodenPickaxe
 	WoodenShovel
-	WoodenSword
 )

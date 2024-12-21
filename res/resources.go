@@ -15,14 +15,14 @@ import (
 var fs embed.FS
 
 var (
-	Images          = make(map[uint16]*ebiten.Image, 0)
-	Frames          = make(map[uint16][]*ebiten.Image, 0)
-	Hotbar          = util.ReadEbImgFS(fs, "assets/img/gui/hotbar.png")
-	HotbarSelection = util.ReadEbImgFS(fs, "assets/img/gui/hotbarBorder.png")
-	Font            = util.LoadFontFromFS("assets/font/pixelcode.otf", 18, fs)
-	PlayerAtlas     = util.ReadEbImgFS(fs, "assets/img/player/player.png")
-	cracks          = util.ImgFromFS(fs, "assets/img/overlay/cracks.png")
-	Border          = util.ReadEbImgFS(fs, "assets/img/overlay/border48.png")
+	Images         = make(map[uint16]*ebiten.Image, 0)
+	Frames         = make(map[uint16][]*ebiten.Image, 0)
+	Hotbar         = util.ReadEbImgFS(fs, "assets/img/gui/hotbar.png")
+	SelectionBar   = util.ReadEbImgFS(fs, "assets/img/gui/selection_bar.png")
+	SelectionBlock = util.ReadEbImgFS(fs, "assets/img/gui/selection_block.png")
+	Font           = util.LoadFontFromFS("assets/font/pixelcode.otf", 18, fs)
+	PlayerAtlas    = util.ReadEbImgFS(fs, "assets/img/player/player.png")
+	cracks         = util.ImgFromFS(fs, "assets/img/cracks.png")
 )
 
 func init() {
@@ -30,7 +30,6 @@ func init() {
 	Frames[items.Bedrock] = blockImgs("bedrock.png")
 	Frames[items.BrewingStand] = blockImgs("brewing_stand.png")
 	Frames[items.CartographyTable] = blockImgs("cartography_table.png")
-	Frames[items.Clay] = blockImgs("clay.png")
 	Frames[items.CoalBlock] = blockImgs("coal_block.png")
 	Frames[items.CoalOre] = blockImgs("coal_ore.png")
 	Frames[items.CopperOre] = blockImgs("copper_ore.png")

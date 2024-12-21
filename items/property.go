@@ -98,12 +98,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   1,
 		Category:    Item | DropItem | RawOre,
 	},
-	Clay: {
-		DisplayName: "Clay",
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
 	Coal: {
 		DisplayName: "Coal",
 		Stackable:   64,
@@ -276,7 +270,7 @@ var Property = map[uint16]ItemProperty{
 		Category:    Item | Tool,
 	},
 	GoldenShovel: {
-		DisplayName: "Golden Hoe",
+		DisplayName: "Golden Shovel",
 		Stackable:   1,
 		MaxHealth:   1,
 		Category:    Item | Tool,
@@ -333,7 +327,7 @@ var Property = map[uint16]ItemProperty{
 		Category:    Item | Tool,
 	},
 	IronShovel: {
-		DisplayName: "Iron Hoe",
+		DisplayName: "Iron Shovel",
 		Stackable:   1,
 		MaxHealth:   1,
 		Category:    Item | Tool,
@@ -379,28 +373,28 @@ var Property = map[uint16]ItemProperty{
 		Category:    Item | Tool,
 	},
 	OakLeaves: {
-		DisplayName: "Leaves",
+		DisplayName: "Oak Leaves",
 		DropID:      OakLeaves,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakLog: {
-		DisplayName: "Log",
+		DisplayName: "Oak Log",
 		DropID:      OakLog,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakPlanks: {
-		DisplayName: "Tree Plank",
+		DisplayName: "Oak Planks",
 		DropID:      OakPlanks,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,
 	},
 	OakSapling: {
-		DisplayName: "Sapling",
+		DisplayName: "Oak Sapling",
 		DropID:      OakSapling,
 		Stackable:   64,
 		MaxHealth:   1,
@@ -594,7 +588,7 @@ var Property = map[uint16]ItemProperty{
 		Category:    Item | Tool,
 	},
 	WoodenShovel: {
-		DisplayName: "Wooden Hoe",
+		DisplayName: "Wooden Shovel",
 		Stackable:   1,
 		MaxHealth:   1,
 		Category:    Item | Tool,

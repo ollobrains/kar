@@ -1,12 +1,15 @@
 package items
 
 import (
+	"fmt"
+	"kar/engine/mathutil"
 	"math/rand/v2"
 )
 
 var BlockIDs []uint16
 
 func init() {
+	fmt.Println(len(Property))
 	for id := range Property {
 		if IsBlock(id) {
 			BlockIDs = append(BlockIDs, id)
@@ -27,4 +30,7 @@ func IsBlock(id uint16) bool {
 
 func RandomBlock() uint16 {
 	return BlockIDs[rand.IntN(len(BlockIDs))]
+}
+func RandomItem() uint16 {
+	return uint16(mathutil.RandRangeInt(1, len(Property)-1))
 }

@@ -56,8 +56,8 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	return MapPlayer.NewWith(
 		AP,
 		&Health{100, 100},
-		&DrawOptions{Scale: 3},
-		&Rect{x, y, 16 * 3, 16 * 3},
+		&DrawOptions{Scale: kar.PlayerScale},
+		&Rect{x, y, 16 * kar.PlayerScale, 16 * kar.PlayerScale},
 		NewInventory(),
 	)
 }

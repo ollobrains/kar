@@ -12,7 +12,6 @@ const (
 	Bucket
 	CartographyTable
 	Charcoal
-	Clay
 	Coal
 	CoalBlock
 	CoalOre
@@ -34,13 +33,13 @@ const (
 	FletchingTable
 	Furnace
 	FurnaceOn
-	GoldIngot
-	GoldOre
 	GoldenAxe
 	GoldenHoe
 	GoldenPickaxe
 	GoldenShovel
 	GoldenSword
+	GoldIngot
+	GoldOre
 	GrassBlock
 	GrassBlockSnow
 	IronAxe

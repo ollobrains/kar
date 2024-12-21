@@ -42,9 +42,11 @@ func (i *Inventory) AddItemIfEmpty(id uint16) bool {
 }
 
 func (i *Inventory) SetSlot(slotIndex int, id uint16, quantity uint8) {
-	i.Slots[slotIndex] = ItemStack{
-		ID:       id,
-		Quantity: quantity,
+	if quantity > 0 {
+		i.Slots[slotIndex] = ItemStack{
+			ID:       id,
+			Quantity: quantity,
+		}
 	}
 }
 
@@ -96,7 +98,8 @@ func (i *Inventory) ClearAllSlots() {
 }
 func (i *Inventory) RandomFillAllSlots() {
 	for idx := range i.Slots {
-		i.SetSlot(idx, items.RandomBlock(), 64)
+		randItemID := items.RandomItem()
+		i.SetSlot(idx, randItemID, items.Property[randItemID].Stackable)
 	}
 }
 

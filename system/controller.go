@@ -2,6 +2,7 @@ package system
 
 import (
 	"image"
+	"kar/arc"
 	"kar/engine/mathutil"
 	"kar/items"
 	"math"
@@ -13,9 +14,10 @@ import (
 )
 
 type Controller struct {
+	DOP          *arc.DrawOptions
+	AnimPlayer   *anim.AnimationPlayer
 	CurrentState string
 	Collider     *tilecollider.Collider[uint16]
-	AnimPlayer   *anim.AnimationPlayer
 
 	VelX                                float64
 	VelY                                float64
@@ -167,14 +169,16 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 	c.VelY += c.Gravity
 	c.VelY = min(c.MaxFallSpeed, c.VelY)
 
-	if PlayerController.VelX > 0.01 {
-		DOP.FlipX = false // sağa gidiyor
-		PlayerController.InputAxisLast.X = 1
-	} else if PlayerController.VelX < -0.01 {
-		DOP.FlipX = true // sola gidiyor
-		PlayerController.InputAxisLast.X = -1
+	if c.VelX > 0.01 {
+		c.DOP.FlipX = false // sağa gidiyor
+		c.InputAxisLast.X = 1
+	} else if c.VelX < -0.01 {
+		c.DOP.FlipX = true // sola gidiyor
+		c.InputAxisLast.X = -1
 	}
+
 	return c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
+
 }
 
 func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx, dy float64) {
@@ -243,8 +247,8 @@ func (c *Controller) Falling() {
 }
 
 func (c *Controller) Attacking() {
-	if IsRaycastHit {
-		targetBlockID := Map.TileID(targetBlock)
+	if IsRayHit {
+		targetBlockID := Map.TileID(targetBlockPos)
 		if items.IsBreakable(targetBlockID) {
 			blockHardness := items.Property[targetBlockID].MaxHealth
 			if blockHealth < blockHardness/4 {
@@ -255,14 +259,14 @@ func (c *Controller) Attacking() {
 		// Destroy block
 		if blockHealth >= items.Property[targetBlockID].MaxHealth {
 			blockHealth = 0
-			Map.SetTile(targetBlock, items.Air)
+			Map.SetTile(targetBlockPos, items.Air)
 			// spawn drop item
-			x, y := Map.TileToWorld(targetBlock)
-			AppendToSpawnList(x, y, targetBlockID)
+			x, y := Map.TileToWorld(targetBlockPos)
+			AppendToSpawnList(x, y, items.Property[targetBlockID].DropID)
 		}
 	}
 
-	if !IsRaycastHit {
+	if !IsRayHit {
 		c.changeState("idle")
 	}
 
@@ -384,7 +388,7 @@ func (c *Controller) Idle() {
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
 		// } else if c.IsBreakKeyPressed && IsRaycastHit && dist <= MinAttackBlockDist {
-	} else if c.IsBreakKeyPressed && IsRaycastHit {
+	} else if c.IsBreakKeyPressed && IsRayHit {
 		c.changeState("attacking")
 	}
 }
@@ -428,7 +432,7 @@ func (c *Controller) enterAttacking() {
 		c.AnimPlayer.SetStateAndReset("attackRight")
 	} else if c.InputAxisLast.X == -1 {
 		c.AnimPlayer.SetStateAndReset("attackRight")
-		DOP.FlipX = true
+		c.DOP.FlipX = true
 	} else if c.InputAxisLast.Y == 1 {
 		c.AnimPlayer.SetStateAndReset("attack")
 	} else if c.InputAxisLast.Y == -1 {

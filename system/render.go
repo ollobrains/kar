@@ -9,20 +9,17 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"github.com/setanarut/kamera/v2"
 	"golang.org/x/image/colornames"
 )
 
 type Render struct{}
 
 func (rn *Render) Init() {
-	kar.Camera.SmoothType = kamera.None
 }
 
 func (rn *Render) Update() {
 
-	// kar.Camera.LookAt(400, 450)
-	kar.Camera.LookAt(playerCenterX, playerCenterY)
+	kar.Camera.LookAt(playerCenterX, 200)
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
 	for q.Next() {
@@ -38,8 +35,8 @@ func (rn *Render) Draw() {
 	camMin := Map.WorldToTile(kar.Camera.TopLeft())
 	camMin.X = min(max(camMin.X, 0), Map.W)
 	camMin.Y = min(max(camMin.Y, 0), Map.H)
-	camMaxX := min(max(camMin.X+19, 0), Map.W)
-	camMaxY := min(max(camMin.Y+11, 0), Map.H)
+	camMaxX := min(max(camMin.X+28, 0), Map.W)
+	camMaxY := min(max(camMin.Y+15, 0), Map.H)
 
 	for y := camMin.Y; y < camMaxY; y++ {
 		for x := camMin.X; x < camMaxX; x++ {
@@ -47,9 +44,9 @@ func (rn *Render) Draw() {
 			if tileID != 0 {
 				px, py := float64(x*Map.TileW), float64(y*Map.TileH)
 				kar.GlobalDIO.GeoM.Reset()
-				kar.GlobalDIO.GeoM.Scale(3, 3)
+				kar.GlobalDIO.GeoM.Scale(2, 2)
 				kar.GlobalDIO.GeoM.Translate(px, py)
-				if x == targetBlock.X && y == targetBlock.Y {
+				if x == targetBlockPos.X && y == targetBlockPos.Y {
 					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
 					if res.Frames[tileID] != nil {
 						kar.Camera.DrawWithColorM(res.Frames[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
@@ -63,11 +60,18 @@ func (rn *Render) Draw() {
 		}
 	}
 
+	// Draw target tile border
+	if IsRayHit {
+		kar.GlobalDIO.GeoM.Reset()
+		kar.GlobalDIO.GeoM.Scale(2, 2)
+		kar.GlobalDIO.GeoM.Translate(float64(targetBlockPos.X*Map.TileW)-2, float64(targetBlockPos.Y*Map.TileH)-2)
+		kar.Camera.DrawWithColorM(res.SelectionBlock, kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+	}
+
+	// Draw player
 	playerQuery := arc.FilterPlayer.Query(&kar.WorldECS)
 	for playerQuery.Next() {
 		anim, _, dop, rect, _ := playerQuery.Get()
-
-		// Draw player
 		sclX := dop.Scale
 		kar.GlobalDIO.GeoM.Reset()
 		if dop.FlipX {
@@ -82,7 +86,7 @@ func (rn *Render) Draw() {
 	}
 
 	// Draw all rects for debug
-	if kar.DrawDebugHitboxes {
+	if kar.DrawDebugHitboxesEnabled {
 		rectQ := arc.FilterRect.Query(&kar.WorldECS)
 		for rectQ.Next() {
 			rect := rectQ.Get()
@@ -119,13 +123,11 @@ func (rn *Render) Draw() {
 		kar.Camera.DrawWithColorM(GetSprite(id.ID), kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
-	// // Draw target tile border
-	kar.GlobalDIO.GeoM.Translate(float64(targetBlock.X*Map.TileW), float64(targetBlock.Y*Map.TileH))
-	kar.Camera.DrawWithColorM(res.Border, kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
-
 	// Draw debug info
-	ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
-	ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
-	ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlock.String(), 10, 50)
-	ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 50+20)
+	if kar.DrawDebugTextEnabled {
+		ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
+		ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
+		ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlockPos.String(), 10, 50)
+		ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 50+20)
+	}
 }

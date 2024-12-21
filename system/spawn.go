@@ -7,6 +7,7 @@ import (
 	"kar/tilemap"
 
 	"github.com/mlange-42/arche/ecs"
+	"github.com/setanarut/kamera/v2"
 	"github.com/setanarut/tilecollider"
 )
 
@@ -29,7 +30,7 @@ var (
 	PlayerEntity     ecs.Entity
 	PlayerInventory  *arc.Inventory
 	PlayerController = NewController(0, 10, Collider)
-	Map              = tilemap.NewTileMap(tm, 48, 48)
+	Map              = tilemap.NewTileMap(tm, 32, 32)
 	Collider         = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
 	ToSpawn          = []SpawnData{}
 )
@@ -50,12 +51,14 @@ func AppendToSpawnList(x, y float64, id uint16) {
 
 func init() {
 	PlayerController.Collider = Collider
-	PlayerController.SetScale(3)
+	PlayerController.SetScale(2)
 	PlayerController.SkiddingJumpEnabled = true
 }
 
 func (s *Spawn) Init() {
-	PlayerEntity = arc.SpawnPlayer(512, 400)
+	PlayerEntity = arc.SpawnPlayer(100, 100)
+	kar.Camera.LookAt(100, 100)
+	kar.Camera.SmoothType = kamera.None
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
 	PlayerInventory.RandomFillAllSlots()
 }

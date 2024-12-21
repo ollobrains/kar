@@ -29,7 +29,7 @@ var (
 	GlobalDIO        = &colorm.DrawImageOptions{}
 	GlobalColorM     = colorm.ColorM{}
 	BackgroundColor  = rgb(38, 0, 121)
-	ItemScale        = 1.0
+	ItemScale        = 2.0
 	PlayerScale      = 2.0
 	// Debug
 	DrawDebugHitboxesEnabled = false

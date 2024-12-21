@@ -65,7 +65,7 @@ func SpawnItem(x, y float64, id uint16) ecs.Entity {
 	return MapItem.NewWith(
 		&ItemID{id},
 		&Health{Health: 100, MaxHealth: 100},
-		&Rect{x, y, 16 * kar.ItemScale, 16 * kar.ItemScale},
+		&Rect{x, y, 8 * kar.ItemScale, 8 * kar.ItemScale},
 		&ItemTimers{60, 0},
 	)
 }

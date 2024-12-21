@@ -19,9 +19,6 @@ const (
 	Dirt
 	Furnace
 	FurnaceOn
-	GoldenAxe
-	GoldenPickaxe
-	GoldenShovel
 	GoldIngot
 	GoldOre
 	GrassBlock

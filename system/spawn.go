@@ -43,8 +43,8 @@ type SpawnData struct {
 
 func AppendToSpawnList(x, y float64, id uint16) {
 	ToSpawn = append(ToSpawn, SpawnData{
-		X:  x - 8*kar.ItemScale,
-		Y:  y - 8*kar.ItemScale,
+		X:  x - 4*kar.ItemScale,
+		Y:  y - 4*kar.ItemScale,
 		Id: id,
 	})
 }

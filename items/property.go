@@ -160,25 +160,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
 	},
-	GoldenAxe: {
-		DisplayName: "Golden Axe",
-		Stackable:   1,
-		MaxHealth:   1,
-		Category:    Item | Tool,
-	},
-
-	GoldenPickaxe: {
-		DisplayName: "Golden Pickaxe",
-		Stackable:   1,
-		MaxHealth:   1,
-		Category:    Item | Tool,
-	},
-	GoldenShovel: {
-		DisplayName: "Golden Shovel",
-		Stackable:   1,
-		MaxHealth:   1,
-		Category:    Item | Tool,
-	},
 
 	GrassBlock: {
 		DisplayName: "Grass Block",

@@ -10,9 +10,9 @@ import (
 )
 
 var (
-	itemGravity float64 = 5
+	itemGravity float64 = 3
 	toRemove    []ecs.Entity
-	sinspace    = mathutil.SinSpace(0, 2*math.Pi, 5, 60)
+	sinspace    = mathutil.SinSpace(0, 2*math.Pi, 3, 60)
 	sinspaceLen = len(sinspace) - 1
 )
 
@@ -38,7 +38,7 @@ func (c *Collect) Update() {
 			}
 			dy := Collider.CollideY(rect.X, rect.Y+8, rect.W, rect.H, itemGravity)
 			rect.Y += dy
-			rect.Y += sinspace[timers.AnimationIndex]
+			// rect.Y += sinspace[timers.AnimationIndex]
 			timers.AnimationIndex = (timers.AnimationIndex + 1) % sinspaceLen
 		}
 		for _, e := range toRemove {

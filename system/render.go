@@ -115,10 +115,10 @@ func (rn *Render) Draw() {
 	// Draw Items
 	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
 	for itemQuery.Next() {
-		id, _, rect, _ := itemQuery.Get()
+		id, _, rect, timers := itemQuery.Get()
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
-		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y)
+		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y+sinspace[timers.AnimationIndex])
 		kar.Camera.DrawWithColorM(res.ItemIcons[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 

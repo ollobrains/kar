@@ -7,7 +7,6 @@ const (
 	Bread
 	Bucket
 	Coal
-	CoalBlock
 	CoalOre
 	Cobblestone
 	CraftingTable
@@ -48,8 +47,6 @@ const (
 	Tnt
 	Torch
 	WaterBucket
-	Wheat
-	WheatCrops
 	WoodenAxe
 	WoodenPickaxe
 	WoodenShovel

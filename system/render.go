@@ -19,7 +19,7 @@ func (rn *Render) Init() {
 
 func (rn *Render) Update() {
 
-	kar.Camera.LookAt(playerCenterX, 200)
+	kar.Camera.LookAt(playerCenterX, 256)
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
 	for q.Next() {
@@ -48,11 +48,11 @@ func (rn *Render) Draw() {
 				kar.GlobalDIO.GeoM.Translate(px, py)
 				if x == targetBlockPos.X && y == targetBlockPos.Y {
 					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
-					if res.BlockCrackFrames[tileID] != nil {
-						kar.Camera.DrawWithColorM(res.BlockCrackFrames[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+					if res.BlockCrackFrames16[tileID] != nil {
+						kar.Camera.DrawWithColorM(res.BlockCrackFrames16[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 					}
 				} else {
-					kar.Camera.DrawWithColorM(res.BlockCrackFrames[tileID][0], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+					kar.Camera.DrawWithColorM(res.BlockCrackFrames16[tileID][0], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 				}
 			}
 
@@ -119,7 +119,7 @@ func (rn *Render) Draw() {
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y+sinspace[timers.AnimationIndex])
-		kar.Camera.DrawWithColorM(res.ItemIcons[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+		kar.Camera.DrawWithColorM(res.Items8[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
 	// Draw debug info

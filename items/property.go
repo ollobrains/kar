@@ -64,14 +64,10 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   1,
 		Category:    Item | DropItem | RawOre,
 	},
-	CoalBlock: {
-		DisplayName: "Coal Block",
-		Stackable:   64,
-		MaxHealth:   1,
-		Category:    Block,
-	},
+
 	CoalOre: {
 		DisplayName: "Coal Ore",
+		DropID:      Coal,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
@@ -338,25 +334,13 @@ var Property = map[uint16]ItemProperty{
 		DisplayName: "Torch",
 		Stackable:   64,
 		MaxHealth:   10,
-		Category:    Item,
+		Category:    Item | Block,
 	},
 	WaterBucket: {
 		DisplayName: "Water Bucket",
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Item,
-	},
-	Wheat: {
-		DisplayName: "Wheat",
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Item,
-	},
-	WheatCrops: {
-		DisplayName: "Wheat Crops",
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block | Harvestable,
 	},
 
 	WoodenAxe: {

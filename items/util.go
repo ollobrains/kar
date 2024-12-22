@@ -1,7 +1,6 @@
 package items
 
 import (
-	"fmt"
 	"kar/engine/mathutil"
 	"math/rand/v2"
 )
@@ -9,7 +8,6 @@ import (
 var BlockIDs []uint16
 
 func init() {
-	fmt.Println(len(Property))
 	for id := range Property {
 		if IsBlock(id) {
 			BlockIDs = append(BlockIDs, id)

@@ -70,7 +70,7 @@ func (c *PlayerSys) Update() {
 
 	// Drop Item
 	if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
-		if PlayerInventory.SelectedSlotQuantity() > 0 {
+		if PlayerInventory.SelectedSlotID() != items.Air {
 			AppendToSpawnList(playerCenterX, playerCenterY, PlayerInventory.SelectedSlotID())
 			PlayerInventory.RemoveItemFromSelectedSlot()
 		}

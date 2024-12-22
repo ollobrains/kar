@@ -76,6 +76,10 @@ func (i *Inventory) RemoveItem(id uint16) bool {
 	return false
 }
 func (i *Inventory) RemoveItemFromSelectedSlot() {
+	if i.Slots[i.SelectedSlot].Quantity == 1 {
+		i.ClearSelectedSlot()
+		return
+	}
 	if i.Slots[i.SelectedSlot].Quantity > 0 {
 		i.Slots[i.SelectedSlot].Quantity--
 	}
@@ -88,7 +92,10 @@ func (i *Inventory) SelectedSlotQuantity() uint8 {
 }
 
 func (i *Inventory) ClearSlot(index int) {
-	i.Slots[index] = ItemStack{}
+	i.Slots[index] = ItemStack{
+		ID:       items.Air,
+		Quantity: 0,
+	}
 }
 
 func (i *Inventory) ClearAllSlots() {

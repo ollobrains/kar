@@ -12,12 +12,7 @@ require (
 	golang.org/x/text v0.21.0
 )
 
-require (
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/setanarut/fastnoise v1.1.1 // indirect
-	github.com/spf13/cobra v0.0.5 // indirect
-	github.com/spf13/pflag v1.0.3 // indirect
-)
+require github.com/setanarut/fastnoise v1.1.1 // indirect
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20241016134836-cc2e38a7c0ee // indirect
@@ -25,8 +20,8 @@ require (
 	github.com/ebitengine/purego v0.8.1 // indirect
 	github.com/go-text/typesetting v0.2.1 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
-	github.com/mlange-42/arche v0.13.3
-	github.com/setanarut/kamera/v2 v2.94.0
+	github.com/mlange-42/arche v0.14.0
+	github.com/setanarut/kamera/v2 v2.95.0
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 )

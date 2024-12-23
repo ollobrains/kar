@@ -372,9 +372,11 @@ func (c *Controller) Walking() {
 }
 
 func (c *Controller) Idle() {
-	// breakDist := targetBlock.Sub(playerTile)
-	// dist := max(math.Abs(float64(breakDist.X)), math.Abs(float64(breakDist.Y)))
-
+	if c.InputAxisLast.Y == -1 {
+		c.AnimPlayer.SetStateAndReset("idleUp")
+	} else if c.InputAxisLast.Y == 1 {
+		c.AnimPlayer.SetStateAndReset("idleDown")
+	}
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
 		c.VelY = c.JumpPower
@@ -387,7 +389,6 @@ func (c *Controller) Idle() {
 		}
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
 		c.changeState("falling")
-		// } else if c.IsBreakKeyPressed && IsRaycastHit && dist <= MinAttackBlockDist {
 	} else if c.IsBreakKeyPressed && IsRayHit {
 		c.changeState("attacking")
 	}

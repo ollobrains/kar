@@ -82,7 +82,7 @@ var Property = map[uint16]ItemProperty{
 
 	CraftingTable: {
 		DisplayName: "Crafting Table",
-		DropID:      Air,
+		DropID:      CraftingTable,
 		Stackable:   1,
 		MaxHealth:   10,
 		Category:    Block,

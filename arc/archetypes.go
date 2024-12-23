@@ -46,6 +46,8 @@ func init() {
 func SpawnPlayer(x, y float64) ecs.Entity {
 	AP := anim.NewAnimationPlayer(res.PlayerAtlas)
 	AP.NewAnimationState("idleRight", 0, 0, 16, 16, 1, false, false).FPS = 1
+	AP.NewAnimationState("idleUp", 208, 0, 16, 16, 1, false, false).FPS = 1
+	AP.NewAnimationState("idleDown", 224, 0, 16, 16, 1, false, false).FPS = 1
 	AP.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
 	AP.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
 	AP.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)

@@ -6,6 +6,7 @@ import (
 	"kar/engine/mathutil"
 	"kar/items"
 	"kar/res"
+	"log"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
@@ -119,6 +120,9 @@ func (rn *Render) Draw() {
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y+sinspace[timers.AnimationIndex])
+		if res.Items8[id.ID] == nil {
+			log.Fatal("image not found", id.ID)
+		}
 		kar.Camera.DrawWithColorM(res.Items8[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 

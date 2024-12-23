@@ -3,7 +3,6 @@ package kar
 import (
 	"image/color"
 	"kar/items"
-	"time"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/colorm"
@@ -17,22 +16,21 @@ type ISystem interface {
 	Draw()
 }
 
-const TimerTick time.Duration = time.Second / 60
-const DeltaTime float64 = 1.0 / 60.0
-
 var (
 	// DesktopPath      string
-	ScreenW, ScreenH = 854.0, 480.0
-	Screen           *ebiten.Image
-	Camera           = kamera.NewCamera(400, 450, ScreenW, ScreenH)
-	WorldECS         = ecs.NewWorld()
-	GlobalDIO        = &colorm.DrawImageOptions{}
-	GlobalColorM     = colorm.ColorM{}
-	ItemScale        = 2.0
-	PlayerScale      = 2.0
+	ScreenW, ScreenH   = 854.0, 480.0
+	Screen             *ebiten.Image
+	Camera                 = kamera.NewCamera(400, 450, ScreenW, ScreenH)
+	WorldECS               = ecs.NewWorld()
+	GlobalDIO              = &colorm.DrawImageOptions{}
+	GlobalColorM           = colorm.ColorM{}
+	ItemScale              = 2.0
+	PlayerScale            = 2.0
+	ItemCollisionDelay     = 30
+	RaycastDist        int = 4 // block unit
 	// Debug
 	DrawDebugHitboxesEnabled = false
-	DrawDebugTextEnabled     = false
+	DrawDebugTextEnabled     = true
 	BackgroundColor          = rgb(54, 45, 95)
 )
 var ItemColorMap = map[uint16]color.RGBA{

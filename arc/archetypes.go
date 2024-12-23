@@ -51,7 +51,7 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	AP.NewAnimationState("walkRight", 16, 0, 16, 16, 4, false, false)
 	AP.NewAnimationState("jump", 16*5, 0, 16, 16, 1, false, false)
 	AP.NewAnimationState("skidding", 16*6, 0, 16, 16, 1, false, false)
-	AP.NewAnimationState("attack", 16*7, 0, 16, 16, 2, false, false).FPS = 8
+	AP.NewAnimationState("attackDown", 16*7, 0, 16, 16, 2, false, false).FPS = 8
 	AP.NewAnimationState("attackRight", 16*9, 0, 16, 16, 2, false, false).FPS = 8
 	AP.NewAnimationState("attackUp", 16*11, 0, 16, 16, 2, false, false).FPS = 8
 	AP.SetState("idleRight")
@@ -68,6 +68,6 @@ func SpawnItem(x, y float64, id uint16) ecs.Entity {
 		&ItemID{id},
 		&Health{Health: 100, MaxHealth: 100},
 		&Rect{x, y, 8 * kar.ItemScale, 8 * kar.ItemScale},
-		&ItemTimers{60, 0},
+		&ItemTimers{kar.ItemCollisionDelay, 0},
 	)
 }

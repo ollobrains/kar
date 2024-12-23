@@ -435,7 +435,7 @@ func (c *Controller) enterAttacking() {
 		c.AnimPlayer.SetStateAndReset("attackRight")
 		c.DOP.FlipX = true
 	} else if c.InputAxisLast.Y == 1 {
-		c.AnimPlayer.SetStateAndReset("attack")
+		c.AnimPlayer.SetStateAndReset("attackDown")
 	} else if c.InputAxisLast.Y == -1 {
 		c.AnimPlayer.SetStateAndReset("attackUp")
 	}

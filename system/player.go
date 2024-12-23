@@ -12,7 +12,6 @@ import (
 
 var (
 	damage                       float64 = 0.3
-	raycastDist                  int     = 3 // block unit
 	blockHealth                  float64
 	targetBlockPos               image.Point
 	placeBlock                   image.Point
@@ -36,7 +35,7 @@ func (c *PlayerSys) Update() {
 
 		playerTile = Map.WorldToTile(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlockPos
-		targetBlockPos, IsRayHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, raycastDist)
+		targetBlockPos, IsRayHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.RaycastDist)
 		// eğer block odağı değiştiyse saldırıyı sıfırla
 		if !targetBlockPos.Eq(targetBlockTemp) || !IsRayHit {
 			blockHealth = 0
@@ -63,9 +62,20 @@ func (c *PlayerSys) Update() {
 				if IsRayHit && IsBlockPlaceable && PlayerInventory.SelectedSlotQuantity() > 0 {
 					Map.SetTile(placeBlock, PlayerInventory.SelectedSlotID())
 					PlayerInventory.RemoveItemFromSelectedSlot()
+
+					if PlayerController.CurrentState != "idle" {
+						if PlayerController.InputAxisLast.Y == -1 {
+							anim.SetStateAndReset("attackUp")
+						}
+						if PlayerController.InputAxisLast.Y == 1 {
+							anim.SetStateAndReset("attackDown")
+						}
+					}
+
 				}
 			}
 		}
+
 	}
 
 	// Drop Item

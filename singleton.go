@@ -26,12 +26,12 @@ var (
 	GlobalDIO              = &colorm.DrawImageOptions{}
 	GlobalColorM           = colorm.ColorM{}
 	ItemScale              = 2.0
-	PlayerScale            = 2.0
-	ItemCollisionDelay     = 30
+	PlayerScale            = 1.0
+	ItemCollisionDelay     = 50
 	RaycastDist        int = 4                   // block unit
 	RenderArea             = image.Point{28, 18} // cam w/h blocks
 	// Debug
-	DrawDebugHitboxesEnabled = false
+	DrawDebugHitboxesEnabled = true
 	DrawDebugTextEnabled     = true
 	BackgroundColor          = rgb(54, 45, 95)
 )

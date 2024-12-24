@@ -11,6 +11,7 @@ type Rect struct {
 // Overlaps checks if the rectangle overlaps with another rectangle
 func (r *Rect) Overlaps(x, y, w, h float64) bool {
 	return r.X+r.W > x && x+w > r.X && r.Y+r.H > y && y+h > r.Y
+
 }
 
 // Overlaps checks if the rectangle overlaps with another rectangle

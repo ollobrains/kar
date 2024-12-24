@@ -200,14 +200,14 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	}
 }
 
-func (c *Controller) ResetVelocity() {
+func (c *Controller) ResetVelocityX() {
 	c.VelX = 0
 	c.HorizontalVelocity = 0
 }
 
 func (c *Controller) Skidding() {
 	if c.SkiddingJumpEnabled && c.IsJumpKeyJustPressed {
-		c.ResetVelocity()
+		c.ResetVelocityX()
 
 		// Yeni yöne doğru çok küçük sabit değerle başla
 		if c.InputAxis.X > 0 {
@@ -235,6 +235,9 @@ func (c *Controller) Skidding() {
 }
 
 func (c *Controller) Falling() {
+	if c.VelY > 1 {
+		c.AnimPlayer.SetStateAndReset("jump")
+	}
 	if c.IsOnFloor {
 		if c.HorizontalVelocity <= 0 {
 			c.changeState("idle")
@@ -282,6 +285,9 @@ func (c *Controller) Attacking() {
 }
 
 func (c *Controller) Jumping() {
+	if c.VelY != 0 && c.VelY > c.JumpPower+0.1 {
+		c.AnimPlayer.SetStateAndReset("jump")
+	}
 	// Skidding'den geldiyse özel durum
 	if c.previousState == "skidding" {
 		if !c.IsJumpKeyPressed && c.JumpTimer < c.JumpReleaseTimer {
@@ -290,7 +296,7 @@ func (c *Controller) Jumping() {
 		} else if c.IsJumpKeyPressed && c.JumpTimer < c.JumpHoldTime {
 			c.VelY += c.JumpBoost * 0.7 // Boost gücünü azalt
 			c.JumpTimer++
-		} else if c.VelY >= 0 {
+		} else if c.VelY >= 0.01 {
 			c.changeState("falling")
 		}
 	} else {
@@ -330,12 +336,6 @@ func (c *Controller) Running() {
 
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
-		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
-			c.VelY = c.JumpPower * c.JumpBoostMultiplier
-		} else {
-			c.VelY = c.JumpPower
-		}
-		c.JumpTimer = 0
 	} else if c.HorizontalVelocity < 0.01 {
 		c.changeState("idle")
 	} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
@@ -372,15 +372,22 @@ func (c *Controller) Walking() {
 }
 
 func (c *Controller) Idle() {
+
 	if c.InputAxisLast.Y == -1 {
 		c.AnimPlayer.SetStateAndReset("idleUp")
 	} else if c.InputAxisLast.Y == 1 {
 		c.AnimPlayer.SetStateAndReset("idleDown")
 	}
 	if c.IsJumpKeyJustPressed {
-		c.changeState("jumping")
 		c.VelY = c.JumpPower
 		c.JumpTimer = 0
+		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+			c.VelY = c.JumpPower * c.JumpBoostMultiplier
+		} else {
+			c.VelY = c.JumpPower
+		}
+		c.JumpTimer = 0
+		// c.changeState("jumping")
 	} else if c.IsOnFloor && c.HorizontalVelocity > 0.01 {
 		if c.HorizontalVelocity > c.MaxWalkSpeed {
 			c.changeState("running")
@@ -391,6 +398,10 @@ func (c *Controller) Idle() {
 		c.changeState("falling")
 	} else if c.IsBreakKeyPressed && IsRayHit {
 		c.changeState("attacking")
+	}
+
+	if c.VelY != 0 && c.VelY < -0.1 {
+		c.changeState("jumping")
 	}
 }
 
@@ -425,7 +436,12 @@ func (c *Controller) enterRunning() {
 }
 
 func (c *Controller) enterIdle() {
-	c.AnimPlayer.SetStateAndReset("idleRight")
+	if c.InputAxisLast.Y == 0 {
+		c.AnimPlayer.SetStateAndReset("idleRight")
+	}
+	if c.InputAxisLast.X == 0 {
+		c.AnimPlayer.SetStateAndReset("idleUp")
+	}
 }
 func (c *Controller) enterAttacking() {
 
@@ -445,11 +461,11 @@ func (c *Controller) exitAttacking() {
 }
 
 func (c *Controller) enterJumping() {
-	c.AnimPlayer.SetStateAndReset("jump")
+
 }
 
 func (c *Controller) enterFalling() {
-	c.AnimPlayer.SetStateAndReset("jump")
+
 }
 
 func (c *Controller) enterSkidding() {

@@ -12,7 +12,7 @@ require (
 	golang.org/x/text v0.21.0
 )
 
-require github.com/setanarut/fastnoise v1.1.1 // indirect
+require github.com/setanarut/fastnoise v1.1.1
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20241016134836-cc2e38a7c0ee // indirect

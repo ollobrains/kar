@@ -1,6 +1,7 @@
 package kar
 
 import (
+	"image"
 	"image/color"
 	"kar/items"
 
@@ -20,14 +21,15 @@ var (
 	// DesktopPath      string
 	ScreenW, ScreenH   = 854.0, 480.0
 	Screen             *ebiten.Image
-	Camera                 = kamera.NewCamera(400, 450, ScreenW, ScreenH)
+	Camera                 = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS               = ecs.NewWorld()
 	GlobalDIO              = &colorm.DrawImageOptions{}
 	GlobalColorM           = colorm.ColorM{}
 	ItemScale              = 2.0
 	PlayerScale            = 2.0
 	ItemCollisionDelay     = 30
-	RaycastDist        int = 4 // block unit
+	RaycastDist        int = 4                   // block unit
+	RenderArea             = image.Point{28, 18} // cam w/h blocks
 	// Debug
 	DrawDebugHitboxesEnabled = false
 	DrawDebugTextEnabled     = true

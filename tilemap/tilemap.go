@@ -3,6 +3,7 @@ package tilemap
 import (
 	"fmt"
 	"image"
+	"kar/items"
 	"math"
 )
 
@@ -75,6 +76,11 @@ func (t *TileMap) TileToWorld(pos image.Point) (float64, float64) {
 	b := float64((pos.Y * t.TileH) + t.TileH/2)
 	return a, b
 }
+func (t *TileMap) TileToWorld2(x, y int) (float64, float64) {
+	a := float64((x * t.TileW) + t.TileW/2)
+	b := float64((y * t.TileH) + t.TileH/2)
+	return a, b
+}
 
 func (t *TileMap) SetTile(pos image.Point, id uint16) {
 	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
@@ -82,13 +88,33 @@ func (t *TileMap) SetTile(pos image.Point, id uint16) {
 	}
 	t.Grid[pos.Y][pos.X] = id
 }
+
 func (t *TileMap) TileID(pos image.Point) uint16 {
 	if pos.X < 0 || pos.X >= t.W || pos.Y < 0 || pos.Y >= t.H {
 		return 0
 	}
 	return t.Grid[pos.Y][pos.X]
 }
+func (t *TileMap) Get(x, y int) uint16 {
+	return t.Grid[y][x]
+}
+func (t *TileMap) Set(x, y int, v uint16) {
+	t.Grid[y][x] = v
+}
 
 func (t *TileMap) GetTileRect(pos image.Point) (x, y, w, h float64) {
 	return float64(pos.X * t.TileW), float64(pos.Y * t.TileH), float64(t.TileW), float64(t.TileH)
+}
+
+func (t *TileMap) FindSpawnPosition() (px, py float64) {
+	for y := range t.H - 1 {
+		upperTile := t.Get(10, y)
+		downTile := t.Get(10, y+1)
+		if downTile != items.Air && upperTile == items.Air {
+			px, py = t.TileToWorld2(10, y-1)
+			break
+		}
+	}
+	return px, py
+
 }

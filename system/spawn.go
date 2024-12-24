@@ -3,7 +3,6 @@ package system
 import (
 	"kar"
 	"kar/arc"
-	"kar/items"
 	"kar/tilemap"
 
 	"github.com/mlange-42/arche/ecs"
@@ -11,28 +10,14 @@ import (
 	"github.com/setanarut/tilecollider"
 )
 
-var tm = [][]uint16{
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, items.Stone},
-	{items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone, items.Stone}}
-
 var (
 	PlayerEntity     ecs.Entity
 	PlayerInventory  *arc.Inventory
 	PlayerController = NewController(0, 10, Collider)
-	Map              = tilemap.NewTileMap(tm, 32, 32)
-	Collider         = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
-	ToSpawn          = []SpawnData{}
+	Map              = tilemap.MakeTileMap(512, 512, 32, 32)
+
+	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
+	ToSpawn  = []SpawnData{}
 )
 
 // SpawnData is a helper for delaying spawn events
@@ -49,15 +34,15 @@ func AppendToSpawnList(x, y float64, id uint16) {
 	})
 }
 
-func init() {
+func (s *Spawn) Init() {
+	tilemap.Generate(Map)
+
 	PlayerController.Collider = Collider
 	PlayerController.SetScale(2)
 	PlayerController.SkiddingJumpEnabled = true
-}
-
-func (s *Spawn) Init() {
-	PlayerEntity = arc.SpawnPlayer(100, 100)
-	kar.Camera.LookAt(100, 100)
+	x, y := Map.FindSpawnPosition()
+	PlayerEntity = arc.SpawnPlayer(x, y)
+	kar.Camera.LookAt(x, y)
 	kar.Camera.SmoothType = kamera.None
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
 	PlayerInventory.RandomFillAllSlots()

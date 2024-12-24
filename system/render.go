@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"kar"
 	"kar/arc"
 	"kar/engine/mathutil"
@@ -20,7 +21,7 @@ func (rn *Render) Init() {
 
 func (rn *Render) Update() {
 
-	kar.Camera.LookAt(playerCenterX, 256)
+	kar.Camera.LookAt(playerCenterX, playerCenterY)
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 
 	for q.Next() {
@@ -36,8 +37,8 @@ func (rn *Render) Draw() {
 	camMin := Map.WorldToTile(kar.Camera.TopLeft())
 	camMin.X = min(max(camMin.X, 0), Map.W)
 	camMin.Y = min(max(camMin.Y, 0), Map.H)
-	camMaxX := min(max(camMin.X+28, 0), Map.W)
-	camMaxY := min(max(camMin.Y+15, 0), Map.H)
+	camMaxX := min(max(camMin.X+kar.RenderArea.X, 0), Map.W)
+	camMaxY := min(max(camMin.Y+kar.RenderArea.Y, 0), Map.H)
 
 	for y := camMin.Y; y < camMaxY; y++ {
 		for x := camMin.X; x < camMaxX; x++ {
@@ -130,7 +131,8 @@ func (rn *Render) Draw() {
 	if kar.DrawDebugTextEnabled {
 		ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
 		ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
-		ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlockPos.String(), 10, 50)
-		ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 50+20)
+		ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlockPos.String(), 10, 30*2)
+		ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 30*3)
+		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("%v", PlayerController.VelY), 10, 30*4)
 	}
 }

@@ -44,29 +44,7 @@ func (c *PlayerSys) Update() {
 		rect.X += dx
 		rect.Y += dy
 
-		if PlayerController.CurrentState != "idle" {
-			if PlayerController.InputAxisLast.Y == -1 {
-				anim.SetStateAndReset("attackUp")
-			}
-			if PlayerController.InputAxisLast.Y == 1 {
-				anim.SetStateAndReset("attackDown")
-			}
-		}
 		PlayerController.UpdateState()
-
-		if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-			PlayerInventory.SelectPrevSlot()
-		}
-		if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-			PlayerInventory.SelectNextSlot()
-		}
-		if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
-			PlayerInventory.ClearSelectedSlot()
-		}
-		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
-			PlayerInventory.RandomFillAllSlots()
-
-		}
 
 		// Drop Item
 		if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
@@ -99,6 +77,19 @@ func (c *PlayerSys) Update() {
 			}
 		}
 
+		if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
+			PlayerInventory.SelectPrevSlot()
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyE) {
+			PlayerInventory.SelectNextSlot()
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyBackspace) {
+			PlayerInventory.ClearSelectedSlot()
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
+			PlayerInventory.RandomFillAllSlots()
+
+		}
 	}
 
 }

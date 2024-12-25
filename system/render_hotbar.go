@@ -40,14 +40,14 @@ func (gui *DrawHotbar) Draw() {
 			SlotOffsetX += hotbarPositionX
 			kar.GlobalDIO.GeoM.Reset()
 			kar.GlobalDIO.GeoM.Scale(2, 2)
-			kar.GlobalDIO.GeoM.Translate(SlotOffsetX, hotbarPositionY)
+			kar.GlobalDIO.GeoM.Translate(SlotOffsetX+8, hotbarPositionY+8)
 			if slotID != items.Air && PlayerInventory.Slots[x].Quantity > 0 {
-				colorm.DrawImage(kar.Screen, res.Items16[slotID], kar.GlobalColorM, kar.GlobalDIO)
+				colorm.DrawImage(kar.Screen, res.Icon8[slotID], kar.GlobalColorM, kar.GlobalDIO)
 			}
 
 			if x == PlayerInventory.SelectedSlot {
 				// draw border
-				kar.GlobalDIO.GeoM.Translate(-2, -2)
+				kar.GlobalDIO.GeoM.Translate(-10, -10)
 				colorm.DrawImage(kar.Screen, res.SelectionBar, kar.GlobalColorM, kar.GlobalDIO)
 
 				// draw display name

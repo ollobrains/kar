@@ -14,7 +14,7 @@ var (
 	PlayerEntity     ecs.Entity
 	PlayerInventory  *arc.Inventory
 	PlayerController = NewController(0, 10, Collider)
-	Map              = tilemap.MakeTileMap(512, 512, 35, 35)
+	Map              = tilemap.MakeTileMap(512, 512, 40, 40)
 
 	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
 	ToSpawn  = []SpawnData{}

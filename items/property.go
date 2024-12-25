@@ -72,13 +72,6 @@ var Property = map[uint16]ItemProperty{
 		MaxHealth:   10,
 		Category:    Block | OreBlock,
 	},
-	Cobblestone: {
-		DisplayName: "Cobblestone",
-		DropID:      Cobblestone,
-		Stackable:   64,
-		MaxHealth:   10,
-		Category:    Block,
-	},
 
 	CraftingTable: {
 		DisplayName: "Crafting Table",
@@ -291,7 +284,7 @@ var Property = map[uint16]ItemProperty{
 
 	Stone: {
 		DisplayName: "Stone",
-		DropID:      Cobblestone,
+		DropID:      Stone,
 		Stackable:   64,
 		MaxHealth:   10,
 		Category:    Block,

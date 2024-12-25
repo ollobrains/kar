@@ -8,7 +8,6 @@ const (
 	Bucket
 	Coal
 	CoalOre
-	Cobblestone
 	CraftingTable
 	Diamond
 	DiamondAxe

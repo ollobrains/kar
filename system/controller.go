@@ -235,9 +235,9 @@ func (c *Controller) Skidding() {
 }
 
 func (c *Controller) Falling() {
-	if c.VelY > 1 {
-		c.AnimPlayer.SetStateAndReset("jump")
-	}
+	// if c.VelY > 0.1 {
+	// 	c.AnimPlayer.SetStateAndReset("jump")
+	// }
 	if c.IsOnFloor {
 		if c.HorizontalVelocity <= 0 {
 			c.changeState("idle")
@@ -336,6 +336,12 @@ func (c *Controller) Running() {
 
 	if c.IsJumpKeyJustPressed {
 		c.changeState("jumping")
+		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
+			c.VelY = c.JumpPower * c.JumpBoostMultiplier
+		} else {
+			c.VelY = c.JumpPower
+		}
+		c.JumpTimer = 0
 	} else if c.HorizontalVelocity < 0.01 {
 		c.changeState("idle")
 	} else if c.HorizontalVelocity <= c.MaxWalkSpeed {

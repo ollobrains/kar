@@ -50,11 +50,11 @@ func (rn *Render) Draw() {
 				kar.GlobalDIO.GeoM.Translate(px, py)
 				if x == targetBlockPos.X && y == targetBlockPos.Y {
 					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
-					if res.BlockCrackFrames16[tileID] != nil {
-						kar.Camera.DrawWithColorM(res.BlockCrackFrames16[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+					if res.BlockCrackFrames[tileID] != nil {
+						kar.Camera.DrawWithColorM(res.BlockCrackFrames[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 					}
 				} else {
-					kar.Camera.DrawWithColorM(res.BlockCrackFrames16[tileID][0], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+					kar.Camera.DrawWithColorM(res.BlockCrackFrames[tileID][0], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 				}
 			}
 
@@ -121,10 +121,10 @@ func (rn *Render) Draw() {
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y+sinspace[timers.AnimationIndex])
-		if res.Items8[id.ID] == nil {
+		if res.Icon8[id.ID] == nil {
 			log.Fatal("image not found", id.ID)
 		}
-		kar.Camera.DrawWithColorM(res.Items8[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
+		kar.Camera.DrawWithColorM(res.Icon8[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
 	// Draw debug info

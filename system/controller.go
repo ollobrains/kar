@@ -250,6 +250,26 @@ func (c *Controller) Falling() {
 }
 
 func (c *Controller) Attacking() {
+
+	if c.InputAxisLast.X == 1 {
+		if c.HorizontalVelocity > 0.01 {
+			c.AnimPlayer.SetStateAndReset("attackWalk")
+		} else {
+			c.AnimPlayer.SetStateAndReset("attackRight")
+		}
+	} else if c.InputAxisLast.X == -1 {
+		if c.HorizontalVelocity > 0.01 {
+			c.AnimPlayer.SetStateAndReset("attackWalk")
+		} else {
+			c.AnimPlayer.SetStateAndReset("attackRight")
+		}
+		c.DOP.FlipX = true
+	} else if c.InputAxisLast.Y == 1 {
+		c.AnimPlayer.SetStateAndReset("attackDown")
+	} else if c.InputAxisLast.Y == -1 {
+		c.AnimPlayer.SetStateAndReset("attackUp")
+	}
+
 	if IsRayHit {
 		targetBlockID := Map.TileID(targetBlockPos)
 		if items.IsBreakable(targetBlockID) {
@@ -450,17 +470,6 @@ func (c *Controller) enterIdle() {
 	}
 }
 func (c *Controller) enterAttacking() {
-
-	if c.InputAxisLast.X == 1 {
-		c.AnimPlayer.SetStateAndReset("attackRight")
-	} else if c.InputAxisLast.X == -1 {
-		c.AnimPlayer.SetStateAndReset("attackRight")
-		c.DOP.FlipX = true
-	} else if c.InputAxisLast.Y == 1 {
-		c.AnimPlayer.SetStateAndReset("attackDown")
-	} else if c.InputAxisLast.Y == -1 {
-		c.AnimPlayer.SetStateAndReset("attackUp")
-	}
 }
 func (c *Controller) exitAttacking() {
 	blockHealth = 0

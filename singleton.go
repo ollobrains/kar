@@ -33,7 +33,7 @@ var (
 	// Debug
 	DrawDebugHitboxesEnabled = false
 	DrawDebugTextEnabled     = true
-	BackgroundColor          = rgb(54, 45, 95)
+	BackgroundColor          = rgb(49, 47, 67)
 )
 var ItemColorMap = map[uint16]color.RGBA{
 	items.Air:        rgb(1, 1, 1),

@@ -235,9 +235,9 @@ func (c *Controller) Skidding() {
 }
 
 func (c *Controller) Falling() {
-	// if c.VelY > 0.1 {
-	// 	c.AnimPlayer.SetStateAndReset("jump")
-	// }
+	if c.VelY > 0.1 {
+		c.AnimPlayer.SetStateAndReset("jump")
+	}
 	if c.IsOnFloor {
 		if c.HorizontalVelocity <= 0 {
 			c.changeState("idle")

@@ -6,7 +6,6 @@ import (
 	"kar/tilemap"
 
 	"github.com/mlange-42/arche/ecs"
-	"github.com/setanarut/kamera/v2"
 	"github.com/setanarut/tilecollider"
 )
 
@@ -41,9 +40,8 @@ func (s *Spawn) Init() {
 	PlayerController.SetScale(2)
 	PlayerController.SkiddingJumpEnabled = true
 	x, y := Map.FindSpawnPosition()
-	PlayerEntity = arc.SpawnPlayer(x, y)
 	kar.Camera.LookAt(x, y)
-	kar.Camera.SmoothType = kamera.None
+	PlayerEntity = arc.SpawnPlayer(x, y)
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
 	PlayerInventory.RandomFillAllSlots()
 }

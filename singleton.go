@@ -33,7 +33,7 @@ var (
 	// Debug
 	DrawDebugHitboxesEnabled = false
 	DrawDebugTextEnabled     = true
-	BackgroundColor          = rgb(49, 47, 67)
+	BackgroundColor          = rgb(36, 36, 39)
 )
 var ItemColorMap = map[uint16]color.RGBA{
 	items.Air:        rgb(1, 1, 1),
@@ -48,6 +48,7 @@ var ItemColorMap = map[uint16]color.RGBA{
 }
 
 func init() {
+	Camera.SmoothType = kamera.None
 	// GlobalColorM.ChangeHSV(1, 0, 1)
 
 	// homePath, err := os.UserHomeDir()

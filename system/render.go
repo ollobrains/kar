@@ -20,10 +20,24 @@ func (rn *Render) Init() {
 }
 
 func (rn *Render) Update() {
+	camCenterX, camCenterY := kar.Camera.Center()
+	camLeft, camTop := kar.Camera.TopLeft()
+	camRight := camLeft + kar.ScreenW
+	camBottom := camTop + kar.ScreenH
 
-	kar.Camera.LookAt(playerCenterX, playerCenterY)
+	if playerCenterX > camRight {
+		kar.Camera.LookAt(camCenterX+kar.ScreenW, camCenterY)
+	}
+	if playerCenterX < camLeft {
+		kar.Camera.LookAt(camCenterX-kar.ScreenW, camCenterY)
+	}
+	if playerCenterY > camBottom {
+		kar.Camera.LookAt(camCenterX, camCenterY+kar.ScreenH)
+	}
+	if playerCenterY < camTop {
+		kar.Camera.LookAt(camCenterX, camCenterY-kar.ScreenH)
+	}
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
-
 	for q.Next() {
 		a := q.Get()
 		a.Update()
@@ -132,7 +146,8 @@ func (rn *Render) Draw() {
 		ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
 		ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
 		ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlockPos.String(), 10, 30*2)
-		ebitenutil.DebugPrintAt(kar.Screen, "Place Block"+placeBlock.String(), 10, 30*3)
-		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("%v", PlayerController.VelY), 10, 30*4)
+		x, y := kar.Camera.TopLeft()
+		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("cam %v %v", x, y), 10, 30*3)
+		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("player %v %v", playerCenterX, playerCenterY), 10, 30*4)
 	}
 }

@@ -110,11 +110,12 @@ func (t *TileMap) GetTileRect(pos image.Point) (x, y, w, h float64) {
 }
 
 func (t *TileMap) FindSpawnPosition() (px, py float64) {
+	x := 20 * 20
 	for y := range t.H - 1 {
-		upperTile := t.Get(10, y)
-		downTile := t.Get(10, y+1)
+		upperTile := t.Get(x, y)
+		downTile := t.Get(x, y+1)
 		if downTile != items.Air && upperTile == items.Air {
-			px, py = t.TileToWorld2(10, y-1)
+			px, py = t.TileToWorld2(x, y-1)
 			break
 		}
 	}

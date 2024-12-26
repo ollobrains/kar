@@ -21,7 +21,7 @@ var (
 	// DesktopPath      string
 	ScreenW, ScreenH   = 860., 480.0
 	Screen             *ebiten.Image
-	Camera                 = kamera.NewCamera(0, 0, ScreenW, ScreenH-60)
+	Camera                 = kamera.NewCamera(0, 0, ScreenW, ScreenH)
 	WorldECS               = ecs.NewWorld()
 	GlobalDIO              = &colorm.DrawImageOptions{}
 	GlobalColorM           = colorm.ColorM{}

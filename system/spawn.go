@@ -41,7 +41,9 @@ func (s *Spawn) Init() {
 	PlayerController.SkiddingJumpEnabled = true
 	x, y := Map.FindSpawnPosition()
 	p := Map.WorldToTile(x, y)
-	kar.Camera.SetTopLeft(Map.TileToWorldTopLeft(p))
+	px, py := Map.TileToWorld(p)
+	kar.Camera.TopLeftX = px - kar.Camera.Width()/2
+	kar.Camera.TopLeftY = py - kar.Camera.Height()/2
 	PlayerEntity = arc.SpawnPlayer(x, y)
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
 	PlayerInventory.RandomFillAllSlots()

@@ -19,6 +19,7 @@ func main() {
 	if err := ebiten.RunGameWithOptions(
 		game,
 		&ebiten.RunGameOptions{
+			DisableHiDPI:    true,
 			GraphicsLibrary: ebiten.GraphicsLibraryAuto,
 			InitUnfocused:   false},
 	); err != nil {

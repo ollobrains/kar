@@ -10,8 +10,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
-var hotbarPositionX = kar.ScreenW / 3
-var hotbarPositionY = kar.ScreenH - 64
+var hotbarPositionX = 8.
+var hotbarPositionY = 8.
 var itemQuantityTextDO = &text.DrawOptions{}
 
 type DrawHotbar struct {

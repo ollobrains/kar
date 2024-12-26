@@ -19,9 +19,9 @@ type ISystem interface {
 
 var (
 	// DesktopPath      string
-	ScreenW, ScreenH   = 854.0, 480.0
+	ScreenW, ScreenH   = 860., 480.0
 	Screen             *ebiten.Image
-	Camera                 = kamera.NewCamera(0, 0, ScreenW, ScreenH)
+	Camera                 = kamera.NewCamera(0, 0, ScreenW, ScreenH-60)
 	WorldECS               = ecs.NewWorld()
 	GlobalDIO              = &colorm.DrawImageOptions{}
 	GlobalColorM           = colorm.ColorM{}
@@ -29,10 +29,10 @@ var (
 	PlayerScale            = 2.0
 	ItemCollisionDelay     = 50
 	RaycastDist        int = 4                   // block unit
-	RenderArea             = image.Point{28, 18} // cam w/h blocks
+	RenderArea             = image.Point{23, 13} // cam w/h blocks
 	// Debug
 	DrawDebugHitboxesEnabled = false
-	DrawDebugTextEnabled     = true
+	DrawDebugTextEnabled     = false
 	BackgroundColor          = rgb(36, 36, 39)
 )
 var ItemColorMap = map[uint16]color.RGBA{

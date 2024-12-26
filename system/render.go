@@ -20,23 +20,24 @@ func (rn *Render) Init() {
 }
 
 func (rn *Render) Update() {
-	camCenterX, camCenterY := kar.Camera.Center()
-	camLeft, camTop := kar.Camera.TopLeft()
-	camRight := camLeft + kar.ScreenW
-	camBottom := camTop + kar.ScreenH
 
-	if playerCenterX > camRight {
-		kar.Camera.LookAt(camCenterX+kar.ScreenW, camCenterY)
+	// camX, camY := kar.Camera.TopLeft()
+
+	if playerCenterX < kar.Camera.TopLeftX {
+		kar.Camera.TopLeftX -= kar.Camera.Width()
 	}
-	if playerCenterX < camLeft {
-		kar.Camera.LookAt(camCenterX-kar.ScreenW, camCenterY)
+	if playerCenterX > kar.Camera.Right() {
+		kar.Camera.TopLeftX += kar.Camera.Width()
 	}
-	if playerCenterY > camBottom {
-		kar.Camera.LookAt(camCenterX, camCenterY+kar.ScreenH)
+	if playerCenterY < kar.Camera.TopLeftY {
+		kar.Camera.TopLeftY -= kar.Camera.Height()
 	}
-	if playerCenterY < camTop {
-		kar.Camera.LookAt(camCenterX, camCenterY-kar.ScreenH)
+	if playerCenterY > kar.Camera.Bottom() {
+		kar.Camera.TopLeftY += kar.Camera.Height()
 	}
+
+	// kar.Camera.SetTopLeft(camX, camY)
+
 	q := arc.FilterAnimPlayer.Query(&kar.WorldECS)
 	for q.Next() {
 		a := q.Get()

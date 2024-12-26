@@ -21,7 +21,7 @@ require (
 	github.com/go-text/typesetting v0.2.1 // indirect
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/mlange-42/arche v0.14.0
-	github.com/setanarut/kamera/v2 v2.95.0
+	github.com/setanarut/kamera/v2 v2.95.1
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 )

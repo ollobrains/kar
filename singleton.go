@@ -27,7 +27,7 @@ var (
 	GlobalColorM           = colorm.ColorM{}
 	ItemScale              = 2.0
 	PlayerScale            = 2.0
-	ItemCollisionDelay     = 50
+	ItemCollisionDelay     = 10
 	RaycastDist        int = 4                   // block unit
 	RenderArea             = image.Point{23, 13} // cam w/h blocks
 	// Debug

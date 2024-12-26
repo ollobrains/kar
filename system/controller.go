@@ -80,7 +80,7 @@ func NewController(velX, velY float64, tc *tilecollider.Collider[uint16]) *Contr
 		SpeedJumpFactor:                     0.3,
 		ShortJumpVelocity:                   -2.0,
 		JumpReleaseTimer:                    5,
-		MaxWalkSpeed:                        2.0,
+		MaxWalkSpeed:                        1.6,
 		MaxRunSpeed:                         3.0,
 		WalkAcceleration:                    0.04,
 		WalkDeceleration:                    0.04,

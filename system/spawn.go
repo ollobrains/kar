@@ -47,6 +47,9 @@ func (s *Spawn) Init() {
 	PlayerEntity = arc.SpawnPlayer(x, y)
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
 	PlayerInventory.RandomFillAllSlots()
+	PlayerInventory.ClearSlot(0)
+	PlayerInventory.ClearSlot(1)
+	PlayerInventory.ClearSlot(4)
 }
 func (s *Spawn) Update() {
 	// Spawn item

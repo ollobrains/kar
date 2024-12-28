@@ -15,25 +15,19 @@ const (
 	Tool
 	Weapon
 	Food
-	Rock
-	Wooden
-	Iron
-	Ground
-	All = ^uint(0)
+	MaterialWooden
+	MaterialGold
+	MaterialStone
+	MaterialIron
+	MaterialDiamond
+	ToolHand
+	ToolAxe
+	ToolPickaxe
+	ToolShovel
+	ToolBucket
 )
 
-// Tool bits
-var Tools = struct {
-	Axe     uint
-	Pickaxe uint
-	Shovel  uint
-	Bucket  uint
-}{
-	Axe:     2,
-	Pickaxe: 4,
-	Shovel:  8,
-	Bucket:  16,
-}
+const All = Category(^uint(0))
 
 type ItemProperty struct {
 	DisplayName string
@@ -41,6 +35,7 @@ type ItemProperty struct {
 	Stackable   uint8
 	MaxHealth   float64
 	Category    Category
+	BestTool    Category
 }
 
 var Property = map[uint16]ItemProperty{
@@ -87,7 +82,8 @@ var Property = map[uint16]ItemProperty{
 		DropID:      Coal,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | OreBlock | Rock,
+		Category:    Block | OreBlock,
+		BestTool:    ToolPickaxe,
 	},
 
 	CraftingTable: {
@@ -96,6 +92,7 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   1,
 		MaxHealth:   100,
 		Category:    Block,
+		BestTool:    ToolAxe,
 	},
 
 	Diamond: {
@@ -117,6 +114,7 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   100,
 		Category:    Block | OreBlock,
+		BestTool:    ToolPickaxe,
 	},
 	DiamondPickaxe: {
 		DisplayName: "Diamond Pickaxe",
@@ -136,7 +134,7 @@ var Property = map[uint16]ItemProperty{
 		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Ground,
+		BestTool:    ToolShovel,
 	},
 
 	Furnace: {
@@ -145,13 +143,14 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   1,
 		MaxHealth:   100,
 		Category:    Block,
+		BestTool:    ToolPickaxe,
 	},
 	FurnaceOn: {
 		DisplayName: "Furnace On",
 		DropID:      Furnace,
 		Stackable:   1,
 		MaxHealth:   100,
-		Category:    Block,
+		BestTool:    ToolPickaxe,
 	},
 	GoldIngot: {
 		DisplayName: "Gold Ingot",
@@ -164,7 +163,8 @@ var Property = map[uint16]ItemProperty{
 		DropID:      RawGold,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | OreBlock | Rock,
+		Category:    Block | OreBlock,
+		BestTool:    ToolPickaxe,
 	},
 
 	GrassBlock: {
@@ -172,20 +172,23 @@ var Property = map[uint16]ItemProperty{
 		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Ground,
+		Category:    Block,
+		BestTool:    ToolShovel,
 	},
 	GrassBlockSnow: {
 		DisplayName: "Grass Block Snow",
 		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Ground,
+		Category:    Block,
+		BestTool:    ToolShovel,
 	},
 
 	IronAxe: {
 		DisplayName: "Iron Axe",
 		Stackable:   1,
 		MaxHealth:   1,
+		Category:    Item | Tool,
 	},
 
 	IronIngot: {
@@ -200,6 +203,7 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   100,
 		Category:    Block | OreBlock,
+		BestTool:    ToolPickaxe,
 	},
 	IronPickaxe: {
 		DisplayName: "Iron Pickaxe",
@@ -220,20 +224,23 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   100,
 		Category:    Block,
+		BestTool:    ToolAxe,
 	},
 	OakLog: {
 		DisplayName: "Oak Log",
 		DropID:      OakLog,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Wooden,
+		Category:    Block,
+		BestTool:    ToolAxe,
 	},
 	OakPlanks: {
 		DisplayName: "Oak Planks",
 		DropID:      OakPlanks,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Wooden,
+		Category:    Block,
+		BestTool:    ToolAxe,
 	},
 	OakSapling: {
 		DisplayName: "Oak Sapling",
@@ -241,13 +248,15 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   1,
 		Category:    Block | Item,
+		BestTool:    ToolAxe,
 	},
 	Obsidian: {
 		DisplayName: "Obsidian",
 		DropID:      Obsidian,
 		Stackable:   64,
 		MaxHealth:   20,
-		Category:    Block | Rock,
+		Category:    Block,
+		BestTool:    ToolPickaxe,
 	},
 
 	RawGold: {
@@ -268,7 +277,8 @@ var Property = map[uint16]ItemProperty{
 		DropID:      Sand,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Ground,
+		Category:    Block,
+		BestTool:    ToolShovel,
 	},
 
 	SmoothStone: {
@@ -276,14 +286,15 @@ var Property = map[uint16]ItemProperty{
 		DropID:      SmoothStone,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Rock,
+		Category:    Block,
 	},
 	Snow: {
 		DisplayName: "Snow",
 		DropID:      Dirt,
 		Stackable:   64,
 		MaxHealth:   5,
-		Category:    Block | Ground,
+		Category:    Block,
+		BestTool:    ToolShovel,
 	},
 	Snowball: {
 		DisplayName: "Snowball",
@@ -304,7 +315,8 @@ var Property = map[uint16]ItemProperty{
 		DropID:      Stone,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Rock,
+		Category:    Block,
+		BestTool:    ToolPickaxe,
 	},
 	StoneAxe: {
 		DisplayName: "Stone Axe",
@@ -317,7 +329,8 @@ var Property = map[uint16]ItemProperty{
 		DropID:      StoneBricks,
 		Stackable:   64,
 		MaxHealth:   100,
-		Category:    Block | Rock,
+		Category:    Block,
+		BestTool:    ToolPickaxe,
 	},
 
 	StonePickaxe: {
@@ -339,12 +352,14 @@ var Property = map[uint16]ItemProperty{
 		Stackable:   64,
 		MaxHealth:   100,
 		Category:    Block,
+		BestTool:    All,
 	},
 	Torch: {
 		DisplayName: "Torch",
 		Stackable:   64,
 		MaxHealth:   100,
 		Category:    Item | Block,
+		BestTool:    All,
 	},
 	WaterBucket: {
 		DisplayName: "Water Bucket",

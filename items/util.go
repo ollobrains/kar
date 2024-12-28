@@ -16,14 +16,17 @@ func init() {
 }
 
 func IsBreakable(id uint16) bool {
-	return Property[id].Category&Unbreakable == 0
+	return Property[id].Tags&Unbreakable == 0
 }
 
 func IsHarvestable(id uint16) bool {
-	return Property[id].Category&Harvestable != 0
+	return Property[id].Tags&Harvestable != 0
 }
 func IsBlock(id uint16) bool {
-	return Property[id].Category&Block != 0
+	return Property[id].Tags&Block != 0
+}
+func IsBestTool(blockID, toolID uint16) bool {
+	return Property[blockID].BestToolTag&Property[toolID].Tags != 0
 }
 
 func RandomBlock() uint16 {

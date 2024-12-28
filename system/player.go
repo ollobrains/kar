@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	damage                       float64 = 0.1
+	// damage                       float64 = 1
 	blockHealth                  float64
 	targetBlockPos               image.Point
 	placeBlock                   image.Point

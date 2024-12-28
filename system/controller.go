@@ -273,11 +273,11 @@ func (c *Controller) Attacking() {
 	if IsRayHit {
 		targetBlockID := Map.TileID(targetBlockPos)
 		if items.IsBreakable(targetBlockID) {
-			blockHardness := items.Property[targetBlockID].MaxHealth
-			if blockHealth < blockHardness/4 {
-				blockHealth += blockHardness / 4
+			if items.IsBestTool(targetBlockID, PlayerInventory.SelectedSlotID()) {
+				blockHealth += 2
+			} else {
+				blockHealth += 0.3
 			}
-			blockHealth += damage
 		}
 		// Destroy block
 		if blockHealth >= items.Property[targetBlockID].MaxHealth {

@@ -44,7 +44,7 @@ type ItemID struct {
 }
 
 type Durability struct {
-	Durability float64
+	Durability int
 }
 
 type Health struct {

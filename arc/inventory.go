@@ -7,7 +7,7 @@ import (
 type ItemStack struct {
 	ID         uint16
 	Quantity   uint8
-	Durability float64
+	Durability int
 }
 
 type Inventory struct {
@@ -26,7 +26,7 @@ func NewInventory() *Inventory {
 }
 
 // AddItemIfEmpty adds item to inventory if empty
-func (i *Inventory) AddItemIfEmpty(id uint16, dura float64) bool {
+func (i *Inventory) AddItemIfEmpty(id uint16, dura int) bool {
 	idx, ok1 := i.HasItemStackSpace(id)
 	if ok1 {
 		i.Slots[idx].Quantity++
@@ -43,11 +43,12 @@ func (i *Inventory) AddItemIfEmpty(id uint16, dura float64) bool {
 	return false
 }
 
-func (i *Inventory) SetSlot(slotIndex int, id uint16, quantity uint8) {
+func (i *Inventory) SetSlot(slotIndex int, id uint16, quantity uint8, dur int) {
 	if quantity > 0 {
 		i.Slots[slotIndex] = ItemStack{
-			ID:       id,
-			Quantity: quantity,
+			ID:         id,
+			Quantity:   quantity,
+			Durability: dur,
 		}
 	}
 }
@@ -87,8 +88,8 @@ func (i *Inventory) RemoveItemFromSelectedSlot() {
 	}
 }
 
-func (i *Inventory) SelectedSlot() ItemStack {
-	return i.Slots[i.SelectedSlotIndex]
+func (i *Inventory) SelectedSlot() *ItemStack {
+	return &i.Slots[i.SelectedSlotIndex]
 }
 
 func (i *Inventory) SelectedSlotID() uint16 {
@@ -105,6 +106,9 @@ func (i *Inventory) ClearSlot(index int) {
 		Quantity: 0,
 	}
 }
+func (i *Inventory) IsSelectedSlotEmpty() bool {
+	return i.Slots[i.SelectedSlotIndex].Quantity <= 0 || i.Slots[i.SelectedSlotIndex].ID == items.Air
+}
 
 func (i *Inventory) ClearAllSlots() {
 	for idx := range i.Slots {
@@ -114,7 +118,8 @@ func (i *Inventory) ClearAllSlots() {
 func (i *Inventory) RandomFillAllSlots() {
 	for idx := range i.Slots {
 		randItemID := items.RandomItem()
-		i.SetSlot(idx, randItemID, items.Property[randItemID].Stackable)
+		dur := items.GetDefaultDurability(randItemID)
+		i.SetSlot(idx, randItemID, items.Property[randItemID].Stackable, dur)
 	}
 }
 
@@ -123,9 +128,14 @@ func (i *Inventory) ClearSelectedSlot() {
 }
 
 func (i *Inventory) HasEmptySlot() (index int, ok bool) {
-	for idx, v := range i.Slots {
-		if v.Quantity == 0 {
-			return idx, true
+	// önce seçili slot boşsa tercih et
+	if i.SelectedSlotQuantity() == 0 {
+		return i.SelectedSlotIndex, true
+	} else {
+		for idx, v := range i.Slots {
+			if v.Quantity == 0 {
+				return idx, true
+			}
 		}
 	}
 	return -1, false

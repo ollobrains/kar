@@ -7,6 +7,7 @@ import (
 	"kar/res"
 	"strconv"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/colorm"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
@@ -14,7 +15,12 @@ import (
 
 var hotbarPositionX = 8.
 var hotbarPositionY = 8.
-var itemQuantityTextDO = &text.DrawOptions{}
+var itemQuantityTextDO = &text.DrawOptions{
+	DrawImageOptions: ebiten.DrawImageOptions{},
+	LayoutOptions: text.LayoutOptions{
+		LineSpacing: 18,
+	},
+}
 
 type DrawHotbar struct {
 	itemQuantityTextDO *text.DrawOptions
@@ -48,21 +54,27 @@ func (gui *DrawHotbar) Draw() {
 			}
 
 			if x == PlayerInventory.SelectedSlotIndex {
-				// draw border
+				// Draw border
 				kar.GlobalDIO.GeoM.Translate(-10, -10)
 				colorm.DrawImage(kar.Screen, res.SelectionBar, kar.GlobalColorM, kar.GlobalDIO)
 
-				// draw display name
+				// Draw display name
 				itemQuantityTextDO.GeoM.Reset()
 				itemQuantityTextDO.GeoM.Translate(SlotOffsetX, hotbarPositionY+32)
-				text.Draw(kar.Screen, items.Property[slotID].DisplayName, res.Font, itemQuantityTextDO)
+				if items.HasTag(slotID, items.Block) {
+					text.Draw(kar.Screen, items.Property[slotID].DisplayName, res.Font, itemQuantityTextDO)
+				} else if items.HasTag(slotID, items.Tool) {
+					text.Draw(kar.Screen, fmt.Sprintf(
+						"%v\nDurability %v",
+						items.Property[slotID].DisplayName,
+						PlayerInventory.Slots[x].Durability,
+					), res.Font, itemQuantityTextDO)
+				}
 			}
-
-			itemQuantityTextDO.GeoM.Reset()
-			itemQuantityTextDO.GeoM.Translate(SlotOffsetX+10, hotbarPositionY+13)
-
-			// draw text
-			if quantity > 0 {
+			// Draw item quantity number
+			if quantity > 0 && items.IsStackable(slotID) {
+				itemQuantityTextDO.GeoM.Reset()
+				itemQuantityTextDO.GeoM.Translate(SlotOffsetX+10, hotbarPositionY+13)
 				num := strconv.FormatUint(uint64(quantity), 10)
 				if quantity < 10 {
 					num = " " + num

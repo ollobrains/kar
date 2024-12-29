@@ -75,5 +75,5 @@ func SpawnItem(data SpawnData) ecs.Entity {
 type SpawnData struct {
 	X, Y       float64
 	Id         uint16
-	Durability float64
+	Durability int
 }

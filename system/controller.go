@@ -283,6 +283,10 @@ func (c *Controller) Attacking() {
 		if blockHealth >= 180 {
 			blockHealth = 0
 			Map.SetTile(targetBlockPos, items.Air)
+			PlayerInventory.SelectedSlot().Durability--
+			if PlayerInventory.SelectedSlot().Durability <= 0 {
+				PlayerInventory.ClearSelectedSlot()
+			}
 			// spawn drop item
 			x, y := Map.TileToWorld(targetBlockPos)
 			AppendToSpawnList(x, y, items.Property[blockID].DropID, 0)

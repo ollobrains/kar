@@ -19,7 +19,7 @@ var (
 	ToSpawn  = []arc.SpawnData{}
 )
 
-func AppendToSpawnList(x, y float64, id uint16, durability float64) {
+func AppendToSpawnList(x, y float64, id uint16, durability int) {
 	ToSpawn = append(ToSpawn, arc.SpawnData{
 		X:          x - 4*kar.ItemScale,
 		Y:          y - 4*kar.ItemScale,

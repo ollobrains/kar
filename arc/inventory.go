@@ -5,14 +5,15 @@ import (
 )
 
 type ItemStack struct {
-	ID       uint16
-	Quantity uint8
+	ID         uint16
+	Quantity   uint8
+	Durability float64
 }
 
 type Inventory struct {
-	SelectedSlot int
-	Slots        [9]ItemStack
-	HandSlot     ItemStack
+	SelectedSlotIndex int
+	Slots             [9]ItemStack
+	HandSlot          ItemStack
 }
 
 func NewInventory() *Inventory {
@@ -25,7 +26,7 @@ func NewInventory() *Inventory {
 }
 
 // AddItemIfEmpty adds item to inventory if empty
-func (i *Inventory) AddItemIfEmpty(id uint16) bool {
+func (i *Inventory) AddItemIfEmpty(id uint16, dura float64) bool {
 	idx, ok1 := i.HasItemStackSpace(id)
 	if ok1 {
 		i.Slots[idx].Quantity++
@@ -35,6 +36,7 @@ func (i *Inventory) AddItemIfEmpty(id uint16) bool {
 		if ok2 {
 			i.Slots[i2].Quantity++
 			i.Slots[i2].ID = id
+			i.Slots[i2].Durability = dura
 			return true
 		}
 	}
@@ -51,10 +53,10 @@ func (i *Inventory) SetSlot(slotIndex int, id uint16, quantity uint8) {
 }
 
 func (i *Inventory) SelectNextSlot() {
-	i.SelectedSlot = (i.SelectedSlot + 1) % 9
+	i.SelectedSlotIndex = (i.SelectedSlotIndex + 1) % 9
 }
 func (i *Inventory) SelectPrevSlot() {
-	i.SelectedSlot = (i.SelectedSlot - 1 + 9) % 9
+	i.SelectedSlotIndex = (i.SelectedSlotIndex - 1 + 9) % 9
 }
 func (i *Inventory) RemoveHandItem(id uint16) bool {
 	ok := i.HasHandItem(id)
@@ -76,19 +78,25 @@ func (i *Inventory) RemoveItem(id uint16) bool {
 	return false
 }
 func (i *Inventory) RemoveItemFromSelectedSlot() {
-	if i.Slots[i.SelectedSlot].Quantity == 1 {
+	if i.Slots[i.SelectedSlotIndex].Quantity == 1 {
 		i.ClearSelectedSlot()
 		return
 	}
-	if i.Slots[i.SelectedSlot].Quantity > 0 {
-		i.Slots[i.SelectedSlot].Quantity--
+	if i.Slots[i.SelectedSlotIndex].Quantity > 0 {
+		i.Slots[i.SelectedSlotIndex].Quantity--
 	}
 }
-func (i *Inventory) SelectedSlotID() uint16 {
-	return i.Slots[i.SelectedSlot].ID
+
+func (i *Inventory) SelectedSlot() ItemStack {
+	return i.Slots[i.SelectedSlotIndex]
 }
+
+func (i *Inventory) SelectedSlotID() uint16 {
+	return i.Slots[i.SelectedSlotIndex].ID
+}
+
 func (i *Inventory) SelectedSlotQuantity() uint8 {
-	return i.Slots[i.SelectedSlot].Quantity
+	return i.Slots[i.SelectedSlotIndex].Quantity
 }
 
 func (i *Inventory) ClearSlot(index int) {
@@ -111,7 +119,7 @@ func (i *Inventory) RandomFillAllSlots() {
 }
 
 func (i *Inventory) ClearSelectedSlot() {
-	i.ClearSlot(i.SelectedSlot)
+	i.ClearSlot(i.SelectedSlotIndex)
 }
 
 func (i *Inventory) HasEmptySlot() (index int, ok bool) {
@@ -125,7 +133,8 @@ func (i *Inventory) HasEmptySlot() (index int, ok bool) {
 
 func (i *Inventory) HasItemStackSpace(id uint16) (index int, ok bool) {
 	for idx, v := range i.Slots {
-		if v.ID == id && v.Quantity < 64 && v.Quantity > 0 {
+		s := items.Property[v.ID].Stackable
+		if v.ID == id && v.Quantity < 64 && v.Quantity > 0 && s != 1 {
 			return idx, true
 		}
 	}

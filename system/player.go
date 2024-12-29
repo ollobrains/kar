@@ -48,8 +48,9 @@ func (c *PlayerSys) Update() {
 
 		// Drop Item
 		if inpututil.IsKeyJustPressed(ebiten.KeyArrowUp) {
-			if PlayerInventory.SelectedSlotID() != items.Air {
-				AppendToSpawnList(playerCenterX, playerCenterY, PlayerInventory.SelectedSlotID())
+			currentSlot := PlayerInventory.SelectedSlot()
+			if currentSlot.ID != items.Air {
+				AppendToSpawnList(playerCenterX, playerCenterY, currentSlot.ID, currentSlot.Durability)
 				PlayerInventory.RemoveItemFromSelectedSlot()
 			}
 		}
@@ -57,11 +58,11 @@ func (c *PlayerSys) Update() {
 		// Place block
 		if PlayerController.IsPlaceKeyJustPressed {
 			anyItemOverlapsWithPlaceCoords := false
-			if IsRayHit && items.HasTag(PlayerInventory.SelectedSlotID(), items.Block) {
+			if IsRayHit && items.HasTag(PlayerInventory.SelectedSlot().ID, items.Block) {
 				placeBlock = targetBlockPos.Sub(PlayerController.InputAxisLast)
 				queryItem := arc.FilterItem.Query(&kar.WorldECS)
 				for queryItem.Next() {
-					_, _, itemRect, _ := queryItem.Get()
+					_, itemRect, _, _ := queryItem.Get()
 					anyItemOverlapsWithPlaceCoords = itemRect.Overlaps(Map.GetTileRect(placeBlock))
 					if anyItemOverlapsWithPlaceCoords {
 						queryItem.Close()

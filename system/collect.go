@@ -22,18 +22,16 @@ type Collect struct {
 func (c *Collect) Init() {}
 func (c *Collect) Update() {
 	if kar.WorldECS.Alive(PlayerEntity) {
-		collisionQuery := arc.FilterCollision.Query(&kar.WorldECS)
+		collisionQuery := arc.FilterItem.Query(&kar.WorldECS)
 		for collisionQuery.Next() {
 			PlayerRect := arc.MapRect.GetUnchecked(PlayerEntity)
-			rect, itemID, timers := collisionQuery.Get()
+			itemID, rect, timers, durability := collisionQuery.Get()
 			if timers.CollisionCountdown != 0 {
 				timers.CollisionCountdown--
 			} else {
 				if PlayerRect.OverlapsRect(rect) {
 					// Çarpan öğeyi envantere ekle
-					ok := PlayerInventory.AddItemIfEmpty(itemID.ID)
-					if ok {
-						// çarpan öğeyi varlık dünyasından kaldırma listesine ekle
+					if PlayerInventory.AddItemIfEmpty(itemID.ID, durability.Durability) {
 						toRemove = append(toRemove, collisionQuery.Entity())
 					}
 				}

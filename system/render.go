@@ -123,7 +123,7 @@ func (rn *Render) Draw() {
 	// Draw Items
 	itemQuery := arc.FilterItem.Query(&kar.WorldECS)
 	for itemQuery.Next() {
-		id, _, rect, timers := itemQuery.Get()
+		id, rect, timers, _ := itemQuery.Get()
 		kar.GlobalDIO.GeoM.Reset()
 		kar.GlobalDIO.GeoM.Scale(kar.ItemScale, kar.ItemScale)
 		kar.GlobalDIO.GeoM.Translate(rect.X, rect.Y+sinspace[timers.AnimationIndex])

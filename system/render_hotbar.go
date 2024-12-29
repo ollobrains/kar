@@ -47,7 +47,7 @@ func (gui *DrawHotbar) Draw() {
 				colorm.DrawImage(kar.Screen, res.Icon8[slotID], kar.GlobalColorM, kar.GlobalDIO)
 			}
 
-			if x == PlayerInventory.SelectedSlot {
+			if x == PlayerInventory.SelectedSlotIndex {
 				// draw border
 				kar.GlobalDIO.GeoM.Translate(-10, -10)
 				colorm.DrawImage(kar.Screen, res.SelectionBar, kar.GlobalColorM, kar.GlobalDIO)

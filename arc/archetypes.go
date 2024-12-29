@@ -12,7 +12,7 @@ import (
 var (
 	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
 	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
-	MapItem      = gn.NewMap4[ItemID, Health, Rect, ItemTimers](&kar.WorldECS)
+	MapItem      = gn.NewMap4[ItemID, Durability, Rect, ItemTimers](&kar.WorldECS)
 	MapPlayer    = gn.NewMap5[
 		anim.AnimationPlayer,
 		Health,
@@ -23,10 +23,9 @@ var (
 
 // Query Filters
 var (
-	FilterCollision  = gn.NewFilter3[Rect, ItemID, ItemTimers]()
 	FilterRect       = gn.NewFilter1[Rect]()
 	FilterAnimPlayer = gn.NewFilter1[anim.AnimationPlayer]()
-	FilterItem       = gn.NewFilter4[ItemID, Health, Rect, ItemTimers]()
+	FilterItem       = gn.NewFilter4[ItemID, Rect, ItemTimers, Durability]()
 	FilterPlayer     = gn.NewFilter5[
 		anim.AnimationPlayer,
 		Health,
@@ -37,7 +36,6 @@ var (
 
 func init() {
 	FilterRect.Register(&kar.WorldECS)
-	FilterCollision.Register(&kar.WorldECS)
 	FilterAnimPlayer.Register(&kar.WorldECS)
 	FilterItem.Register(&kar.WorldECS)
 	FilterPlayer.Register(&kar.WorldECS)
@@ -64,11 +62,18 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 		NewInventory(),
 	)
 }
-func SpawnItem(x, y float64, id uint16) ecs.Entity {
+func SpawnItem(data SpawnData) ecs.Entity {
 	return MapItem.NewWith(
-		&ItemID{id},
-		&Health{Health: 100, MaxHealth: 100},
-		&Rect{x, y, 8 * kar.ItemScale, 8 * kar.ItemScale},
+		&ItemID{data.Id},
+		&Durability{data.Durability},
+		&Rect{data.X, data.Y, 8 * kar.ItemScale, 8 * kar.ItemScale},
 		&ItemTimers{kar.ItemCollisionDelay, 0},
 	)
+}
+
+// SpawnData is a helper for delaying spawn events
+type SpawnData struct {
+	X, Y       float64
+	Id         uint16
+	Durability float64
 }

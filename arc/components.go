@@ -43,6 +43,10 @@ type ItemID struct {
 	ID uint16
 }
 
+type Durability struct {
+	Durability float64
+}
+
 type Health struct {
 	Health    float64
 	MaxHealth float64

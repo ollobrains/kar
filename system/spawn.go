@@ -16,20 +16,15 @@ var (
 	Map              = tilemap.MakeTileMap(512, 512, 40, 40)
 
 	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
-	ToSpawn  = []SpawnData{}
+	ToSpawn  = []arc.SpawnData{}
 )
 
-// SpawnData is a helper for delaying spawn events
-type SpawnData struct {
-	X, Y float64
-	Id   uint16
-}
-
-func AppendToSpawnList(x, y float64, id uint16) {
-	ToSpawn = append(ToSpawn, SpawnData{
-		X:  x - 4*kar.ItemScale,
-		Y:  y - 4*kar.ItemScale,
-		Id: id,
+func AppendToSpawnList(x, y float64, id uint16, durability float64) {
+	ToSpawn = append(ToSpawn, arc.SpawnData{
+		X:          x - 4*kar.ItemScale,
+		Y:          y - 4*kar.ItemScale,
+		Id:         id,
+		Durability: durability,
 	})
 }
 
@@ -54,7 +49,7 @@ func (s *Spawn) Init() {
 func (s *Spawn) Update() {
 	// Spawn item
 	for _, spawnData := range ToSpawn {
-		arc.SpawnItem(spawnData.X, spawnData.Y, spawnData.Id)
+		arc.SpawnItem(spawnData)
 	}
 	ToSpawn = ToSpawn[:0]
 }

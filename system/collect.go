@@ -30,8 +30,10 @@ func (c *Collect) Update() {
 				timers.CollisionCountdown--
 			} else {
 				if PlayerRect.OverlapsRect(rect) {
+					// Çarpan öğeyi envantere ekle
 					ok := PlayerInventory.AddItemIfEmpty(itemID.ID)
 					if ok {
+						// çarpan öğeyi varlık dünyasından kaldırma listesine ekle
 						toRemove = append(toRemove, collisionQuery.Entity())
 					}
 				}

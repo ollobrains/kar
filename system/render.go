@@ -1,15 +1,12 @@
 package system
 
 import (
-	"fmt"
 	"kar"
 	"kar/arc"
 	"kar/engine/mathutil"
-	"kar/items"
 	"kar/res"
 	"log"
 
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"golang.org/x/image/colornames"
 )
@@ -58,7 +55,7 @@ func (rn *Render) Draw() {
 				kar.GlobalDIO.GeoM.Scale(2, 2)
 				kar.GlobalDIO.GeoM.Translate(px, py)
 				if x == targetBlockPos.X && y == targetBlockPos.Y {
-					i := mathutil.MapRange(blockHealth, 0, items.Property[tileID].MaxHealth, 0, 5)
+					i := mathutil.MapRange(blockHealth, 0, 180, 0, 5)
 					if res.BlockCrackFrames[tileID] != nil {
 						kar.Camera.DrawWithColorM(res.BlockCrackFrames[tileID][int(i)], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 					}
@@ -136,13 +133,4 @@ func (rn *Render) Draw() {
 		kar.Camera.DrawWithColorM(res.Icon8[id.ID], kar.GlobalColorM, kar.GlobalDIO, kar.Screen)
 	}
 
-	// Draw debug info
-	if kar.DrawDebugTextEnabled {
-		ebitenutil.DebugPrintAt(kar.Screen, PlayerController.CurrentState, 10, 10)
-		ebitenutil.DebugPrintAt(kar.Screen, "InputAxis"+PlayerController.InputAxisLast.String(), 10, 30)
-		ebitenutil.DebugPrintAt(kar.Screen, "Target Block"+targetBlockPos.String(), 10, 30*2)
-		x, y := kar.Camera.TopLeft()
-		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("cam %v %v", x, y), 10, 30*3)
-		ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf("player %v %v", playerCenterX, playerCenterY), 10, 30*4)
-	}
 }

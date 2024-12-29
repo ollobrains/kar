@@ -9,22 +9,16 @@ var BlockIDs []uint16
 
 func init() {
 	for id := range Property {
-		if IsBlock(id) {
+		if HasTag(id, Block) {
 			BlockIDs = append(BlockIDs, id)
 		}
 	}
 }
 
-func IsBreakable(id uint16) bool {
-	return Property[id].Tags&Unbreakable == 0
+func HasTag(id uint16, tag tag) bool {
+	return Property[id].Tags&tag != 0
 }
 
-func IsHarvestable(id uint16) bool {
-	return Property[id].Tags&Harvestable != 0
-}
-func IsBlock(id uint16) bool {
-	return Property[id].Tags&Block != 0
-}
 func IsBestTool(blockID, toolID uint16) bool {
 	return Property[blockID].BestToolTag&Property[toolID].Tags != 0
 }

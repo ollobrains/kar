@@ -1,12 +1,14 @@
 package system
 
 import (
+	"fmt"
 	"kar"
 	"kar/items"
 	"kar/res"
 	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2/colorm"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
@@ -25,13 +27,13 @@ func (gui *DrawHotbar) Init() {
 func (gui *DrawHotbar) Update() {
 }
 func (gui *DrawHotbar) Draw() {
-	// Background
-	kar.GlobalDIO.GeoM.Reset()
-	kar.GlobalDIO.GeoM.Scale(2, 2)
-	kar.GlobalDIO.GeoM.Translate(hotbarPositionX, hotbarPositionY)
-	colorm.DrawImage(kar.Screen, res.Hotbar, kar.GlobalColorM, kar.GlobalDIO)
-
 	if kar.WorldECS.Alive(PlayerEntity) {
+		// Background
+		kar.GlobalDIO.GeoM.Reset()
+		kar.GlobalDIO.GeoM.Scale(2, 2)
+		kar.GlobalDIO.GeoM.Translate(hotbarPositionX, hotbarPositionY)
+		colorm.DrawImage(kar.Screen, res.Hotbar, kar.GlobalColorM, kar.GlobalDIO)
+
 		for x := range 9 {
 			// draw item
 			slotID := PlayerInventory.Slots[x].ID
@@ -69,5 +71,20 @@ func (gui *DrawHotbar) Draw() {
 			}
 		}
 
+		// Draw debug info
+		if kar.DrawDebugTextEnabled {
+			ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf(stats,
+				PlayerController.CurrentState,
+				PlayerController.InputAxisLast,
+				targetBlockPos,
+				blockHealth,
+			), 10, 50)
+		}
 	}
 }
+
+var stats = `state %v
+inputAxisLast %v
+targeBlock %v
+blockHealth %v
+`

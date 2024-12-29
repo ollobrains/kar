@@ -57,7 +57,7 @@ func (c *PlayerSys) Update() {
 		// Place block
 		if PlayerController.IsPlaceKeyJustPressed {
 			anyItemOverlapsWithPlaceCoords := false
-			if IsRayHit && items.IsBlock(PlayerInventory.SelectedSlotID()) {
+			if IsRayHit && items.HasTag(PlayerInventory.SelectedSlotID(), items.Block) {
 				placeBlock = targetBlockPos.Sub(PlayerController.InputAxisLast)
 				queryItem := arc.FilterItem.Query(&kar.WorldECS)
 				for queryItem.Next() {

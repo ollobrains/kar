@@ -61,14 +61,14 @@ func (gui *DrawHotbar) Draw() {
 				// Draw display name
 				itemQuantityTextDO.GeoM.Reset()
 				itemQuantityTextDO.GeoM.Translate(SlotOffsetX, hotbarPositionY+32)
-				if items.HasTag(slotID, items.Block) {
-					text.Draw(kar.Screen, items.Property[slotID].DisplayName, res.Font, itemQuantityTextDO)
-				} else if items.HasTag(slotID, items.Tool) {
+				if items.HasTag(slotID, items.Tool) {
 					text.Draw(kar.Screen, fmt.Sprintf(
 						"%v\nDurability %v",
 						items.Property[slotID].DisplayName,
 						PlayerInventory.Slots[x].Durability,
 					), res.Font, itemQuantityTextDO)
+				} else {
+					text.Draw(kar.Screen, items.Property[slotID].DisplayName, res.Font, itemQuantityTextDO)
 				}
 			}
 			// Draw item quantity number

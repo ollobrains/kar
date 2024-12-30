@@ -89,7 +89,7 @@ func (gui *DrawHotbar) Draw() {
 				PlayerController.CurrentState,
 				PlayerController.InputAxisLast,
 				targetBlockPos,
-				blockHealth,
+				playerHealth,
 			), 10, 50)
 		}
 	}

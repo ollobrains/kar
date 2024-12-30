@@ -1,6 +1,7 @@
 package system
 
 import (
+	"fmt"
 	"image"
 	"kar/arc"
 	"kar/engine/mathutil"
@@ -70,7 +71,7 @@ func NewController(velX, velY float64, tc *tilecollider.Collider[uint16]) *Contr
 		VelY:                                velY,
 		JumpPower:                           -3.7,
 		Gravity:                             0.19,
-		MaxFallSpeed:                        6.0,
+		MaxFallSpeed:                        100.0,
 		Acceleration:                        0.08,
 		Deceleration:                        0.1,
 		JumpHoldTime:                        20.0,
@@ -185,10 +186,19 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	c.IsOnFloor = false
 	for _, v := range ci {
 		if v.Normal[1] == -1 {
+			if dy != 0 && c.VelY != 0 {
+				fmt.Println(c.VelY)
+				_, h, _, _, _ := arc.MapPlayer.Get(PlayerEntity)
+				if c.VelY > 12 {
+					h.Health -= c.VelY
+				}
+			}
+			// yere çarpma
 			c.VelY = 0
 			c.IsOnFloor = true
 		}
 		if v.Normal[1] == 1 {
+			// tavana çarpma
 			c.VelY = 0
 		}
 		if v.Normal[0] == -1 {
@@ -379,7 +389,6 @@ func (c *Controller) Running() {
 
 func (c *Controller) Walking() {
 	c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
-
 	// Kayma durumu kontrolü
 	if c.IsSkidding {
 		c.changeState("skidding")

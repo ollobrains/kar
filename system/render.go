@@ -38,7 +38,6 @@ func (rn *Render) Update() {
 }
 
 func (rn *Render) Draw() {
-
 	// Draw tilemap
 	camMin := Map.WorldToTile(kar.Camera.TopLeft())
 	camMin.X = min(max(camMin.X, 0), Map.W)

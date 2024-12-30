@@ -13,6 +13,7 @@ import (
 var (
 	// damage                       float64 = 1
 	blockHealth                  float64
+	playerHealth                 float64
 	targetBlockPos               image.Point
 	placeBlock                   image.Point
 	playerTile                   image.Point
@@ -26,14 +27,14 @@ type PlayerSys struct {
 func (c *PlayerSys) Update() {
 	q := arc.FilterPlayer.Query(&kar.WorldECS)
 	for q.Next() {
-		anim, _, dop, rect, _ := q.Get()
+		anim, hlt, dop, rect, _ := q.Get()
+		playerHealth = hlt.Health
 		PlayerController.DOP = dop
 		PlayerController.AnimPlayer = anim
 		playerCenterX, playerCenterY = rect.X+rect.W/2, rect.Y+rect.H/2
 		PlayerController.UpdateInput()
 
 		dx, dy := PlayerController.UpdatePhysics(rect.X, rect.Y, rect.W, rect.H)
-
 		playerTile = Map.WorldToTile(playerCenterX, playerCenterY)
 		targetBlockTemp := targetBlockPos
 		targetBlockPos, IsRayHit = Map.Raycast(playerTile, PlayerController.InputAxisLast, kar.RaycastDist)
@@ -43,7 +44,6 @@ func (c *PlayerSys) Update() {
 		}
 		rect.X += dx
 		rect.Y += dy
-
 		PlayerController.UpdateState()
 
 		// Drop Item
@@ -89,7 +89,10 @@ func (c *PlayerSys) Update() {
 		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyEnter) {
 			PlayerInventory.RandomFillAllSlots()
+		}
 
+		if inpututil.IsKeyJustPressed(ebiten.KeyV) {
+			kar.DrawDebugTextEnabled = !kar.DrawDebugTextEnabled
 		}
 	}
 

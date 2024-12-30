@@ -21,13 +21,12 @@ var (
 	Hotbar           = util.ReadEbImgFS(fs, "assets/img/gui/hotbar.png")
 	SelectionBlock   = util.ReadEbImgFS(fs, "assets/img/gui/selection_block.png")
 	SelectionBar     = util.ReadEbImgFS(fs, "assets/img/gui/selection_bar.png")
-	PlayerAtlas      = util.ReadEbImgFS(fs, "assets/img/player/player.png")
+	PlayerAtlas      = util.ReadEbImgFS(fs, "assets/img/player.png")
 	cracks           = util.ImgFromFS(fs, "assets/img/cracks.png")
 	Font             = util.LoadFontFromFS("assets/font/pixelcode.otf", 18, fs)
 )
 
 func init() {
-
 	BlockCrackFrames[items.Bedrock] = blockImgs("bedrock.png")
 	BlockCrackFrames[items.CoalOre] = blockImgs("coal_ore.png")
 	BlockCrackFrames[items.CraftingTable] = blockImgs("crafting_table.png")
@@ -100,57 +99,6 @@ func init() {
 	Icon8[items.WoodenAxe] = itemIconImg("wooden_axe.png")
 	Icon8[items.WoodenPickaxe] = itemIconImg("wooden_pickaxe.png")
 	Icon8[items.WoodenShovel] = itemIconImg("wooden_shovel.png")
-
-	// blocks
-
-	Items20[items.Bedrock] = blockImg("bedrock.png")
-	Items20[items.CoalOre] = blockImg("coal_ore.png")
-	Items20[items.CraftingTable] = blockImg("crafting_table.png")
-	Items20[items.DiamondOre] = blockImg("diamond_ore.png")
-	Items20[items.Dirt] = blockImg("dirt.png")
-	Items20[items.Furnace] = blockImg("furnace.png")
-	Items20[items.FurnaceOn] = blockImg("furnace_on.png")
-	Items20[items.GoldOre] = blockImg("gold_ore.png")
-	Items20[items.GrassBlock] = blockImg("grass_block.png")
-	Items20[items.GrassBlockSnow] = blockImg("grass_block_snow.png")
-	Items20[items.IronOre] = blockImg("iron_ore.png")
-	Items20[items.OakLeaves] = blockImg("oak_leaves.png")
-	Items20[items.OakLog] = blockImg("oak_log.png")
-	Items20[items.OakPlanks] = blockImg("oak_planks.png")
-	Items20[items.OakSapling] = blockImg("oak_sapling.png")
-	Items20[items.Obsidian] = blockImg("obsidian.png")
-	Items20[items.Sand] = blockImg("sand.png")
-	Items20[items.SmoothStone] = blockImg("smooth_stone.png")
-	Items20[items.Snow] = blockImg("snow.png")
-	Items20[items.Stone] = blockImg("stone.png")
-	Items20[items.StoneBricks] = blockImg("stone_bricks.png")
-	Items20[items.Tnt] = blockImg("tnt.png")
-	Items20[items.Torch] = blockImg("torch.png")
-
-	Items20[items.Bread] = itemImg("bread.png")
-	Items20[items.Bucket] = itemImg("bucket.png")
-	Items20[items.Coal] = itemImg("coal.png")
-	Items20[items.Diamond] = itemImg("diamond.png")
-	Items20[items.DiamondAxe] = itemImg("diamond_axe.png")
-	Items20[items.DiamondPickaxe] = itemImg("diamond_pickaxe.png")
-	Items20[items.DiamondShovel] = itemImg("diamond_shovel.png")
-	Items20[items.GoldIngot] = itemImg("gold_ingot.png")
-	Items20[items.IronAxe] = itemImg("iron_axe.png")
-	Items20[items.IronIngot] = itemImg("iron_ingot.png")
-	Items20[items.IronPickaxe] = itemImg("iron_pickaxe.png")
-	Items20[items.IronShovel] = itemImg("iron_shovel.png")
-	Items20[items.RawGold] = itemImg("raw_gold.png")
-	Items20[items.RawIron] = itemImg("raw_iron.png")
-	Items20[items.Snowball] = itemImg("snowball.png")
-	Items20[items.Stick] = itemImg("stick.png")
-	Items20[items.StoneAxe] = itemImg("stone_axe.png")
-	Items20[items.StonePickaxe] = itemImg("stone_pickaxe.png")
-	Items20[items.StoneShovel] = itemImg("stone_shovel.png")
-	Items20[items.WaterBucket] = itemImg("water_bucket.png")
-	Items20[items.WoodenAxe] = itemImg("wooden_axe.png")
-	Items20[items.WoodenPickaxe] = itemImg("wooden_pickaxe.png")
-	Items20[items.WoodenShovel] = itemImg("wooden_shovel.png")
-
 }
 
 func toEbiten(st []image.Image) []*ebiten.Image {
@@ -181,11 +129,4 @@ func itemIconImg(f string) *ebiten.Image {
 }
 func blockIconImg(f string) *ebiten.Image {
 	return util.ReadEbImgFS(fs, "assets/img/blocks_icon/"+f)
-}
-func blockImg(f string) *ebiten.Image {
-	return util.ReadEbImgFS(fs, "assets/img/blocks/"+f)
-}
-
-func itemImg(f string) *ebiten.Image {
-	return util.ReadEbImgFS(fs, "assets/img/items/"+f)
 }

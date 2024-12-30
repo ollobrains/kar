@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"image"
 	"kar/arc"
 	"kar/engine/mathutil"
@@ -187,7 +186,6 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	for _, v := range ci {
 		if v.Normal[1] == -1 {
 			if dy != 0 && c.VelY != 0 {
-				fmt.Println(c.VelY)
 				_, h, _, _, _ := arc.MapPlayer.Get(PlayerEntity)
 				if c.VelY > 12 {
 					h.Health -= c.VelY

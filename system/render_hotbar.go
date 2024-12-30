@@ -83,6 +83,10 @@ func (gui *DrawHotbar) Draw() {
 			}
 		}
 
+		itemQuantityTextDO.GeoM.Reset()
+		itemQuantityTextDO.GeoM.Translate(400, 16)
+		text.Draw(kar.Screen, fmt.Sprintf("Health %v", playerHealth), res.Font, itemQuantityTextDO)
+
 		// Draw debug info
 		if kar.DrawDebugTextEnabled {
 			ebitenutil.DebugPrintAt(kar.Screen, fmt.Sprintf(stats,
@@ -92,6 +96,7 @@ func (gui *DrawHotbar) Draw() {
 				playerHealth,
 			), 10, 50)
 		}
+
 	}
 }
 

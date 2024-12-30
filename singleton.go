@@ -32,7 +32,7 @@ var (
 	RenderArea             = image.Point{23, 13} // cam w/h blocks
 	// Debug
 	DrawDebugHitboxesEnabled = false
-	DrawDebugTextEnabled     = true
+	DrawDebugTextEnabled     = false
 	BackgroundColor          = rgb(36, 36, 39)
 )
 var ItemColorMap = map[uint16]color.RGBA{

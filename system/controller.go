@@ -135,6 +135,9 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 	currentDecel := c.WalkDeceleration
 	c.HorizontalVelocity = math.Abs(c.VelX)
 
+	c.VelY += c.Gravity
+	c.VelY = min(c.MaxFallSpeed, c.VelY)
+
 	if !c.IsSkidding {
 		if c.IsRunKeyPressed {
 			maxSpeed = c.MaxRunSpeed
@@ -166,8 +169,6 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 	}
 
 	c.IsSkidding = (c.VelX > 0 && c.InputAxis.X == -1) || (c.VelX < 0 && c.InputAxis.X == 1)
-	c.VelY += c.Gravity
-	c.VelY = min(c.MaxFallSpeed, c.VelY)
 
 	if c.VelX > 0.01 {
 		c.DOP.FlipX = false // sağa gidiyor
@@ -176,8 +177,8 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 		c.DOP.FlipX = true // sola gidiyor
 		c.InputAxisLast.X = -1
 	}
-
-	return c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
+	dx, dy = c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
+	return dx, dy
 
 }
 
@@ -185,12 +186,6 @@ func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx
 	c.IsOnFloor = false
 	for _, v := range ci {
 		if v.Normal[1] == -1 {
-			if dy != 0 && c.VelY != 0 {
-				_, h, _, _, _ := arc.MapPlayer.Get(PlayerEntity)
-				if c.VelY > 12 {
-					h.Health -= c.VelY
-				}
-			}
 			// yere çarpma
 			c.VelY = 0
 			c.IsOnFloor = true
@@ -226,18 +221,18 @@ func (c *Controller) Skidding() {
 
 		c.VelY = c.JumpPower * 0.7 // Zıplama gücünü azalt
 		c.JumpTimer = 0
-		c.changeState("jumping")
+		c.ChangeState("jumping")
 		return
 	}
 
 	// Mevcut mantık devam eder...
 	if c.HorizontalVelocity < 0.01 {
-		c.changeState("idle")
+		c.ChangeState("idle")
 	} else if !c.IsSkidding {
 		if c.HorizontalVelocity > c.MaxWalkSpeed {
-			c.changeState("running")
+			c.ChangeState("running")
 		} else {
-			c.changeState("walking")
+			c.ChangeState("walking")
 		}
 	}
 }
@@ -248,11 +243,11 @@ func (c *Controller) Falling() {
 	}
 	if c.IsOnFloor {
 		if c.HorizontalVelocity <= 0 {
-			c.changeState("idle")
+			c.ChangeState("idle")
 		} else if c.IsRunKeyPressed {
-			c.changeState("running")
+			c.ChangeState("running")
 		} else {
-			c.changeState("walking")
+			c.ChangeState("walking")
 		}
 	}
 }
@@ -306,15 +301,15 @@ func (c *Controller) Attacking() {
 	}
 
 	if !IsRayHit {
-		c.changeState("idle")
+		c.ChangeState("idle")
 	}
 
 	if !c.IsOnFloor && c.VelY > 0.01 {
-		c.changeState("falling")
+		c.ChangeState("falling")
 	} else if !c.IsBreakKeyPressed && c.IsOnFloor {
-		c.changeState("idle")
+		c.ChangeState("idle")
 	} else if !c.IsBreakKeyPressed && c.IsJumpKeyJustPressed {
-		c.changeState("jumping")
+		c.ChangeState("jumping")
 		c.VelY = c.JumpPower
 		c.JumpTimer = 0
 	}
@@ -333,7 +328,7 @@ func (c *Controller) Jumping() {
 			c.VelY += c.JumpBoost * 0.7 // Boost gücünü azalt
 			c.JumpTimer++
 		} else if c.VelY >= 0.01 {
-			c.changeState("falling")
+			c.ChangeState("falling")
 		}
 	} else {
 		// Normal jumping mantığı aynen devam eder
@@ -345,7 +340,7 @@ func (c *Controller) Jumping() {
 			c.VelY += c.JumpBoost * (1 + speedFactor)
 			c.JumpTimer++
 		} else if c.VelY >= 0 {
-			c.changeState("falling")
+			c.ChangeState("falling")
 		}
 	}
 
@@ -362,16 +357,16 @@ func (c *Controller) Running() {
 
 	// Kayma durumu kontrolü
 	if c.IsSkidding {
-		c.changeState("skidding")
+		c.ChangeState("skidding")
 		return
 	}
 
 	if c.VelY > 0 && !c.IsOnFloor {
-		c.changeState("falling")
+		c.ChangeState("falling")
 	}
 
 	if c.IsJumpKeyJustPressed {
-		c.changeState("jumping")
+		c.ChangeState("jumping")
 		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
 			c.VelY = c.JumpPower * c.JumpBoostMultiplier
 		} else {
@@ -379,9 +374,9 @@ func (c *Controller) Running() {
 		}
 		c.JumpTimer = 0
 	} else if c.HorizontalVelocity < 0.01 {
-		c.changeState("idle")
+		c.ChangeState("idle")
 	} else if c.HorizontalVelocity <= c.MaxWalkSpeed {
-		c.changeState("walking")
+		c.ChangeState("walking")
 	}
 }
 
@@ -389,16 +384,16 @@ func (c *Controller) Walking() {
 	c.AnimPlayer.Animations["walkRight"].FPS = mathutil.MapRange(c.HorizontalVelocity, 0, c.MaxRunSpeed, 4, 23)
 	// Kayma durumu kontrolü
 	if c.IsSkidding {
-		c.changeState("skidding")
+		c.ChangeState("skidding")
 		return
 	}
 
 	if c.VelY > 0 && !c.IsOnFloor {
-		c.changeState("falling")
+		c.ChangeState("falling")
 	}
 
 	if c.IsJumpKeyJustPressed {
-		c.changeState("jumping")
+		c.ChangeState("jumping")
 		if c.HorizontalVelocity > c.MinSpeedThresForJumpBoostMultiplier {
 			c.VelY = c.JumpPower * c.JumpBoostMultiplier
 		} else {
@@ -406,9 +401,9 @@ func (c *Controller) Walking() {
 		}
 		c.JumpTimer = 0
 	} else if c.HorizontalVelocity <= 0 {
-		c.changeState("idle")
+		c.ChangeState("idle")
 	} else if c.HorizontalVelocity > c.MaxWalkSpeed {
-		c.changeState("running")
+		c.ChangeState("running")
 	}
 }
 
@@ -431,18 +426,18 @@ func (c *Controller) Idle() {
 		// c.changeState("jumping")
 	} else if c.IsOnFloor && c.HorizontalVelocity > 0.01 {
 		if c.HorizontalVelocity > c.MaxWalkSpeed {
-			c.changeState("running")
+			c.ChangeState("running")
 		} else {
-			c.changeState("walking")
+			c.ChangeState("walking")
 		}
 	} else if !c.IsOnFloor && c.VelY > 0.01 {
-		c.changeState("falling")
+		c.ChangeState("falling")
 	} else if c.IsBreakKeyPressed && IsRayHit {
-		c.changeState("attacking")
+		c.ChangeState("attacking")
 	}
 
 	if c.VelY != 0 && c.VelY < -0.1 {
-		c.changeState("jumping")
+		c.ChangeState("jumping")
 	}
 }
 
@@ -469,7 +464,7 @@ func (c *Controller) UpdateState() {
 // func (c *Controller) exitJumping()  {}
 // func (c *Controller) exitFalling()  {}
 
-func (c *Controller) enterWalking() {
+func (c *Controller) EnterWalking() {
 	c.AnimPlayer.SetStateAndReset("walkRight")
 }
 func (c *Controller) enterRunning() {
@@ -494,15 +489,24 @@ func (c *Controller) enterJumping() {
 
 }
 
-func (c *Controller) enterFalling() {
+func (c *Controller) EnterFalling() {
+	TempFallingY = playerRect.Y
+}
 
+func (c *Controller) exitFalling() {
+	if playerRect != nil {
+		d := int((playerRect.Y - TempFallingY) / 40)
+		if d > 3 {
+			playerHealth.Health -= d - 3
+		}
+	}
 }
 
 func (c *Controller) enterSkidding() {
 	c.AnimPlayer.SetStateAndReset("skidding")
 }
 
-func (c *Controller) changeState(newState string) {
+func (c *Controller) ChangeState(newState string) {
 	if c.CurrentState == newState {
 		return
 	}
@@ -511,16 +515,16 @@ func (c *Controller) changeState(newState string) {
 	switch c.CurrentState {
 	case "attacking":
 		c.exitAttacking()
-		// case "idle":
-		// c.exitIdle()
-		// case "walking":
-		// 	c.exitWalking()
-		// case "running":
-		// 	c.exitRunning()
-		// case "jumping":
-		// 	c.exitJumping()
-		// case "falling":
-		// 	c.exitFalling()
+	// case "idle":
+	// c.exitIdle()
+	// case "walking":
+	// 	c.exitWalking()
+	// case "running":
+	// 	c.exitRunning()
+	// case "jumping":
+	// 	c.exitJumping()
+	case "falling":
+		c.exitFalling()
 	}
 
 	c.previousState = c.CurrentState
@@ -533,13 +537,13 @@ func (c *Controller) changeState(newState string) {
 	case "attacking":
 		c.enterAttacking()
 	case "walking":
-		c.enterWalking()
+		c.EnterWalking()
 	case "running":
 		c.enterRunning()
 	case "jumping":
 		c.enterJumping()
 	case "falling":
-		c.enterFalling()
+		c.EnterFalling()
 	case "skidding":
 		c.enterSkidding()
 	}

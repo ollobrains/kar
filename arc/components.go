@@ -48,6 +48,6 @@ type Durability struct {
 }
 
 type Health struct {
-	Health    float64
-	MaxHealth float64
+	Health    int
+	MaxHealth int
 }

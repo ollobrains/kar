@@ -10,8 +10,11 @@ import (
 )
 
 var (
+	TempFallingY     float64
 	PlayerEntity     ecs.Entity
 	PlayerInventory  *arc.Inventory
+	playerRect       *arc.Rect
+	playerHealth     *arc.Health
 	PlayerController = NewController(0, 10, Collider)
 	Map              = tilemap.MakeTileMap(512, 512, 40, 40)
 
@@ -34,13 +37,16 @@ func (s *Spawn) Init() {
 	PlayerController.Collider = Collider
 	PlayerController.SetScale(2)
 	PlayerController.SkiddingJumpEnabled = true
-	x, y := Map.FindSpawnPosition()
-	p := Map.WorldToTile(x, y)
+	SpawnX, SpawnY := Map.FindSpawnPosition()
+	p := Map.WorldToTile(SpawnX, SpawnY)
 	px, py := Map.TileToWorld(p)
 	kar.Camera.TopLeftX = px - kar.Camera.Width()/2
 	kar.Camera.TopLeftY = py - kar.Camera.Height()/2
-	PlayerEntity = arc.SpawnPlayer(x, y)
+	PlayerEntity = arc.SpawnPlayer(SpawnX, SpawnY)
 	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
+	playerRect = arc.MapRect.Get(PlayerEntity)
+	playerHealth = arc.MapHealth.Get(PlayerEntity)
+	PlayerController.EnterFalling()
 	PlayerInventory.RandomFillAllSlots()
 	PlayerInventory.ClearSlot(0)
 	PlayerInventory.ClearSlot(1)

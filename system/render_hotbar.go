@@ -85,7 +85,9 @@ func (gui *DrawHotbar) Draw() {
 
 		itemQuantityTextDO.GeoM.Reset()
 		itemQuantityTextDO.GeoM.Translate(400, 16)
-		text.Draw(kar.Screen, fmt.Sprintf("Health %v", playerHealth), res.Font, itemQuantityTextDO)
+		if playerHealth != nil {
+			text.Draw(kar.Screen, fmt.Sprintf("Health %v", playerHealth.Health), res.Font, itemQuantityTextDO)
+		}
 
 		// Draw debug info
 		if kar.DrawDebugTextEnabled {

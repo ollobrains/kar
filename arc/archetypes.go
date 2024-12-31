@@ -12,6 +12,7 @@ import (
 var (
 	MapInventory = gn.NewMap1[Inventory](&kar.WorldECS)
 	MapRect      = gn.NewMap1[Rect](&kar.WorldECS)
+	MapHealth    = gn.NewMap1[Health](&kar.WorldECS)
 	MapItem      = gn.NewMap4[ItemID, Durability, Rect, ItemTimers](&kar.WorldECS)
 	MapPlayer    = gn.NewMap5[
 		anim.AnimationPlayer,
@@ -56,7 +57,7 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	AP.SetState("idleRight")
 	return MapPlayer.NewWith(
 		AP,
-		&Health{100, 100},
+		&Health{20, 20},
 		&DrawOptions{Scale: kar.PlayerScale},
 		&Rect{x, y, 16 * kar.PlayerScale, 16 * kar.PlayerScale},
 		NewInventory(),

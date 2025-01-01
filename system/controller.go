@@ -14,8 +14,12 @@ import (
 )
 
 type Controller struct {
-	DOP          *arc.DrawOptions
-	AnimPlayer   *anim.AnimationPlayer
+	DOP        *arc.DrawOptions
+	AnimPlayer *anim.AnimationPlayer
+	Health     *arc.Health
+	Inventory  *arc.Inventory
+	Rect       *arc.Rect
+
 	CurrentState string
 	Collider     *tilecollider.Collider[uint16]
 
@@ -129,7 +133,7 @@ func (c *Controller) UpdateInput() {
 	}
 }
 
-func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
+func (c *Controller) UpdatePhysics() {
 	maxSpeed := c.MaxWalkSpeed
 	currentAccel := c.WalkAcceleration
 	currentDecel := c.WalkDeceleration
@@ -177,9 +181,9 @@ func (c *Controller) UpdatePhysics(x, y, w, h float64) (dx, dy float64) {
 		c.DOP.FlipX = true // sola gidiyor
 		c.InputAxisLast.X = -1
 	}
-	dx, dy = c.Collider.Collide(math.Round(x), y, w, h, c.VelX, c.VelY, c.handleCollision)
-	return dx, dy
-
+	dx, dy := c.Collider.Collide(math.Round(c.Rect.X), c.Rect.Y, c.Rect.W, c.Rect.H, c.VelX, c.VelY, c.handleCollision)
+	c.Rect.X += dx
+	c.Rect.Y += dy
 }
 
 func (c *Controller) handleCollision(ci []tilecollider.CollisionInfo[uint16], dx, dy float64) {
@@ -276,7 +280,7 @@ func (c *Controller) Attacking() {
 	if IsRayHit {
 		blockID := Map.TileID(targetBlockPos)
 		if !items.HasTag(blockID, items.Unbreakable) {
-			if items.IsBestTool(blockID, PlayerInventory.SelectedSlotID()) {
+			if items.IsBestTool(blockID, c.Inventory.SelectedSlotID()) {
 				blockHealth += 3
 			} else {
 				blockHealth += 1
@@ -287,10 +291,10 @@ func (c *Controller) Attacking() {
 			blockHealth = 0
 			Map.SetTile(targetBlockPos, items.Air)
 
-			if items.HasTag(PlayerInventory.SelectedSlotID(), items.Tool) {
-				PlayerInventory.SelectedSlot().Durability--
-				if PlayerInventory.SelectedSlot().Durability <= 0 {
-					PlayerInventory.ClearSelectedSlot()
+			if items.HasTag(c.Inventory.SelectedSlotID(), items.Tool) {
+				c.Inventory.SelectedSlot().Durability--
+				if c.Inventory.SelectedSlot().Durability <= 0 {
+					c.Inventory.ClearSelectedSlot()
 				}
 			}
 
@@ -490,15 +494,13 @@ func (c *Controller) enterJumping() {
 }
 
 func (c *Controller) EnterFalling() {
-	TempFallingY = playerRect.Y
+	TempFallingY = c.Rect.Y
 }
 
-func (c *Controller) exitFalling() {
-	if playerRect != nil {
-		d := int((playerRect.Y - TempFallingY) / 40)
-		if d > 3 {
-			playerHealth.Health -= d - 3
-		}
+func (c *Controller) ExitFalling() {
+	d := int((c.Rect.Y - TempFallingY) / 60)
+	if d > 3 {
+		c.Health.Health -= d - 3
 	}
 }
 
@@ -524,7 +526,7 @@ func (c *Controller) ChangeState(newState string) {
 	// case "jumping":
 	// 	c.exitJumping()
 	case "falling":
-		c.exitFalling()
+		c.ExitFalling()
 	}
 
 	c.previousState = c.CurrentState

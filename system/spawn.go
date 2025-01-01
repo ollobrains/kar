@@ -10,16 +10,12 @@ import (
 )
 
 var (
-	TempFallingY     float64
-	PlayerEntity     ecs.Entity
-	PlayerInventory  *arc.Inventory
-	playerRect       *arc.Rect
-	playerHealth     *arc.Health
-	PlayerController = NewController(0, 10, Collider)
-	Map              = tilemap.MakeTileMap(512, 512, 40, 40)
-
-	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
-	ToSpawn  = []arc.SpawnData{}
+	TempFallingY float64
+	PlayerEntity ecs.Entity
+	CTRL         *Controller
+	Map          *tilemap.TileMap
+	Collider     *tilecollider.Collider[uint16]
+	ToSpawn      = []arc.SpawnData{}
 )
 
 func AppendToSpawnList(x, y float64, id uint16, durability int) {
@@ -32,25 +28,28 @@ func AppendToSpawnList(x, y float64, id uint16, durability int) {
 }
 
 func (s *Spawn) Init() {
+	Map = tilemap.MakeTileMap(512, 512, 40, 40)
 	tilemap.Generate(Map)
-
-	PlayerController.Collider = Collider
-	PlayerController.SetScale(2)
-	PlayerController.SkiddingJumpEnabled = true
+	Collider = tilecollider.NewCollider(Map.Grid, Map.TileW, Map.TileH)
+	CTRL = NewController(0, 10, Collider)
+	CTRL.Collider = Collider
+	CTRL.SetScale(2)
+	CTRL.SkiddingJumpEnabled = true
 	SpawnX, SpawnY := Map.FindSpawnPosition()
 	p := Map.WorldToTile(SpawnX, SpawnY)
 	px, py := Map.TileToWorld(p)
 	kar.Camera.TopLeftX = px - kar.Camera.Width()/2
 	kar.Camera.TopLeftY = py - kar.Camera.Height()/2
-	PlayerEntity = arc.SpawnPlayer(SpawnX, SpawnY)
-	PlayerInventory = arc.MapInventory.Get(PlayerEntity)
-	playerRect = arc.MapRect.Get(PlayerEntity)
-	playerHealth = arc.MapHealth.Get(PlayerEntity)
-	PlayerController.EnterFalling()
-	PlayerInventory.RandomFillAllSlots()
-	PlayerInventory.ClearSlot(0)
-	PlayerInventory.ClearSlot(1)
-	PlayerInventory.ClearSlot(4)
+
+	PlayerEntity := arc.SpawnPlayer(SpawnX, SpawnY)
+	anim, hlt, dop, rect, inv := arc.MapPlayer.Get(PlayerEntity)
+	CTRL.AnimPlayer = anim
+	CTRL.Rect = rect
+	CTRL.Health = hlt
+	CTRL.DOP = dop
+	CTRL.Inventory = inv
+	CTRL.EnterFalling()
+
 }
 func (s *Spawn) Update() {
 	// Spawn item

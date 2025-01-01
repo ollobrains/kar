@@ -19,32 +19,30 @@ var (
 type Collect struct {
 }
 
-func (c *Collect) Init() {}
+func (c *Collect) Init() {
+}
 func (c *Collect) Update() {
-	if kar.WorldECS.Alive(PlayerEntity) {
-		collisionQuery := arc.FilterItem.Query(&kar.WorldECS)
-		for collisionQuery.Next() {
-			PlayerRect := arc.MapRect.GetUnchecked(PlayerEntity)
-			itemID, rect, timers, durability := collisionQuery.Get()
-			if timers.CollisionCountdown != 0 {
-				timers.CollisionCountdown--
-			} else {
-				if PlayerRect.OverlapsRect(rect) {
-					// Çarpan öğeyi envantere ekle
-					if PlayerInventory.AddItemIfEmpty(itemID.ID, durability.Durability) {
-						toRemove = append(toRemove, collisionQuery.Entity())
-					}
+	collisionQuery := arc.FilterItem.Query(&kar.WorldECS)
+	for collisionQuery.Next() {
+		itemID, rect, timers, durability := collisionQuery.Get()
+		if timers.CollisionCountdown != 0 {
+			timers.CollisionCountdown--
+		} else {
+			if CTRL.Rect.OverlapsRect(rect) {
+				// Çarpan öğeyi envantere ekle
+				if CTRL.Inventory.AddItemIfEmpty(itemID.ID, durability.Durability) {
+					toRemove = append(toRemove, collisionQuery.Entity())
 				}
 			}
-			dy := Collider.CollideY(rect.X, rect.Y+8, rect.W, rect.H, itemGravity)
-			rect.Y += dy
-			// rect.Y += sinspace[timers.AnimationIndex]
-			timers.AnimationIndex = (timers.AnimationIndex + 1) % sinspaceLen
 		}
-		for _, e := range toRemove {
-			kar.WorldECS.RemoveEntity(e)
-		}
-		toRemove = toRemove[:0]
+		dy := Collider.CollideY(rect.X, rect.Y+8, rect.W, rect.H, itemGravity)
+		rect.Y += dy
+		// rect.Y += sinspace[timers.AnimationIndex]
+		timers.AnimationIndex = (timers.AnimationIndex + 1) % sinspaceLen
 	}
+	for _, e := range toRemove {
+		kar.WorldECS.RemoveEntity(e)
+	}
+	toRemove = toRemove[:0]
 }
 func (itm *Collect) Draw() {}

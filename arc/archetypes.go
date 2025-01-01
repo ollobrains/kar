@@ -55,12 +55,19 @@ func SpawnPlayer(x, y float64) ecs.Entity {
 	AP.NewAnimationState("attackWalk", 0, 16, 16, 16, 4, false, false).FPS = 8
 	AP.NewAnimationState("attackUp", 16*11, 0, 16, 16, 2, false, false).FPS = 8
 	AP.SetState("idleRight")
+
+	inv := NewInventory()
+	inv.RandomFillAllSlots()
+	inv.ClearSlot(0)
+	inv.ClearSlot(1)
+	inv.ClearSlot(4)
+
 	return MapPlayer.NewWith(
 		AP,
 		&Health{20, 20},
 		&DrawOptions{Scale: kar.PlayerScale},
 		&Rect{x, y, 16 * kar.PlayerScale, 16 * kar.PlayerScale},
-		NewInventory(),
+		inv,
 	)
 }
 func SpawnItem(data SpawnData) ecs.Entity {
